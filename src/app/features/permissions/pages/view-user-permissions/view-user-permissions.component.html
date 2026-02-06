@@ -1,0 +1,69 @@
+<div class="user-form-container">
+    <div class="user-form-card">
+        <div class="form-header">
+            <h2 class="form-title">View & Update Role</h2>
+            <p class="form-subtitle">Define role and assign permissions</p>
+        </div>
+
+        <form class="user-form">
+            <!-- Role Basic Info -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Role Code <span class="text-danger">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="code" name="code"
+                        placeholder="Enter role code" />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Role Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="name" name="name"
+                        placeholder="Enter role name" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label class="input-label">Description</label>
+                    <textarea class="form-input" [(ngModel)]="description" name="description" rows="3"
+                        placeholder="Enter role description"></textarea>
+                </div>
+            </div>
+
+            <!-- Permissions Section -->
+            <div class="permissions-section">
+                <h3 class="section-title">Assign Permissions</h3>
+
+                <div class="module-container" *ngFor="let module of permissionModules">
+                    <div class="module-header" (click)="toggleModule(module.key)">
+                        <div class="module-title">
+                            <i class="fa-solid fa-chevron-right module-icon"
+                                [class.rotate-down]="expandedModules[module.key]"></i>
+                            <span>{{ module.name }}</span>
+                        </div>
+                        <div class="module-count">
+                            {{ getSelectedCount(module.key) }} / {{ module.permissions.length }} selected
+                        </div>
+                    </div>
+
+                    <div class="module-permissions" *ngIf="expandedModules[module.key]">
+                        <div class="permission-grid">
+                            <div class="permission-item" *ngFor="let permission of module.permissions">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-style"
+                                        [checked]="isPermissionSelected(permission.code)"
+                                        (change)="togglePermission(permission.code)" />
+                                    <span class="permission-label-text">{{ permission.label }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+                <button type="submit" class="submit-btn" (click)="updateRole()">Update Role</button>
+            </div>
+        </form>
+    </div>
+</div>

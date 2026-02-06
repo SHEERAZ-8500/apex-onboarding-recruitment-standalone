@@ -7,6 +7,7 @@ import {
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgbOffcanvas, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToggleService } from '../../../../../core/services/management-services/ToggleService';
 import { ThemeService } from '../../../../../core/services/management-services/Theme.service';
 import { ToastrService } from 'ngx-toastr';
@@ -18,7 +19,7 @@ import { ResponsiveBotstrapSideNavBarComponent } from '../responsive-botstrap-si
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderModalComponent, ChatBoxCardComponent, ResponsiveBotstrapSideNavBarComponent],
+  imports: [CommonModule, RouterModule, NgbDropdownModule, HeaderModalComponent, ChatBoxCardComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -47,7 +48,8 @@ export class HeaderComponent {
     public themeService: ThemeService,
     private apiService: ApiService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private offcanvasService: NgbOffcanvas
   ) { }
 
 
@@ -71,12 +73,11 @@ export class HeaderComponent {
     if (window.innerWidth > 1000) {
       this.toggleService.toggleSidebar();
     } else {
-      const offcanvasElement = document.getElementById('offcanvasScrolling');
-      if (offcanvasElement) {
-        const bootstrapOffcanvas =
-          new (window as any).bootstrap.Offcanvas(offcanvasElement);
-        bootstrapOffcanvas.show();
-      }
+      this.offcanvasService.open(ResponsiveBotstrapSideNavBarComponent, {
+        position: 'start',
+        scroll: true,
+        backdrop: false
+      });
     }
   }
 

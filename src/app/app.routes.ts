@@ -36,7 +36,7 @@ export const routes: Routes = [
 
       { path: 'admin', loadChildren: () => import('../app/features/admin/admin.routes').then(m => m.routes) },
 
-      //   { path: 'permissions', loadChildren: () => import('./modules/permissions/permissions.module').then(m => m.PermissionsModule) },
+        { path: 'permissions', loadChildren: () => import('../app/features/permissions/permissions.routes').then(m => m.routes) },
 
       { path: 'requisition-lookups', loadChildren: () => import('../app/features/requisition-lookups/requisition-lookups.routes').then(m => m.routes) },
       //   { path: 'organizational-master-data', loadChildren: () => import('./modules/organizational-master-data/organizational-master-data.module').then(m => m.OrganizationalMasterDataModule) },

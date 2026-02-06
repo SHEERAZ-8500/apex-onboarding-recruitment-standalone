@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { SideNavBarComponent } from '../side-nav-bar/side-nav-bar.component';
 
 @Component({
@@ -11,4 +12,9 @@ import { SideNavBarComponent } from '../side-nav-bar/side-nav-bar.component';
 })
 export class ResponsiveBotstrapSideNavBarComponent {
 
+  constructor(public activeOffcanvas: NgbActiveOffcanvas) {}
+
+  close() {
+    this.activeOffcanvas.dismiss();
+  }
 }

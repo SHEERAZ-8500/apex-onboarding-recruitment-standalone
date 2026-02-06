@@ -11,3 +11,9 @@
 ::ng-deep app-side-nav-bar .sidebar {
   width: 100% !important;
 }
+.offcanvas-body{
+  padding: 0%!important;
+}
+.offcanvas-header{
+  background-color: var(--second-primary-color);
+}
