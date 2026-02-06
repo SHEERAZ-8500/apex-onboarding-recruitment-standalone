@@ -1,0 +1,293 @@
+.manage-visibility-wrapper {
+  padding: 20px;
+  min-height: 100vh;
+  margin-top: -32px;
+
+  .card-container {
+    background: var(--second-primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 30px;
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      .header-info {
+        .main-title {
+          color: var(--text-primary);
+          font-size: 23px;
+          font-weight: 600;
+          margin: 0 0 8px 0;
+        }
+
+        .form-name {
+          color: var(--text-secondary);
+          font-size: 14px;
+          margin: 0;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .divider {
+      border: none;
+      height: 1px;
+      background: var(--border-color);
+      margin: 20px 0;
+    }
+
+    // Loading & Empty States
+    .loading-state,
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+
+      i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0;
+      }
+    }
+
+    // Table Section
+    .table-section {
+      margin-top: 20px;
+
+      .table-container {
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        border: none;
+
+
+        .fields-table {
+          width: 100%;
+          margin: 0;
+          border-collapse: collapse;
+          background: var(--second-primary-color);
+
+          thead {
+            background: var(--primary-color) !important;
+
+
+            tr th {
+              padding: 12px 16px;
+              text-align: center;
+              font-weight: 600;
+              font-size: 14px;
+              color: var(--text-primary);
+              border: none;
+              white-space: nowrap;
+              background: var(--primary-color) !important;
+
+            }
+          }
+
+          tbody {
+            tr {
+              transition: background-color 0.2s ease;
+
+
+
+
+              td {
+                padding: 14px 12px;
+                background: var(--second-primary-color) !important;
+                border: none;
+                color: var(--text-primary);
+                font-size: 14px;
+                vertical-align: middle;
+                text-align: center;
+
+
+                .field-code {
+                  background: rgba(112, 71, 238, 0.1);
+                  padding: 4px 8px;
+                  border-radius: 4px;
+                  font-size: 12px;
+                  color: var(--purple-1);
+                  font-family: monospace;
+                  white-space: nowrap;
+                }
+
+                .linked-component {
+                  color: var(--text-primary);
+                  font-weight: 500;
+                  font-size: 13px;
+                }
+
+                .display-order {
+                  display: inline-block;
+                  background: rgba(0, 0, 0, 0.2);
+                  padding: 4px 10px;
+                  border-radius: 6px;
+                  font-weight: 500;
+                  font-size: 13px;
+                }
+
+                .text-muted {
+                  color: var(--text-secondary);
+                  opacity: 0.5;
+                }
+
+                .no-linked {
+                  color: var(--text-secondary); // ya koi aur theme color
+                  opacity: 0.7;
+                }
+
+                // Badges
+                .badge {
+                  display: inline-block;
+                  padding: 6px 12px;
+                  border-radius: 6px;
+                  font-size: 12px;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+
+                  &.badge-primary {
+                    background: rgba(0, 123, 255, 0.2);
+                    color: #4dabf7;
+                  }
+
+                  &.badge-success {
+                    background: rgba(40, 167, 69, 0.2);
+                    color: #51cf66;
+                  }
+
+                  &.badge-info {
+                    background: rgba(23, 162, 184, 0.2);
+                    color: #4fc3f7;
+                  }
+
+                  &.badge-warning {
+                    background: rgba(255, 193, 7, 0.2);
+                    color: #ffd43b;
+                  }
+
+                  &.badge-danger {
+                    background: rgba(220, 53, 69, 0.2);
+                    color: #ff6b6b;
+                  }
+
+                  &.badge-purple {
+                    background: #59b9e233;
+                    color: var(--purple-1);
+                  }
+
+                  &.badge-orange {
+                    background: rgba(255, 127, 80, 0.2);
+                    color: #ffa94d;
+                  }
+
+                  &.badge-pink {
+                    background: rgba(233, 30, 99, 0.2);
+                    color: #f783ac;
+                  }
+
+                  &.badge-secondary {
+                    background: rgba(108, 117, 125, 0.2);
+                    color: #868e96;
+                  }
+                }
+
+                // Form Switch
+                .form-check {
+                  display: inline-flex;
+                  align-items: center;
+                  pointer-events: none;
+                  margin: 0;
+                }
+
+                .form-check-input {
+                  cursor: pointer;
+                  width: 40px;
+                  height: 20px;
+                  pointer-events: auto;
+
+                  &:checked {
+                    background-color: var(--purple-1);
+                    border-color: var(--purple-1);
+                  }
+
+
+                }
+
+                .form-check-label {
+                  color: var(--text-primary);
+                  font-size: 13px;
+                  margin-left: 8px;
+                  cursor: pointer;
+                  pointer-events: auto;
+                  font-weight: 500;
+                  transition: color 0.3s ease;
+
+                  &.active-yes {
+                    color: var(--purple-1);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .manage-visibility-wrapper {
+    padding: 15px;
+
+    .card-container {
+      padding: 20px;
+
+      .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .table-section {
+        .table-container {
+          .fields-table {
+            font-size: 12px;
+
+            thead tr th {
+              padding: 12px 8px;
+              font-size: 12px;
+            }
+
+            tbody tr td {
+              padding: 10px 8px;
+              font-size: 12px;
+
+              .badge {
+                font-size: 10px;
+                padding: 4px 8px;
+              }
+
+              .form-check-input {
+                width: 35px;
+                height: 18px;
+              }
+
+              .form-check-label {
+                font-size: 11px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

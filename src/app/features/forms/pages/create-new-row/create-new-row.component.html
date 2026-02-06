@@ -1,0 +1,66 @@
+<div class="udd-form-container">
+    <div class="udd-form-card">
+        <div class="form-header">
+            <h2 class="form-title">Create New Tab</h2>
+            <p class="form-subtitle">Define a new row field for {{ formCode || 'Form' }}</p>
+        </div>
+
+        <form class="udd-form">
+            <!-- Row 1: Field Code & Label -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Field Code <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="fieldCode" name="fieldCode"
+                        placeholder="e.g., employee_department" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Label <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="label" name="label"
+                        placeholder="e.g., Department" required />
+                </div>
+            </div>
+
+            <!-- Row 2: Independent Row Table & Display Order -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Select Independent Row Table <span class="required">*</span></label>
+
+                    <div class="custom-dropdown" (click)="toggleRowDropdown($event)">
+                        <div class="dropdown-selected">
+                            <span>{{ selectedRowLabel || 'Select Independent Row Table' }}</span>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow" [class.rotate]="isRowDropdownOpen"></i>
+                        </div>
+                        <div class="dropdown-options" *ngIf="isRowDropdownOpen">
+                            <div class="dropdown-option" *ngFor="let item of selectTable" 
+                                 (click)="selectRowComponent(item, $event)">
+                                {{ item.displayName }}
+                            </div>
+                            <div class="dropdown-option no-data" *ngIf="selectTable.length === 0">
+                                No independent row tables available
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Display Order <span class="required">*</span></label>
+                    <input type="number" class="form-input" [(ngModel)]="displayOrder" name="displayOrder"
+                        placeholder="e.g., 1" required min="1" />
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" (click)="onSubmit()">
+                    <i class="fa-solid fa-check"></i>
+                    Create Field
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

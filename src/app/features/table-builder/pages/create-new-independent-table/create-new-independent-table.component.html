@@ -1,0 +1,226 @@
+<div class="independent-table-wrapper">
+  <div class="card-container">
+    <!-- Header -->
+    <div class="header-row">
+      <h4 class="main-title">Create Independent Table</h4>
+      <button class="reset-btn" type="button" (click)="resetForm()">
+        <i class="fa fa-refresh"></i> Reset
+      </button>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()">
+      <!-- Table Basic Info -->
+      <div class="form-section">
+        <h5 class="section-title">Table Information</h5>
+        
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Table Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter Table Name"
+              [(ngModel)]="rowTableName"
+              name="rowTableName"
+              (input)="onTableNameInput()"
+              required
+            />
+            <small class="form-text">Spaces will be automatically replaced with underscores</small>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Description <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter Description"
+              [(ngModel)]="description"
+              name="description"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Columns Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h5 class="section-title">Table Columns</h5>
+          <button type="button" class="add-column-btn" (click)="addColumn()">
+            <i class="fa fa-plus"></i> Add Column
+          </button>
+        </div>
+
+        <!-- Columns List -->
+        <div class="columns-list">
+          <div
+            class="column-item"
+            *ngFor="let column of columns; let i = index; trackBy: trackByIndex"
+          >
+            <div class="column-header">
+              <span class="column-number">Column {{ i + 1 }}</span>
+              <button
+                type="button"
+                class="remove-column-btn"
+                (click)="removeColumn(i)"
+                [disabled]="columns.length === 1"
+              >
+                <i class="fa fa-trash"></i> Remove
+              </button>
+            </div>
+
+            <div class="row">
+              <!-- Column Name -->
+              <div class="col-md-4 mb-3">
+                <label>Column Name <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Column Name"
+                  [(ngModel)]="column.name"
+                  [name]="'columnName' + i"
+                  (input)="onColumnNameInput(i)"
+                  required
+                />
+              </div>
+
+              <!-- Column Type -->
+              <div class="col-md-4 mb-3">
+                <label>Column Type <span class="text-danger">*</span></label>
+                <div class="custom-dropdown" (click)="toggleColumnTypeDropdown(i, $event)">
+                  <div class="dropdown-selected">
+                    <span>{{ column.type || 'Select Type' }}</span>
+                    <i
+                      class="fa-solid fa-chevron-down dropdown-arrow"
+                      [class.rotate]="column.isTypeDropdownOpen"
+                    ></i>
+                  </div>
+                  <div class="dropdown-options" *ngIf="column.isTypeDropdownOpen">
+                    <div
+                      class="dropdown-option"
+                      *ngFor="let type of columnTypes"
+                      (click)="selectColumnType(i, type, $event)"
+                    >
+                      {{ type }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Display Order -->
+              <div class="col-md-4 mb-3">
+                <label>Display Order <span class="text-danger">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Order"
+                  [(ngModel)]="column.displayOrder"
+                  [name]="'displayOrder' + i"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Conditional Fields Row -->
+            <div class="row">
+              <!-- Max Length (for STRING, TEXTAREA) -->
+              <div
+                class="col-md-4 mb-3"
+                *ngIf="column.type === 'STRING' || column.type === 'TEXTAREA'"
+              >
+                <label>Max Length</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Max Length"
+                  [(ngModel)]="column.maxLength"
+                  [name]="'maxLength' + i"
+                />
+              </div>
+
+              <!-- Precision (for NUMBER) -->
+              <div class="col-md-4 mb-3" *ngIf="column.type === 'NUMBER'">
+                <label>Precision</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Precision"
+                  [(ngModel)]="column.precision"
+                  [name]="'precision' + i"
+                />
+              </div>
+
+              <!-- Scale (for NUMBER) -->
+              <div class="col-md-4 mb-3" *ngIf="column.type === 'NUMBER'">
+                <label>Scale</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Scale"
+                  [(ngModel)]="column.scale"
+                  [name]="'scale' + i"
+                />
+              </div>
+
+              <!-- Lookup Component Selection (for LOOKUP_TABLE, LOOKUP_ENUM, and ROW_TABLE) -->
+              <div class="col-md-4 mb-3" *ngIf="column.type === 'LOOKUP_TABLE' || column.type === 'LOOKUP_ENUM' || column.type === 'ROW_TABLE'">
+                <label>
+                  {{ column.type === 'LOOKUP_TABLE' ? 'Select Lookup Table' : column.type === 'LOOKUP_ENUM' ? 'Select Enum' : 'Select Row Table' }}
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="custom-dropdown">
+                  <div class="dropdown-selected" (click)="toggleLookupDropdown(i, $event)">
+                    <span>{{ column.lookupComponentCode || 'Select ' + (column.type === 'LOOKUP_TABLE' ? 'Lookup Table' : column.type === 'LOOKUP_ENUM' ? 'Enum' : 'Row Table') }}</span>
+                    <i class="fa" [ngClass]="column.isLookupDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                  </div>
+                  <div class="dropdown-options" *ngIf="column.isLookupDropdownOpen">
+                    <div 
+                      class="dropdown-option" 
+                      *ngFor="let option of column.lookupOptions"
+                      (click)="selectLookupOption(i, option, $event)">
+                      {{ option.componentCode || option.enumComponentCode || option.rowComponentCode || option.code || option.name }}
+                    </div>
+                    <div class="dropdown-option text-muted" *ngIf="!column.lookupOptions || column.lookupOptions.length === 0">
+                      No options available
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nullable Checkbox -->
+              <div class="col-md-4 mb-3" (click)="$event.stopPropagation()">
+                <label class="d-block">Nullable</label>
+                <div class="form-check form-switch mt-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [id]="'nullable' + i"
+                    [(ngModel)]="column.nullable"
+                    [name]="'nullable' + i"
+                  />
+                  <label class="form-check-label mb-0" [for]="'nullable' + i">
+                    {{ column.nullable ? 'Yes' : 'No' }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Buttons -->
+      <div class="form-buttons">
+          <button type="button" class="btn btn-danger ms-2" (click)="onCancel()">
+          <i class="fa fa-ban"></i> Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa fa-check-circle"></i> Create Table
+        </button>
+      
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="chat-card" *ngIf="visible">
+
+  <div class="header d-flex align-items-center justify-content-between">
+  <!-- Left: Profile icon -->
+  <div class="profile-icon" (click)="toggleDropdown()" #profileButton>
+    <i [class]="cardData.profileIcon"></i>
+  </div>
+
+  <!-- Center: Name + Status -->
+  <div class="info text-center">
+    <h4>{{ cardData.name }}</h4>
+    <span class="active-status">● {{ cardData.status }}</span>
+  </div>
+
+  <!-- Right: Close button -->
+  <div class="close-btn" (click)="closeCard()">
+    <i class="fa fa-times"></i>
+  </div>
+
+  <!-- Dropdown -->
+  <div class="dropdown" *ngIf="isDropdownOpen" #dropdownMenu>
+    <div class="dropdown-item" *ngFor="let item of dropdownItems">
+      <i [class]="item.icon"></i> {{ item.label }}
+    </div>
+  </div>
+</div>
+
+  <!-- Messages area -->
+  <div class="messages-area">
+    <div
+      class="message"
+      *ngFor="let msg of messages"
+      [ngClass]="msg.type"
+    >
+      {{ msg.text }}
+    </div>
+  </div>
+
+  <!-- Input bar -->
+  <div class="input-bar">
+    <input type="text" placeholder="Send a message..." />
+    <button><i class="fa fa-paper-plane"></i></button>
+  </div>
+
+</div>

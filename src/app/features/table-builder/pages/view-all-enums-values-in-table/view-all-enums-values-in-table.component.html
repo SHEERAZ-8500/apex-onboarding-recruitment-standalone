@@ -1,0 +1,57 @@
+<section class="container-fluid p-0">
+    <div class="d-flex justify-content-between mb-3">
+
+        <div class="page-title ">
+            <i class="fa-solid fa-house"></i>
+            <span style="font-weight: 700; color: #566f9e;">-</span>
+            <br>
+            <span>View All Tables List</span>
+
+
+        </div>
+        <!-- <div>
+            <button class="creat-btn" routerLink="/panel/requisition-lookups/create-lookup-enums">Create New
+                Lookup</button>
+        </div> -->
+    </div>
+
+    <section class="table-main-div ">
+        <div class="rounded-2xl text-gray-200 overflow-x-auto  pt-4">
+            <h4>View Lookup - {{ enumComponentCode }}</h4>
+            <table class="min-w-full text-sm border-separate border-spacing-y-2 ">
+                <thead>
+                    <tr class="text-gray-400 text-left text-xs uppercase tracking-wider">
+
+
+                        <th class="px-3 py-2">Values</th>
+                        <th class="px-3 py-2">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let value of enumValues; let i = index"
+                        class="bg-[#1e293b] hover:bg-[#27354a] rounded-lg">
+
+                        <td class="px-3 py-3 font-medium">
+                            {{ value }}
+                        </td>
+
+                        <td class="px-3 py-3 font-medium">
+                            <i class="fa fa-edit" style="cursor:pointer; margin-right: 10px;"
+                                [routerLink]="['/panel/requisition-lookups/edit-new-enum-value']"
+                                [queryParams]="{enumCode:enumComponentCode , enum: value,allEnums: enumValues}"></i>
+                            <i class="fa fa-trash" style="cursor:pointer;" (click)="onDeleteEnumValue(value)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ✅ Pagination -->
+        <app-pagination [currentPage]="currentPage + 1" [totalPages]="totalPages" [totalPagesArray]="totalPagesArray"
+            (pageChange)="changePage($event)">
+        </app-pagination>
+    </section>
+</section>

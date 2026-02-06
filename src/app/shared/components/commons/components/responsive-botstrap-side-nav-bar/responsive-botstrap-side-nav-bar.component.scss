@@ -1,0 +1,13 @@
+
+// botstrap modal
+
+.offcanvas-start{
+    background-color: var(--second-primary-color);
+}
+.btn-close {
+    border: 2px solid #0080ff;
+  filter: invert(36%) sepia(88%) saturate(600%) hue-rotate(230deg) brightness(95%) contrast(90%);
+}
+::ng-deep app-side-nav-bar .sidebar {
+  width: 100% !important;
+}

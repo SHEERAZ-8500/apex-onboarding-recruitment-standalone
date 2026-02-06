@@ -1,0 +1,332 @@
+.sidebar {
+  height: 97.5vh;
+  width: 300px;
+  background-color: var(--second-primary-color);
+  color: var(--white-color-1);
+  // transition: width 0.35s ease, all 0.35s ease;
+  overflow: hidden;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* collapsed sidebar */
+.sidebar.closed {
+  width: 60px;
+
+  .user-card {
+    display: none;
+  }
+
+  .menu-title {
+    display: none;
+  }
+
+  .collapseStyling {
+    padding-inline-start: 0px !important;
+  }
+
+  a span {
+    display: none;
+  }
+
+  /* hide text when collapsed */
+  .chev-icon {
+    display: none;
+  }
+
+  // .logo { justify-content: flex-start !important; }
+  // .logo img { width: 48px; }
+  .logo {
+    display: none;
+  }
+
+  .logo img {
+    display: none;
+  }
+}
+
+/* base link */
+/* base link */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 8px 18px;
+  color: var(--gray-color-1);
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  position: relative;
+
+  /* hover */
+  &:hover {
+    background: transparent;
+    border-radius: 6px; // border radius on hover
+
+    span {
+      color: #1274ac !important; // hover text color black
+    }
+
+    i {
+      color: #1274ac !important; // hover icon color black
+    }
+  }
+
+
+}
+
+::ng-deep .light-theme .sidebar a {
+
+
+
+
+  /* hover */
+  &:hover {
+    background: transparent !important;
+    border-radius: 6px; // border radius on hover
+
+    span {
+      color: #1274ac !important; // hover text color black
+    }
+
+    i {
+      color: #1274ac !important; // hover icon color black
+    }
+  }
+
+  a.active,
+  a.router-link-active {
+    background: none !important;
+    color: var(--gray-color-1) !important;
+  }
+
+}
+
+.sidebar a i {
+  margin-right: 10px;
+  transition: margin-right 0.2s ease, color 0.2s ease;
+}
+
+.sidebar i.fa-angle-double-right {
+ font-size: 10px;
+  width: 10px;
+  height: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* chevron container (right side) */
+.chev-icon {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--gray-color-2);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* small chevrons for level-2 */
+.chev-icon.small {
+  font-size: 13px;
+  margin-left: 8px;
+}
+
+.level-link {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 12px;
+}
+
+.level-link span {
+  flex-grow: 1;
+  margin-left: 5px;
+}
+
+/* rotate animation if needed */
+.chev-icon i {
+  transition: transform 0.2s ease;
+}
+
+/* logo */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s ease;
+}
+
+.logo img {
+  width: 60px;
+  transition: width 0.25s ease;
+}
+
+.logo span {
+  font-weight: 700;
+  font-size: 2.57rem;
+  transition: opacity 0.25s ease, margin-left 0.25s ease;
+}
+
+.sidebar.closed .logo span {
+  opacity: 0;
+  margin-left: 0;
+}
+
+/* user card */
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  border: 2px solid var(--border-color);
+  border-radius: 3px;
+  padding: 10px 15px;
+  width: 220px;
+  color: var(--white-color-1);
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  // &:hover {
+  //   background-color: var(--primary-color);
+  //   border-color: var(--purple-1);
+  //   transform: translateY(-2px);
+  //   box-shadow: 0 4px 12px rgba(108, 92, 231, 0.12);
+  // }
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .user-info {
+    flex: 1;
+
+    h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--white-color-1);
+    }
+
+    p {
+      font-size: 13px;
+      font-weight: 400;
+      margin: 0;
+      color: var(--gray-color-2);
+    }
+  }
+
+  i {
+    color: var(--gray-color-2);
+    font-size: 10px;
+    margin-left: 8px;
+  }
+}
+
+// .menu-title h5 {
+//   color: var(--gray-color-1);
+//   padding: 15px 20px 15px 20px;
+//   font-weight: 400;
+//   font-size: 17px;
+// }
+
+/* collapse container */
+.collapseStyling {
+  padding-inline-start: 22px;
+  /* level-1 indent */
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.32s ease, padding 0.24s ease;
+}
+
+/* when open */
+.collapseStyling.open {
+  max-height: 1200px;
+  padding-bottom: 6px;
+}
+
+/* inner (level-2 indent) */
+.collapseStyling.inner {
+  padding-inline-start: 16px;
+}
+
+/* collapseDiv */
+.collapseDiv {
+  padding-left: 6px;
+  margin-left: 6px;
+  transition: padding 0.18s ease;
+}
+
+/* nested solid line to match screenshot style (only on nested-line) */
+
+
+
+
+/* links inside collapse */
+.collapseDiv a {
+  display: block;
+  padding: 8px 12px;
+  color: var(--gray-color-1);
+  text-decoration: none;
+  font-size: 13.5px;
+  border-radius: 6px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+
+
+/* scrollbar */
+.tabslist {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
+.tabslist::-webkit-scrollbar {
+  width: 3px;
+}
+
+.tabslist::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabslist::-webkit-scrollbar-thumb {
+  background-color: #8daac6;
+  border-radius: 10px;
+}
+
+/* active router link */
+a.active,
+a.router-link-active {
+  background: rgba(108, 92, 231, 0.08);
+  color: var(--purple-1);
+}
+
+/* responsiveness */
+@media (max-width: 1000px) {
+  .tabslist {
+    height: calc(100vh - 180px);
+  }
+}
+
+
+.dropdown-btn{
+  background: none;
+  border: none;
+  
+}
+.dropdown-menu{
+  transform: translate3d(127.4px, 73.2px, 0px)!important;
+}
+.dropdown-menu .dropdown-item:hover {
+  
+  color: var(--purple-1) !important;
+}

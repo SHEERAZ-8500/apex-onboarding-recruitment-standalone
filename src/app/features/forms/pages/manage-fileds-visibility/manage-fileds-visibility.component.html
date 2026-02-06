@@ -1,0 +1,88 @@
+<div class="manage-visibility-wrapper">
+  <div class="card-container">
+    <!-- Header -->
+    <div class="header-row">
+      <div class="header-info">
+        <h4 class="main-title">Manage Fields Visibility</h4>
+        <p class="form-name" *ngIf="formData">{{ formData.displayName }} ({{ formData.formCode }})</p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="!formData && fields.length === 0">
+      <i class="fa fa-spinner fa-spin"></i>
+      <p>Loading form fields...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="formData && fields.length === 0">
+      <i class="fa fa-inbox"></i>
+      <p>No fields found for this form</p>
+    </div>
+
+    <!-- Fields Table -->
+    <div class="table-section" *ngIf="fields.length > 0">
+      <div class="table-container">
+        <table class="table table-bordered fields-table">
+          <thead>
+            <tr>
+              <th>Sr #</th>
+              <th>Field Code</th>
+              <th>Display Name</th>
+              <th>Field Type</th>
+              <th>Linked Component</th>
+              <th>Display Order</th>
+              <th>Required</th>
+              <th>Active Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let field of fields; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <code class="field-code">{{ field.fieldCode }}</code>
+              </td>
+              <td>{{ field.label }}</td>
+              <td>
+                <span class="badge" [ngClass]="getFieldTypeBadge(field.fieldType)">
+                  {{ field.fieldType }}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="field.linkedComponent" class="linked-component">
+                  {{ field.linkedComponent }}
+                </span>
+                <span *ngIf="!field.linkedComponent" class="no-linked" >—</span>
+              </td>
+              <td>
+                <span class="display-order">{{ field.displayOrder }}</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="field.required ? 'badge-danger' : 'badge-secondary'">
+                  {{ field.required ? 'Yes' : 'No' }}
+                </span>
+              </td>
+              <td>
+                <div class="form-check form-switch" (click)="$event.stopPropagation()">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [id]="'active' + i"
+                    [(ngModel)]="field.active"
+                    (change)="toggleFieldStatus(field)"
+                  />
+                  <label class="form-check-label" [for]="'active' + i" [class.active-yes]="field.active">
+                    {{ field.active ? 'Active' : 'Inactive' }}
+                  </label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

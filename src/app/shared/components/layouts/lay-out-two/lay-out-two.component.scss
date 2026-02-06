@@ -1,0 +1,29 @@
+.lay-out-two {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.lay-out-two::-webkit-scrollbar {
+    width: 6px;
+    /* barik scrollbar */
+}
+
+.lay-out-two::-webkit-scrollbar-track {
+    background: transparent;
+    /* track ko none jesa dikhana */
+}
+
+.lay-out-two::-webkit-scrollbar-thumb {
+    background-color: #8daac6;
+    /* scrollbar ka color */
+    border-radius: 10px;
+}
+
+
+@media (max-width: 800px) {
+    .lay-out-two::after {
+        content: '';
+
+        height: 150px;
+    }
+}

@@ -1,1 +1,203 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  padding: 0%;
+  margin: 0%;
+
+}
+
+@import 'ngx-toastr/toastr';
+
+:root {
+  --primary-color: #171e31;
+  --second-primary-color: #20263a;
+  --gray-color-1: #b5b5c3;
+  --gray-color-2: #8daac6;
+  --purple-1: #4f89ab;
+  --border-color: #5C607B;
+  --white-color-1: #ffffffd9;
+  --light-purple: #648fa8;
+  --red-color: #dc3545;
+  --text-primary: #ffffff;
+  --text-secondary: #b5b5c3;
+}
+
+.light-theme {
+  --primary-color: #f0f4f8;
+  --second-primary-color: #ffffff;
+  --gray-color-1: #2d3748;
+  --gray-color-2: #4a5568;
+  --purple-1: #1274ac;
+  --border-color: #cbd5e0;
+  --white-color-1: #1a202c;
+  --light-purple: #648fa8;
+  --red-color: #dc3545;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+}
+
+// document.documentElement.style.setProperty('--primary-color', '#ffffff');
+// document.documentElement.style.setProperty('--purple-1', '#a16eff');
+body {
+  background-color: var(--primary-color);
+  overflow: hidden;
+  color: var(--text-primary);
+}
+
+/* Light Theme Enhancements */
+.light-theme {
+
+  /* Cards with better shadows */
+  .card,
+  .table-main-div,
+  .colloms,
+  .btn-groups-main-div,
+  .email-list-card,
+  .inbox-card,
+  .chat-box-card,
+  .events-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
+  }
+
+  /* Inputs with better contrast */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    background-color: #ffffff !important;
+    border: 1.5px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+
+    &:focus {
+      border-color: var(--purple-1) !important;
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15) !important;
+      background-color: #ffffff !important;
+    }
+
+    &::placeholder {
+      color: #a0aec0 !important;
+    }
+  }
+
+  /* Sidebar improvements */
+  .sidebar {
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+
+    a:hover {
+      background: rgba(108, 92, 231, 0.1) !important;
+    }
+
+    a.active {
+      background: rgba(108, 92, 231, 0.15) !important;
+    }
+  }
+
+  /* Table improvements */
+  table {
+    thead tr th {
+      background-color: #f7fafc !important;
+      color: var(--text-primary) !important;
+      font-weight: 600 !important;
+    }
+
+    tbody tr {
+      &:hover {
+        background-color: #f7fafc !important;
+      }
+    }
+  }
+
+  /* Button hover enhancements */
+  button:not(.btn-close):not(.login-btn):hover {
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.15) !important;
+  }
+
+  /* Page title better contrast */
+  .page-title {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+  }
+}
+
+.page-title {
+  color: var(--gray-color-1);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+
+}
+
+
+
+// pagination
+
+
+
+.page-link {
+  background-color: var(--second-primary-color) !important;
+  color: var(--white-color-1) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.page-link:hover {
+  background-color: var(--second-primary-color) !important;
+  color: var(--purple-1) !important;
+  cursor: pointer;
+}
+
+.page-item.active .page-link {
+  background-color: var(--purple-1) !important;
+    color: white !important;
+
+  /* Active color */
+}
+
+
+:host ::ng-deep {
+  .pagination {
+    .page-item {
+      &.active .page-link {
+        background-color: var(--purple-1);
+        color: #ffffff;
+      }
+
+      &.disabled .page-link {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+/* Buttons aur text ke liye thoda spacing aur color contrast */
+.builder-group-button {
+  color: var(--white-color-1) !important;
+  font-weight: 500;
+  text-align: left;
+}
+
+
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+  /* icon ko white jesa banata hai */
+  opacity: 1;
+  /* ensure visible */
+}
+
+
+
+
+
+
+
+

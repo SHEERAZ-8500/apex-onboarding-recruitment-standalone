@@ -1,0 +1,144 @@
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  caption-side: bottom;
+  border-collapse: collapse;
+}
+
+tr {
+  transition: background-color 0.2s ease-in-out;
+}
+
+th,
+td {
+  white-space: nowrap;
+}
+
+table thead tr th {
+  color: var(--gray-color-1);
+  border-bottom: 1px solid #d8d3d3b1;
+  font-size: 13px;
+  font-weight: 300;
+
+}
+
+table tbody tr td {
+  color: var(--gray-color-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+}
+
+.table-main-div {
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background-color: var(--second-primary-color);
+}
+
+.checkbox-style {
+  appearance: none;
+  /* removes default checkbox design */
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color, #999);
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkbox-style:checked {
+  background-color: var(--purple-1);
+  /* Tailwind blue-500 */
+  border-color: var(--purple-1);
+  position: relative;
+}
+
+.checkbox-style:checked::after {
+  content: "✓";
+  color: #ffffff;
+  font-size: 12px;
+  position: absolute;
+  top: -2px;
+  left: 4px;
+}
+
+:host ::ng-deep {
+  .action-button {
+    display: flex;
+    gap: 0;
+
+    .btn {
+      background: transparent !important;
+      color: #333;
+      padding: 6px 12px;
+      border-style: solid !important;
+      border-width: 2px !important;
+      border-color: transparent !important;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-radius: 0;
+    }
+
+    .btn-1 {
+      border-left-color: #198754 !important;
+      border-top-color: #198754 !important;
+      border-bottom-color: #198754 !important;
+      border-right-color: #893689 !important;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      color: #b5b5c3 !important;
+    }
+
+
+    .btn-2 {
+      border-top-color: #893689 !important;
+      border-bottom-color: #893689 !important;
+      border-right-color: #893689 !important;
+      border-left: none !important;
+      color: #b5b5c3 !important;
+
+    }
+
+    .btn-3 {
+      border-top-color: #dc3545 !important;
+      border-bottom-color: #dc3545 !important;
+      border-right-color: #dc3545 !important;
+      border-left: none !important;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      color: #b5b5c3 !important;
+
+    }
+
+
+
+  }
+}
+
+.btn-1:hover {
+  background-color: #05825f !important;
+  color: #ffffff !important;
+}
+
+.btn-2:hover {
+  background-color: var(--purple-1) !important;
+  color: #ffffff !important;
+}
+
+.btn-3:hover {
+  background-color: #ee3158 !important;
+  color: #ffffff !important;
+}
+
+.dropdown .dropdown-menu{
+  background-color: var(--primary-color)!important;
+  li a{
+    color: var(--gray-color-1)!important;
+  }
+  li a:hover{
+     background: rgba(86, 111, 158, 0.2)!important;
+  }
+}

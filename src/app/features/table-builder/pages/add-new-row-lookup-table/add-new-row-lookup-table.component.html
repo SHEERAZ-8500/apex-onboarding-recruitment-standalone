@@ -1,0 +1,138 @@
+<div class="row-form-container">
+    <div class="row-form-card">
+        <div class="form-header">
+            <h2 class="form-title"> {{componentTitle}}</h2>
+            <p class="form-subtitle">{{componentTitle === 'Add New Row to Lookup Table' ? 'Add a new entry to the lookup table' : 'Edit an existing entry in the lookup table'}}</p>
+        </div>
+
+        <form class="row-form"  *ngIf="componentTitle === 'Add New Row to Lookup Table' || componentTitle === 'Edit Value in Lookup Table'">
+            <!-- Row 1: Code & Name -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Code <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="code" name="code"
+                        placeholder="e.g., SUV" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Name <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="name" name="name"
+                        placeholder="e.g., Sport Utility Vehicle" required />
+                </div>
+            </div>
+
+            <!-- Row 2: Description (Full Width) -->
+            <div class="form-row full-width">
+                <div class="form-group">
+                    <label class="input-label">Description <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="description" name="description"
+                        placeholder="e.g., 4x4 off-road vehicle" required />
+                </div>
+            </div>
+
+            <!-- Row 3: Is Active Checkbox -->
+            <div class="form-row">
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" [(ngModel)]="isActive" name="isActive" />
+                        <span class="checkbox-text">Is Active</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" (click)="onSubmit()">
+                    <i class="fa-solid fa-check"></i>
+                    {{ componentTitle === 'Add New Row to Lookup Table' ? 'Add Row' : 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+
+        <form class="row-form"  *ngIf="componentTitle === 'Add New Column to Lookup Table'">
+            <!-- Row 1: Code & Name -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Field Code <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="createColumnDto.name" name="fieldCode"
+                        (input)="onFieldCodeInput()" placeholder="e.g., passport_number" required />
+                </div>
+
+                 <div class="form-group">
+                    <label class="input-label">Field Type <span class="required">*</span></label>
+                    <div class="custom-dropdown" (click)="toggleFieldTypeDropdown($event)">
+                        <div class="dropdown-selected">
+                            <span>{{ selectedFieldType || 'Select field type' }}</span>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow"
+                                [class.rotate]="isFieldTypeDropdownOpen"></i>
+                        </div>
+                        <div class="dropdown-options" *ngIf="isFieldTypeDropdownOpen">
+                            <div class="dropdown-option" *ngFor="let type of fieldTypes"
+                                (click)="selectFieldType(type, $event)">
+                                {{ type }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="form-group">
+                    <label class="input-label">Max Length</label>
+                    <input type="number" class="form-input" [(ngModel)]="createColumnDto.maxLength" name="maxLength"
+                        placeholder="e.g., 20" min="1" />
+                </div>
+
+                     <!-- Row 3: Precision & Scale (only for NUMBER) -->
+            <div class="form-row" *ngIf="fieldType === 'NUMBER'">
+                <div class="form-group">
+                    <label class="input-label">Precision</label>
+                    <input type="number" class="form-input" [(ngModel)]="createColumnDto.precision" name="precision"
+                        placeholder="e.g., 10" min="0" />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Scale</label>
+                    <input type="number" class="form-input" [(ngModel)]="createColumnDto.scale" name="scale" placeholder="e.g., 2"
+                        min="0" />
+                </div>
+            </div>
+
+
+                <div class="form-group">
+                    <label class="input-label">Display Order <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="createColumnDto.displayOrder" name="name"
+                        placeholder="e.g., Sport Utility Vehicle" required />
+                </div>
+            </div>
+
+           
+            <!-- Row 5: Required Checkbox -->
+            <div class="form-row">
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" [(ngModel)]="createColumnDto.nullable" name="required" />
+                        <span class="checkbox-text">Nullable</span>
+                    </label>
+                </div>
+            </div>
+
+            
+
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" (click)="onSubmit()">
+                    <i class="fa-solid fa-check"></i>
+                    Add Column
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

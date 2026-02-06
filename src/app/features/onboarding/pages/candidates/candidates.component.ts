@@ -1,0 +1,548 @@
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
+import { CandidateDto } from '../../dtos/candidate.dto';
+import { RequisitionDto } from '../../dtos/requisition.dto';
+import { LookupDto, LookupDtoWhenTypeForm, CandidateTableListingDto } from '../../../../shared/models/common/common-dto-';
+import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../core/services/management-services/loader.service';
+import { OnboardingService } from '../../service/onboarding.service';
+import { FormsService } from '../../../forms/services/forms.service';
+import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+
+@Component({
+  selector: 'app-create-candidates',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent],
+  templateUrl: './candidates.component.html',
+  styleUrls: ['./candidates.component.scss']
+})
+export class CandidatesComponent implements OnInit {
+
+  title = 'view';
+  formTitle = "";
+
+  // Section-wise candidate data
+  candidate: CandidateDto = new CandidateDto();
+
+  currentPage = 0; // Backend uses 0-based indexing
+  itemsPerPage = 5;
+  totalItems = 0;
+  totalPages = 0;
+
+  // Dropdown state
+  activeDropdown: string = '';
+
+  // Backend field management - for static fields visibility
+  backendFieldsMap: Record<string, boolean> = {};
+
+  // Dropdown options
+  requisitions: string[] = ['Req-101', 'Req-102', 'Req-103'];
+  departments: string[] = ['IT', 'HR', 'Finance', 'Marketing'];
+  designations: string[] = ['Manager', 'Developer', 'Analyst', 'Intern'];
+  hiringManagers: string[] = ['John Doe', 'Jane Smith', 'Alice Johnson'];
+  // genders: string[] = ['Male', 'Female', 'Other'];
+  countries: string[] = ['USA', 'Pakistan', 'India', 'UK'];
+  cities: string[] = ['New York', 'Lahore', 'Mumbai', 'London'];
+  categories: string[] = ['General', 'OBC', 'SC', 'ST'];
+  onboardingStatuses: string[] = ['Pending', 'Completed', 'Rejected'];
+  candidateStatuses: string[] = ['New', 'In Process', 'Hired', 'Rejected'];
+  genderEnumArray = []
+  candidateEnumArray = []
+  onboardingStatusEnumArray = []
+  requsitionDropDownValue: LookupDtoWhenTypeForm[] = [];
+  departmentDropDownValue: LookupDto[] = [];
+  designationDropDownValue: LookupDto[] = [];
+  requisitionDisplayValue: string = '';
+  religionEnumArray = []
+  selectedDesignationDisplay: string = '';
+  // Sidebar Tabs Data
+  sidebarTabs: any[] = [];
+  editCandidatePublicId: string = '';
+  activeTabId: number = 1;
+  candidateTableListArray: CandidateTableListingDto[] = [];
+
+  constructor(
+    private router: Router,
+    public dynamicFieldsService: DynamicFieldsSharingService,
+    private toastr: ToastrService,
+    private loader: LoaderService,
+    private onboardingService: OnboardingService,
+    private formsService: FormsService,
+    private activatedRoute: ActivatedRoute
+  ) { }
+
+  ngOnInit(): void {
+
+    // Load dynamic fields and tabs
+    this.loader.show();
+
+
+
+    this.activatedRoute.data.subscribe(data => {
+      this.title = data['title'];
+      if (this.title === 'view') {
+
+        this.getCandidateData();
+        // set view mode loigc
+        //  this.fetchSkills()
+      }
+      if (this.title === 'edit') {
+        this.formTitle = "Edit Skill"
+        this.dynamicFieldsService.loadDynamicFields('CANDIDATE', 'USER_DEFINED', [])
+          .then(() => {
+            // Get tabs from service
+            this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
+            this.activeTabId = this.dynamicFieldsService.activeTabId;
+
+            // Now load candidate data after dynamic fields are ready
+            this.getCandidateData();
+
+            this.loader.hide();
+          })
+          .catch((err) => {
+            console.error('Error loading dynamic fields:', err);
+            this.toastr.error('Failed to load dynamic fields');
+            this.loader.hide();
+          });
+        this.activatedRoute.queryParams.subscribe(params => {
+          const id = params['id'];
+          const currentPage = params['currentPage'];
+          this.currentPage = currentPage;
+          this.editCandidatePublicId = id;
+
+          // Removed getCandidateData from here as it's now called after dynamic fields load
+
+
+          // console.log(id);
+        })
+
+        this.getFormFileds();
+
+      }
+      if (this.title === 'create') {
+        this.formTitle = "Create New Skill"
+        this.dynamicFieldsService.loadDynamicFields('CANDIDATE', 'USER_DEFINED', [])
+          .then(() => {
+            // Get tabs from service
+            this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
+            this.activeTabId = this.dynamicFieldsService.activeTabId;
+            this.loader.hide();
+          })
+          .catch((err) => {
+            console.error('Error loading dynamic fields:', err);
+            this.toastr.error('Failed to load dynamic fields');
+            this.loader.hide();
+          });
+
+        this.getFormFileds();
+
+
+      }
+    });
+
+  }
+
+
+  get totalPagesArray() {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+
+  changePage(page: number) {
+
+    const apiPage = page - 1;
+    if (apiPage < 0 || apiPage >= this.totalPages) return;
+    this.currentPage = apiPage;
+    this.getCandidateData();
+
+  }
+
+
+  // filteredRequisitions() {
+  //   if (!this.searchText.trim()) return this.requisition;
+
+  //   return this.requisition.filter(this.requisition =>
+  //     this.requisition.requisition_name.toLowerCase().includes(this.searchText.toLowerCase()) ||
+  //     this.requisition.department.toLowerCase().includes(this.searchText.toLowerCase())
+  //   );
+  // }
+
+  hideForm() {
+    this.resetForm();
+
+  }
+
+  cancelForm() {
+    // this.hideForm();
+    this.router.navigate(['/panel/onboarding/view-all-candidates']);
+  }
+
+  // deleteSkill(index: number) {
+  //   this.requisition.splice(index, 1);
+
+  //   if (this.currentPage > this.totalPages && this.totalPages > 0) {
+  //     this.currentPage = this.totalPages;
+  //   }
+  //   this.updatePagination();
+  // }
+
+  editSkill() {
+    this.router.navigate(['/panel/onboarding/edit-candidates']);
+
+
+  }
+
+  // // updateSkill() {
+  // //   if (this.editIndex === null) return;
+
+  // //   this.requisition[this.editIndex] = {
+  // //     code: this.requisition.,
+  // //     name: this.skillName,
+  // //   };
+
+  //   this.hideForm();
+  // }
+
+  onNew() {
+    this.resetForm();
+    // this.showForm = true;
+    this.router.navigate(['/panel/onboarding/create-new-candidates']);
+  }
+
+  // createSkill() {
+  //   if (!this.skillCode || !this.skillName) return;
+
+  //   this.skills.push({
+  //     code: this.skillCode,
+  //     name: this.skillName,
+  //   });
+
+  //   this.hideForm();
+  // }
+
+
+  // Toggle Dropdown open/close
+  toggleDropdown(event: Event, field: string): void {
+    event.stopPropagation(); // Prevent document click from closing
+    if (this.activeDropdown === field) {
+      this.activeDropdown = ''; // Close if already open
+    } else {
+      this.activeDropdown = field; // Open selected
+    }
+    if (field === 'requisition') {
+      this.fetchLookupOptionsWhenLokupTypeForm('job_requisition');
+    }
+    if (field === 'department') {
+      this.fetchLookupOptions('department');
+    }
+    if (field === 'designation') {
+      this.fetchLookupOptions('designation');
+    }
+  }
+
+  // Select option from dropdown
+  selectOption(field: string, value: any, event: Event): void {
+    event.stopPropagation();
+
+    if (field === 'requisition' && value.code) {
+      // For requisition, store code and display summary
+      this.candidate.requisition_code = value.code;
+      this.requisitionDisplayValue = value.summary;
+    } else if (field === 'designation') {
+      this.candidate.designation = value.code;
+      this.selectedDesignationDisplay = value.name;
+    } else {
+      (this.candidate as any)[field] = value;
+    }
+
+    this.activeDropdown = ''; // Close dropdown
+  }
+
+  // Close dropdowns when clicking outside
+  @HostListener('document:click', ['$event'])
+  closeDropdowns(event: Event): void {
+    this.activeDropdown = '';
+    this.dynamicFieldsService.closeAllDropdowns();
+  }
+
+  // Set active tab
+  setActiveTab(tabId: number): void {
+    this.activeTabId = tabId;
+    this.dynamicFieldsService.setActiveTab(tabId);
+  }
+
+  // Save candidate data
+  saveCandidate(): void {
+
+
+    if (
+      !this.candidate.code ||
+      !this.candidate.first_name ||
+      !this.candidate.last_name ||
+      !this.candidate.requisition_code
+
+    ) {
+      this.toastr.warning('Please fill all required fields');
+      return;
+    }
+
+
+    delete (this.candidate as any).designation;
+    delete (this.candidate as any).category;
+    delete (this.candidate as any).remarks;
+    if (this.title === 'edit') {
+      delete (this.candidate as any).candidate_attachment;
+      delete (this.candidate as any).candidate_experience;
+      delete (this.candidate as any).candidate_qualification;
+      delete (this.candidate as any).candidate_skills;
+      delete (this.candidate as any).public_id;
+      delete (this.candidate as any).requisition_public_id;
+      delete (this.candidate as any).requisition_code;
+      delete (this.candidate as any).requisition_name;
+      delete (this.candidate as any).department_public_id;
+      delete (this.candidate as any).department_name;
+      delete (this.candidate as any).job_title_public_id;
+      delete (this.candidate as any).job_title_name;
+      delete (this.candidate as any).designation_public_id;
+      delete (this.candidate as any).designation_name;
+      delete (this.candidate as any).created_date;
+
+
+    }
+
+
+    this.candidate.onboarding_status = 'IN_PROGRESS';
+    this.candidate.status = 'APPLIED';
+
+    const completeData = this.dynamicFieldsService.getCompleteFormData(this.candidate);
+
+    if (this.title === 'create') {
+      this.loader.show();
+
+      // API call to save data
+      this.formsService.saveFormData('CANDIDATE', completeData).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Candidate data saved successfully');
+          this.loader.hide();
+          this.router.navigate(['/panel/onboarding/view-all-candidates']);
+        },
+        error: (err: any) => {
+          console.error('Error saving candidate data:', err);
+          this.toastr.error('Failed to save candidate data');
+          this.loader.hide();
+        }
+      });
+    } else {
+      this.formsService.updateFormData('CANDIDATE', this.candidate.code, completeData).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Candidate data updated successfully');
+          this.router.navigate(['/panel/onboarding/view-all-candidates']);
+        }
+        , error: (err: any) => {
+          console.error('Error updating candidate data:', err);
+          this.toastr.error('Failed to update candidate data');
+        }
+      });
+    }
+
+    // For now just show success
+
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/panel/onboarding/view-all-candidates']);
+  }
+  getFormFileds() {
+    this.formsService.getFormByFormCode('CANDIDATE').subscribe({
+      next: (res: any) => {
+        console.log('Form Fields:', res);
+
+        // safety check
+        if (res?.data?.fields && Array.isArray(res.data.fields)) {
+          res.data.fields.forEach((field: any) => {
+            this.backendFieldsMap[field.fieldCode] = field.active;
+            if (field.fieldCode === 'gender') {
+              this.genderEnumArray = field.enumValues || [];
+            }
+            if (field.fieldCode === 'status') {
+              this.candidateEnumArray = field.enumValues || [];
+            }
+            if (field.fieldCode === 'onboarding_status') {
+              this.onboardingStatusEnumArray = field.enumValues || [];
+            }
+            if (field.fieldCode === 'religion') {
+              this.religionEnumArray = field.enumValues || [];
+            }
+          });
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching form fields:', err);
+      }
+    });
+  }
+
+  isFieldActive(fieldCode: string): boolean {
+    return this.backendFieldsMap[fieldCode] !== false;
+  }
+  fetchLookupOptions(fieldCode: string): void {
+    this.formsService.getLokupTableByCode(fieldCode).subscribe({
+      next: (res: any) => {
+        let data: LookupDto[] = res?.data || [];
+
+        if (fieldCode === 'department') {
+          this.departmentDropDownValue = data;
+        }
+        if (fieldCode === 'designation') {
+          this.designationDropDownValue = data;
+        }
+
+      },
+      error: (err: any) => {
+        console.error(`Error fetching lookup options for ${fieldCode}:`, err);
+      }
+    });
+  }
+  fetchLookupOptionsWhenLokupTypeForm(fieldCode: string): void {
+    this.formsService.getLokupTableByCodeWithFormType(fieldCode).subscribe({
+      next: (res: any) => {
+
+        let data = res?.data || [];
+        if (fieldCode === 'job_requisition') {
+          this.requsitionDropDownValue = data;
+        }
+
+
+      },
+      error: (err: any) => {
+        console.error(`Error fetching lookup options for ${fieldCode}:`, err);
+      }
+    });
+  }
+
+
+
+
+  resetForm(): void {
+    // Reset candidate object
+    this.candidate = new CandidateDto();
+    // Reset dropdown display values
+    this.genderEnumArray = [];
+    this.candidateEnumArray = [];
+    this.onboardingStatusEnumArray = [];
+    this.requsitionDropDownValue = [];
+    this.departmentDropDownValue = [];
+    this.designationDropDownValue = [];
+    this.requisitionDisplayValue = '';
+    // Reset loaded lookups to allow fresh fetch on next form
+    // Reset dynamic fields
+    this.dynamicFieldsService.resetDynamicFields();
+  }
+
+  getCandidateData() {
+
+    this.onboardingService.getAllCandidatesTables(this.currentPage, this.itemsPerPage,this.editCandidatePublicId).subscribe({
+      next: (res: any) => {
+        this.loader.hide();
+
+        this.candidateTableListArray = res.data || [];
+        if (this.title === 'edit') {
+          
+          this.candidate = this.candidateTableListArray.find(c => c.public_id === this.editCandidatePublicId) as any;
+          let data = this.candidateTableListArray.find(c => c.public_id === this.editCandidatePublicId) as any
+          this.requisitionDisplayValue = data.requisition_name || ''
+          this.selectedDesignationDisplay = data.designation_name || ''
+
+          // Populate dynamic fields data from backend
+          let dynamicData = [data.candidate_attachment, data.candidate_experience, data.candidate_qualification, data.candidate_skills];
+          this.populateDynamicFieldsFromBackend(data, dynamicData);
+        }
+        if (res.paginator) {
+          this.currentPage = res.paginator.currentPage;
+          this.totalItems = res.paginator.totalItems;
+          this.totalPages = res.paginator.totalPages;
+          // console.log('Pagination:', res.paginator);
+        }
+
+
+      },
+      error: (err: any) => {
+        console.error('Error fetching requisition data:', err);
+        this.loader.hide();
+
+      }
+    });
+  }
+
+  populateDynamicFieldsFromBackend(data: any, dynamicRowData: any[]) {
+
+
+    // Populate single dynamic fields (non-ROW fields)
+    this.dynamicFieldsService.dynamicFields.forEach(field => {
+      if (data[field.fieldCode]) {
+        this.dynamicFieldsService.dynamicFieldsData[field.fieldCode] = data[field.fieldCode];
+      }
+    });
+
+    // Create a mapping of field codes to their backend data
+    const fieldDataMap: any = {
+      'candidate_attachment': data.candidate_attachment,
+      'candidate_experience': data.candidate_experience,
+      'candidate_qualification': data.candidate_qualification,
+      'candidate_skills': data.candidate_skills
+    };
+
+    // Populate ROW table fields with backend data by matching field codes
+    this.dynamicFieldsService.rowTableFields.forEach((field) => {
+
+      // Get the data for this specific field by fieldCode
+      let rowDataArray = fieldDataMap[field.fieldCode];
+
+      if (rowDataArray) {
+
+        // Handle if it's already an array or convert to array
+        if (!Array.isArray(rowDataArray)) {
+          rowDataArray = [rowDataArray];
+        }
+
+        // If backend sends array of rows, populate the first row
+        if (rowDataArray.length > 0 && field.rowColumns) {
+          const rowData = rowDataArray[0]; // Get first row
+
+          if (rowData && typeof rowData === 'object') {
+            field.rowColumns.forEach((column: any) => {
+              if (rowData[column.fieldCode] !== undefined && rowData[column.fieldCode] !== null) {
+                column.selectedValue = rowData[column.fieldCode];
+                console.log(`Set ${field.fieldCode}.${column.fieldCode} = ${rowData[column.fieldCode]}`);
+              }
+            });
+          }
+        }
+      } else {
+      }
+    });
+  }
+  deleteCandidate(value: any) {
+    let status = ''
+    
+    if (value.is_active) {
+      status = 'deactivate'
+    } else {
+      status = 'activate'
+    }
+    this.formsService.deletValueInFromTbale('CANDIDATE', value.code, status).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Candidate deleted successfully');
+        this.getCandidateData(); // Refresh the list after deletion
+      },
+      error: (err: any) => {
+        console.error('Error deleting candidate:', err);
+        this.toastr.error('Failed to delete candidate');
+      }
+    });
+  }
+
+}

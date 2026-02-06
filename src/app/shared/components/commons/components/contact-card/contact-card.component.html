@@ -1,0 +1,28 @@
+<div class="card mb-3">
+  <img [src]="member.image" class="card-img-top" alt="...">
+  <div class="card-body">
+    <div class="social-media">
+      <div class="icons">
+        <i class="fa-brands fa-facebook-f"></i>
+      </div>
+      <div class="icons" style="background-color: #e1306c;">
+        <i class="fa-brands fa-instagram"></i>
+      </div>
+      <div class="icons" style="background-color: #1da1f2;">
+        <i class="fa-brands fa-twitter"></i>
+      </div>
+      <div class="icons" style="background-color: #ffa800; color: white;">
+        <i class="fa-solid fa-envelope"></i>
+      </div>
+    </div>
+    <div class="text-center">
+      <h3 class="card-title">{{member.name}}</h3>
+      <h5 class="user-role">{{member.designation}}</h5>
+    </div>
+    <div class="text-center">
+      <p class="user-discription">{{member.address}}
+
+      </p>
+    </div>
+  </div>
+</div>

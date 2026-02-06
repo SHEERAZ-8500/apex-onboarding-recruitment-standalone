@@ -1,0 +1,14 @@
+<div class="lay-out">
+    <div class="sid-navbar" [ngStyle]="{ width: isOpen ? '390px' : '60px' }">
+        <app-side-nav-bar></app-side-nav-bar>
+    </div>
+    <div class="main-content">
+        <div >
+            <app-header></app-header>
+            <div class="landig-pages mt-2 header pt-3 px-3" style="background: transparent;">
+                <router-outlet></router-outlet>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="offcanvas offcanvas-end" tabindex="-1" id="quickactions" data-bs-backdrop="static">
+
+  <div class="offcanvas-header flex-column align-items-start">
+
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="offcanvas-title">Quick Actions</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <span class="badge bg-primary mt-2">23 tasks pending</span>
+
+  </div>
+
+
+<div class="offcanvas-body">
+  <div class="row g-3">
+    <div class="col-6" *ngFor="let action of quickActions">
+      <div class="card qa-card d-flex flex-column align-items-center justify-content-center p-4">
+        <i [class]="action.icon"></i>
+        <div class="label">{{ action.label }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  </div>
+
+
+
+
+
+<!-- file ofcanvas -->
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="setting" aria-labelledby="settingLabel" data-bs-backdrop="static">
+  <div class="off-canvas-container">
+    <!-- Header with breadcrumbs - Only one time at top -->
+    <div class="off-canvas-header">
+      <div class="breadcrumbs">
+        <button 
+          class="breadcrumb-item" 
+          [class.active]="activeTab === 'audit-logs'"
+          (click)="setActiveTab('audit-logs')">
+          Audit Logs
+        </button>
+        <button 
+          class="breadcrumb-item" 
+          [class.active]="activeTab === 'notifications'"
+          (click)="setActiveTab('notifications')">
+          Notifications
+        </button>
+        <button 
+          class="breadcrumb-item" 
+          [class.active]="activeTab === 'settings'"
+          (click)="setActiveTab('settings')">
+          Settings
+        </button>
+      </div>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+
+    </div>
+
+    <!-- Tab content -->
+    <div class="off-canvas-content">
+      <!-- Audit Logs Tab -->
+      <div *ngIf="activeTab === 'audit-logs'" class="tab-content">
+        <!-- System Messages Section -->
+        <div class="section">
+          <h3 class="section-title">System Messages</h3>
+          <div class="message-list">
+            <div *ngFor="let message of systemMessages; let i = index" class="message-item">
+              <div class="message-content">
+                <div 
+                  class="message-title" 
+                  [style.--hover-color]="getSystemMessageColor(i)">
+                  {{ message.title }}
+                </div>
+                <div class="message-subtitle">{{ message.subtitle }}</div>
+              </div>
+              <div class="message-badge">{{ message.amount }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Overview Section -->
+        <div class="section">
+          <h3 class="section-title">Tasks Overview</h3>
+          <div class="task-list">
+            <div *ngFor="let task of tasksOverview; let i = index" class="task-item">
+              <div 
+                class="task-title" 
+                [style.--hover-color]="getTaskOverviewColor(i)">
+                {{ task.title }}
+              </div>
+              <div class="task-subtitle">{{ task.subtitle }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Tab -->
+      <div *ngIf="activeTab === 'notifications'" class="tab-content">
+        <div class="notification-list">
+          <div *ngFor="let notification of notifications; let i = index" class="notification-item">
+            <div class="notification-time">{{ notification.time }}</div>
+            <div 
+              class="notification-timeline"
+              [style.background-color]="getNotificationTimelineColor(i)">
+            </div>
+            <div class="notification-content">
+              <div class="notification-message">{{ notification.message }}</div>
+              <div class="notification-author">by {{ notification.author }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div *ngIf="activeTab === 'settings'" class="tab-content">
+        <div class="settings-sections">
+          <div *ngFor="let section of settings; let sectionIndex = index" class="settings-section">
+            <h4 class="section-title">{{ section.section }}</h4>
+            <div class="settings-list">
+              <div *ngFor="let item of section.items; let itemIndex = index" class="setting-item">
+                <div class="setting-label">{{ item.name }}</div>
+                <div class="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    [id]="item.id"
+                    [checked]="item.enabled"
+                    (change)="toggleSetting(sectionIndex, itemIndex)">
+                  <label 
+                    [for]="item.id" 
+                    class="toggle-slider"
+                    [style.--toggle-color]="getToggleColor(section.section)">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

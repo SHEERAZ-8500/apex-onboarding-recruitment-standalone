@@ -1,0 +1,61 @@
+<section class="table-main-div ">
+  <div class="rounded-2xl text-gray-200 overflow-x-auto  pt-4">
+    <table class="min-w-full text-sm border-separate border-spacing-y-2 ">
+      <thead>
+        <tr class="text-gray-400 text-left text-xs uppercase tracking-wider">
+          <th class="px-3 py-2">
+            <input type="checkbox" class="accent-blue-500 checkbox-style" />
+          </th>
+          <th class="px-3 py-2">Name</th>
+          <th class="px-3 py-2">Status</th>
+          <th class="px-3 py-2">Screener Questions</th>
+          <th class="px-3 py-2">Apply Date</th>
+          <th class="px-3 py-2">Interested?</th>
+          <th class="px-3 py-2"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let c of paginatedCandidates" class="bg-[#1e293b] hover:bg-[#27354a] rounded-lg">
+          <td class="px-3 py-3"><input type="checkbox" class="accent-blue-500 checkbox-style" /></td>
+          <td class="px-3 py-3 font-medium">{{ c.name }}</td>
+          <td class="px-3 py-3">{{ c.status }}</td>
+          <td class="px-3 py-3">
+            <span class="px-2 py-1 rounded-md text-xs bg-green-900/30 text-green-300 rounded-1"
+              style="background-color: #ebf9f5; color: #05825f;">{{ c.screener }}</span>
+          </td>
+          <td class="px-3 py-3">{{ c.applyDate }}</td>
+          <td class="px-3 py-3">
+            <div class="flex action-button">
+              <button (click)="setInterest(c, true)" class="btn btn-1"><i class="fa-solid fa-check"></i></button>
+              <button (click)="setInterest(c, null)" class="btn btn-2"><i class="fa-solid fa-xmark"></i></button>
+              <button (click)="setInterest(c, false)" class="btn btn-3"><i class="fa-solid fa-box-archive"></i></button>
+            </div>
+          </td>
+          <td class="px-3 py-3 text-gray-400">
+
+            <div class="dropdown">
+              <span class="cursor-pointer" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;"><i
+                  class="fa-solid fa-ellipsis"></i></span>
+
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- ✅ Pagination -->
+  <app-pagination 
+    [currentPage]="currentPage" 
+    [totalPages]="totalPages" 
+    [totalPagesArray]="totalPagesArray"
+    (pageChange)="changePage($event)">
+  </app-pagination>
+</section>

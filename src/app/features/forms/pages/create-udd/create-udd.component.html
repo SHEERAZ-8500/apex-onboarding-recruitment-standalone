@@ -1,0 +1,110 @@
+<div class="udd-form-container">
+    <div class="udd-form-card">
+        <div class="form-header">
+            <h2 class="form-title">Create New UDD Field</h2>
+            <p class="form-subtitle">Define a new dropdown field for {{ formCode || 'Form' }}</p>
+        </div>
+
+        <!-- Step 1: Select Link Type -->
+        <div class="step-selection" *ngIf="!step">
+            <h3 class="step-title">Choose Link Type</h3>
+            <p class="step-subtitle">Select how you want to link this field</p>
+
+            <div class="option-cards">
+                <div class="option-card" (click)="selectLinkType('1')">
+                    <div class="option-icon">
+                        <i class="fa-solid fa-table"></i>
+                    </div>
+                    <h4 class="option-title">Link with Lookup Table</h4>
+                    <p class="option-description">Connect this field to a lookup table</p>
+                </div>
+
+                <div class="option-card" (click)="selectLinkType('2')">
+                    <div class="option-icon">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+                    <h4 class="option-title">Link with Lookup Enum</h4>
+                    <p class="option-description">Connect this field to a lookup enum</p>
+                </div>
+
+                <!-- <div class="option-card" (click)="selectLinkType('3')">
+                    <div class="option-icon">
+                        <i class="fa-solid fa-table-cells"></i>
+                    </div>
+                    <h4 class="option-title">Link with Independent Row Table</h4>
+                    <p class="option-description">Connect this field to an independent row table</p>
+                </div> -->
+            </div>
+        </div>
+
+        <!-- Step 2: Form Fields -->
+        <form class="udd-form" *ngIf="step">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <span class="step-badge">Step {{ step }}</span>
+                <span class="step-info">{{ step === '1' ? 'Linked with Lookup Table' : step === '2' ? 'Linked with Lookup Enum' : 'Linked with Independent Row Table' }}</span>
+                <button type="button" class="btn-change-step" (click)="changeStep()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Change
+                </button>
+            </div>
+
+            <!-- Row 1: Field Code & Label -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Field Code <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="fieldCode" name="fieldCode"
+                        (input)="onFieldCodeInput()"
+                        placeholder="e.g., employee_department" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Label <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="label" name="label"
+                        placeholder="e.g., Department" required />
+                </div>
+            </div>
+
+            <!-- Row 2: Enum Component Code & Display Order -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Select {{ step === '1' ? 'Table' : step === '2' ? 'Enum' : 'Independent Row Table' }} Component Code <span class="required">*</span></label>
+
+                    <div class="custom-dropdown" (click)="toggleEnumDropdown($event)">
+                        <div class="dropdown-selected">
+                            <span>{{ selectedEnumLabel || 'Select ' + (step === '1' ? 'Table' : step === '2' ? 'Enum' : 'Independent Row Table') }}</span>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow" [class.rotate]="isEnumDropdownOpen"></i>
+                        </div>
+                        <div class="dropdown-options" *ngIf="isEnumDropdownOpen">
+                            <div class="dropdown-option" *ngFor="let item of selectTable" 
+                                 (click)="selectEnumComponent(item, $event)">
+                                {{ item.displayName }}
+                            </div>
+                            <div class="dropdown-option no-data" *ngIf="selectTable.length === 0">
+                                No {{ step === '1' ? 'tables' : step === '2' ? 'enums' : 'independent row tables' }} available
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Display Order <span class="required">*</span></label>
+                    <input type="number" class="form-input" [(ngModel)]="displayOrder" name="displayOrder"
+                        placeholder="e.g., 1" required min="1" />
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" (click)="onSubmit()">
+                    <i class="fa-solid fa-check"></i>
+                    Create UDD Field
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

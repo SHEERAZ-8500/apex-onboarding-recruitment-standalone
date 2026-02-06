@@ -1,0 +1,189 @@
+// Form background
+.schema-form {
+  background-color: var(--second-primary-color);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+// Form field styling
+.form-field {
+  height: 40px !important; // Reduced from 45px
+  border-radius: 6px;
+  background-color: var(--second-primary-color);
+  color: #b5b5c3;
+  border: 1px solid var(--border-color);
+  outline: none;
+  padding-inline-start: 10px;
+  width: 100%;
+  font-size: 14px;
+}
+
+// Checkbox styling - SIRF TICK KA COLOR CHANGE
+input[type="checkbox"] {
+  height: 18px !important;
+  width: 18px !important;
+  margin-right: 8px;
+  cursor: pointer;
+  
+  // Yeh line add karo - SIRF TICK KA COLOR
+  accent-color: var(--purple-1);
+}
+
+.form-checkbox {
+  height: 18px !important;
+  width: 18px !important;
+  margin-right: 8px;
+  cursor: pointer;
+  
+  // Yeh line add karo - SIRF TICK KA COLOR
+  accent-color: var(--purple-1);
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--gray-color-2);
+  font-size: 14px;
+}
+
+.table-title {
+  font-size: 18px;
+  color: var(--white-color-1);
+}
+
+select {
+  cursor: pointer;
+}
+
+// Checkbox group styling
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: var(--second-primary-color);
+  border-radius: 6px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-item label {
+  margin-bottom: 0;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+// Button styling
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove {
+  background-color: var(--red-color);
+  color: white;
+  
+   &:hover {
+       transform: translateY(-2px);
+    }
+}
+
+.btn-add {
+  background-color: var(--purple-1);
+  color: white;
+  
+   &:hover {
+       transform: translateY(-2px);
+    }
+}
+
+.btn-submit {
+   padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+    background-color: var(--purple-1);
+    color: white;
+
+  
+  
+   &:hover {
+       transform: translateY(-2px);
+    }
+}
+
+// Form sections
+.form-section {
+  background-color: var(--primary-color);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.form-divider {
+  border: 0;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 20px 0;
+}
+
+// Hide number input spinners
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+// Firefox
+input[type=number] {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;  
+  -moz-appearance: none;   
+  appearance: none;          
+  margin: 0;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .checkbox-group {
+    gap: 15px;
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .form-field {
+    height: 38px !important;
+  }
+}

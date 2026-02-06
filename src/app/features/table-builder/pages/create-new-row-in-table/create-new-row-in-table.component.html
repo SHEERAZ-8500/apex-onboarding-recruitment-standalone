@@ -1,0 +1,261 @@
+<div class="table-form-container">
+    <div class="table-form-card">
+        <div class="form-header">
+            <h2 class="form-title"> {{componentTitle}}</h2>
+            <p class="form-subtitle">Define a new table with custom columns</p>
+        </div>
+
+        <form class="table-form" *ngIf="currentPath === 'create-new-row-in-table'">
+            <!-- Row 1: Table Name & Description -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Row Table Name <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="rowTableName" name="rowTableName"
+                        placeholder="e.g., Bank Account" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Description <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="description" name="description"
+                        placeholder="e.g., Employee bank account details" required />
+                </div>
+            </div>
+
+            <!-- Columns Section -->
+            <div class="columns-section">
+                <div class="columns-header">
+                    <label class="input-label">Table Columns <span class="required">*</span></label>
+                    <button type="button" class="btn-add-column" (click)="addColumn()">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Column
+                    </button>
+                </div>
+
+                <div class="columns-list">
+                    <div class="column-item" *ngFor="let column of columns; let i = index; trackBy: trackByIndex">
+                        <div class="column-card">
+                            <div class="column-header">
+                                <h4 class="column-title">Column {{ i + 1 }}</h4>
+                                <button type="button" class="btn-remove-column" (click)="removeColumn(i)"
+                                    *ngIf="columns.length > 1">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+
+                            <div class="column-fields">
+                                <!-- Column Name & Type -->
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="input-label">Column Name <span class="required">*</span></label>
+                                        <input type="text" class="form-input" [(ngModel)]="column.name"
+                                            [name]="'columnName_' + i" placeholder="e.g., bank_name" required />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="input-label">Column Type <span class="required">*</span></label>
+                                        <div class="custom-dropdown" (click)="toggleTypeDropdown(i, $event)">
+                                            <div class="dropdown-selected">
+                                                <span>{{ column.type || 'Select type' }}</span>
+                                                <i class="fa-solid fa-chevron-down dropdown-arrow"
+                                                    [class.rotate]="column.isTypeDropdownOpen"></i>
+                                            </div>
+                                            <div class="dropdown-options" *ngIf="column.isTypeDropdownOpen">
+                                                <div class="dropdown-option" *ngFor="let type of columnTypes"
+                                                    (click)="selectColumnType(i, type, $event)">
+                                                    {{ type }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Conditional Fields based on Type -->
+                                <div class="form-row" *ngIf="column.type === 'STRING' || column.type === 'NUMBER'">
+                                    <div class="form-group">
+                                        <label class="input-label">Max Length</label>
+                                        <input type="number" class="form-input" [(ngModel)]="column.maxLength"
+                                            [name]="'maxLength_' + i" placeholder="e.g., 100" min="1" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="input-label">Display Order <span class="required">*</span></label>
+                                        <input type="number" class="form-input" [(ngModel)]="column.displayOrder"
+                                            [name]="'displayOrder_' + i" placeholder="e.g., 1" required min="1" />
+                                    </div>
+                                </div>
+
+                                <!-- Lookup Component Selection (for LOOKUP_TABLE and LOOKUP_ENUM) -->
+                                <div class="form-row"
+                                    *ngIf="column.type === 'LOOKUP_TABLE' || column.type === 'LOOKUP_ENUM'">
+                                    <div class="form-group">
+                                        <label class="input-label">
+                                            {{ column.type === 'LOOKUP_TABLE' ? 'Select Lookup Table' : 'Select Enum' }}
+                                            <span class="required">*</span>
+                                        </label>
+                                        <div class="custom-dropdown">
+                                            <div class="dropdown-selected" (click)="toggleLookupDropdown(i, $event)">
+                                                <span>{{ column.lookupComponentCode || 'Select ' + (column.type ===
+                                                    'LOOKUP_TABLE' ? 'Lookup Table' : 'Enum') }}</span>
+                                                <i class="fa"
+                                                    [ngClass]="column.isLookupDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                                            </div>
+                                            <div class="dropdown-options" *ngIf="column.isLookupDropdownOpen">
+                                                <div class="dropdown-option" *ngFor="let option of column.lookupOptions"
+                                                    (click)="selectLookupOption(i, option, $event)">
+                                                    {{ option.componentCode || option.enumComponentCode || option.code
+                                                    || option.name }}
+                                                </div>
+                                                <div class="dropdown-option text-muted"
+                                                    *ngIf="!column.lookupOptions || column.lookupOptions.length === 0">
+                                                    No options available
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="input-label">Display Order <span class="required">*</span></label>
+                                        <input type="number" class="form-input" [(ngModel)]="column.displayOrder"
+                                            [name]="'displayOrder2_' + i" placeholder="e.g., 1" required min="1" />
+                                    </div>
+                                </div>
+
+                                <!-- Display Order for other types -->
+                                <div class="form-row"
+                                    *ngIf="column.type && column.type !== 'STRING' && column.type !== 'NUMBER' && column.type !== 'LOOKUP_ENUM'">
+                                    <div class="form-group">
+                                        <label class="input-label">Display Order <span class="required">*</span></label>
+                                        <input type="number" class="form-input" [(ngModel)]="column.displayOrder"
+                                            [name]="'displayOrder3_' + i" placeholder="e.g., 1" required min="1" />
+                                    </div>
+                                </div>
+
+                                <!-- Nullable Checkbox -->
+                                <div class="form-row">
+                                    <div class="form-group checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" class="checkbox-input" [(ngModel)]="column.nullable"
+                                                [name]="'nullable_' + i" />
+                                            <span class="checkbox-text">Nullable (Allow empty values)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" (click)="onSubmit()">
+                    <i class="fa-solid fa-check"></i>
+                    Create Row Table
+                </button>
+            </div>
+        </form>
+        <form class="row-form" *ngIf="currentPath === 'create-new-column-in-table'">
+            <!-- Row 1: Code & Name -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="input-label">Field Code <span class="required">*</span></label>
+                    <input type="text" class="form-input" [(ngModel)]="createNewColumnInIndependentTableDto.name"
+                        name="fieldCode" (input)="onFieldCodeInput()" placeholder="e.g., passport_number" required />
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Field Type <span class="required">*</span></label>
+                    <div class="custom-dropdown" (click)="toggleFieldTypeDropdown($event)">
+                        <div class="dropdown-selected">
+                            <span>{{ selectedFieldType || 'Select field type' }}</span>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow"
+                                [class.rotate]="isFieldTypeDropdownOpen"></i>
+                        </div>
+                        <div class="dropdown-options" *ngIf="isFieldTypeDropdownOpen">
+                            <div class="dropdown-option" *ngFor="let type of fieldTypes"
+                                (click)="selectFieldType(type, $event)">
+                                {{ type }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Max Length</label>
+                    <input type="number" class="form-input" [(ngModel)]="createNewColumnInIndependentTableDto.maxLength"
+                        name="maxLength" placeholder="e.g., 20" min="1" />
+                </div>
+
+                <!-- Row 3: Precision & Scale (only for NUMBER) -->
+                <div class="form-row" *ngIf="fieldType === 'NUMBER'">
+                    <div class="form-group">
+                        <label class="input-label">Precision</label>
+                        <input type="number" class="form-input"
+                            [(ngModel)]="createNewColumnInIndependentTableDto.precision" name="precision"
+                            placeholder="e.g., 10" min="0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="input-label">Scale</label>
+                        <input type="number" class="form-input" [(ngModel)]="createNewColumnInIndependentTableDto.scale"
+                            name="scale" placeholder="e.g., 2" min="0" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="input-label">Lookup Component Code <span class="required">*</span></label>
+                    <input type="text" class="form-input"
+                        [(ngModel)]="createNewColumnInIndependentTableDto.lookupComponentCode" name="name"
+                        placeholder="e.g., Sport Utility Vehicle" required />
+                </div>
+
+
+                <div class="form-group">
+                    <label class="input-label">Display Order <span class="required">*</span></label>
+                    <input type="text" class="form-input"
+                        [(ngModel)]="createNewColumnInIndependentTableDto.displayOrder" name="name"
+                        placeholder="e.g., Sport Utility Vehicle" required />
+                </div>
+            </div>
+
+
+            <!-- Row 5: Required Checkbox -->
+            <div class="form-row">
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input"
+                            [(ngModel)]="createNewColumnInIndependentTableDto.nullable" name="required" />
+                        <span class="checkbox-text">Nullable (Allow Empty Values)</span>
+                    </label>
+                </div>
+
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input"
+                            [(ngModel)]="createNewColumnInIndependentTableDto.active" name="required" />
+                        <span class="checkbox-text">Required Field</span>
+                    </label>
+                </div>
+            </div>
+
+
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" (click)="onCancel()">
+                    <i class="fa-solid fa-times"></i>
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-submit" (click)="onSubmit()">
+                    <i class="fa-solid fa-check"></i>
+                    Add Column
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+<header class="header py-3">
+  <div class="d-flex gap-2">
+    <button (click)="toggleSidebar()" class="menu-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="search-box">
+      <input type="text" placeholder="Search" />
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </div>
+  </div>
+  <div class="button-group">
+    <!-- <button class="bell-btn" (click)="toggleNotifications($event)">
+      <i class="fa-solid fa-bell"></i>
+      <span class="wave"></span>
+    </button> -->
+
+    <!-- <button data-bs-toggle="offcanvas" data-bs-target="#quickactions" aria-controls="quickactions">
+      <i class="fa-solid fa-radiation"> </i>
+    </button>
+    <button class="display-none-style" data-bs-toggle="offcanvas" data-bs-target="#setting" aria-controls="setting">
+      <i class="fa-solid fa-file"></i>
+    </button> -->
+    <button (click)="themeService.toggleLightTheme()">
+      <img [src]="
+          isDarkMode
+            ? '../../../../assets/moon.svg'
+            : '../../../../assets/sun.svg'
+        " alt="" [style.filter]="
+          isDarkMode
+            ? 'invert(62%) sepia(84%) saturate(513%) hue-rotate(248deg) brightness(95%) contrast(90%)'
+            : 'invert(0%) sepia(0%) saturate(100%) hue-rotate(0deg) brightness(100%) contrast(100%)'
+        " />
+    </button>
+    <!-- <button class="display-none-style" (click)="openChat()">
+      <i class="fa-solid fa-comment-dots"></i>
+    </button> -->
+    <!-- <button><i class="fa-solid fa-earth-americas"></i></button> -->
+
+    <div class="btn-group display-none-style" ngbDropdown>
+      <button class="dropdown-btn" id="dropdownBasic" ngbDropdownToggle>
+        <i class="fa-solid fa-gear"></i>
+      </button>
+      <ul id="dropdown-basic" ngbDropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem"><a class="dropdown-item"  (click)="logoutUser()">Log-Out</a></li>
+
+      </ul>
+
+    </div>
+  </div>
+</header>
+
+<app-responsive-botstrap-side-nav-bar></app-responsive-botstrap-side-nav-bar>
+
+<app-header-modal></app-header-modal>
+
+<app-chat-box-card [visible]="showChat" (close)="closeChat()">
+</app-chat-box-card>
+
+<!-- Notification Card -->
+<!-- Notification Card -->
+<div #notifyCard class="notify-card" *ngIf="showNotifications" [class.bounce]="animateBounce">
+  <div class="notify-header d-flex justify-content-between align-items-center">
+    <h6>Notifications</h6>
+    <button class="clear-all-btn" (click)="clearAll()">Clear All</button>
+  </div>
+
+  <div class="notify-item" *ngFor="let n of notifications">
+    <i [class]="n.icon" [style.color]="n.color"></i>
+    <span>{{ n.text }}</span>
+  </div>
+
+  <button class="view-all text-center" (click)="closeNotifications()" routerLink="/panel/view-all-notifications">
+    View all
+  </button>
+</div>

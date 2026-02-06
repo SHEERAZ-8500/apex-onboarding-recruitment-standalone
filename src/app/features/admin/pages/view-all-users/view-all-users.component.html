@@ -1,0 +1,83 @@
+<section class="container-fluid p-0">
+    <div class="d-flex justify-content-between mb-3">
+
+        <div class="page-title ">
+            <i class="fa-solid fa-house"></i>
+            <span style="font-weight: 700; color: #566f9e;">-</span>
+            <span>View All Users</span>
+        </div>
+        <div>
+            <button class="creat-btn" routerLink="/panel/admin/create-new-user">Create User</button>
+        </div>
+    </div>
+    <section class="table-main-div ">
+        <div class="rounded-2xl text-gray-200 overflow-x-auto  pt-4">
+            <table class="min-w-full text-sm border-separate border-spacing-y-2 ">
+                <thead>
+                    <tr class="text-gray-400 text-left text-xs uppercase tracking-wider">
+                        <th class="px-3 py-2">#</th>
+                        <th class="px-3 py-2">First Name</th>
+                        <th class="px-3 py-2">Last Name</th>
+                        <th class="px-3 py-2">Email</th>
+                        <!-- <th class="px-3 py-2">Phone</th> -->
+                        <th class="px-3 py-2">Role</th>
+                        <th class="px-3 py-2">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let user of paginatedUsersList; let i = index"
+                        class="bg-[#1e293b] hover:bg-[#27354a] rounded-lg">
+                        <td class="px-3 py-3 font-medium">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                        <td class="px-3 py-3 font-medium">{{ user.firstName }}</td>
+                        <td class="px-3 py-3 font-medium">{{ user.lastName }}</td>
+                        <td class="px-3 py-3 text-gray-400">{{ user.email }}</td>
+                        <!-- <td class="px-3 py-3 text-gray-400">{{ user.phoneNumber }}</td> -->
+                        <td class="px-3 py-3 text-gray-400">{{ formatRoleName(user.roleCode) }}</td>
+
+                        <td class="px-3 py-3 text-gray-400">
+
+                            <div ngbDropdown class="d-inline-block">
+                                <!-- <button type="button" class="btn  p-0" ngbDropdownToggle> -->
+                                <i ngbDropdownToggle class="fa-solid fa-ellipsis-vertical"
+                                    style="color: var(--white-color-1); font-size: 18px;cursor: pointer;"></i>
+                                <!-- </button> -->
+                                <div ngbDropdownMenu class="dropdown-menu">
+                                    <button ngbDropdownItem routerLink="/panel/permissions/view-user-permissions">view
+                                        permissions</button>
+                                    <button ngbDropdownItem>Delete User</button>
+                                    <button ngbDropdownItem>View Details</button>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- ✅ Pagination -->
+        <div class="d-flex justify-content-end mt-3 me-3">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+                            &laquo;
+                        </a>
+                    </li>
+
+                    <li class="page-item" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
+                        <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+                    </li>
+
+                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                        <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+                            &raquo;
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+</section>
