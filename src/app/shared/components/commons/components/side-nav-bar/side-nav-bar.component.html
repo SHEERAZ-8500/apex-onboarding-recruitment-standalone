@@ -31,493 +31,62 @@
 
   <div class="tabslist">
     <!-- Top-level items -->
-    <a routerLink="/panel/dashboard" routerLinkActive="active"><i class="fas fa-home"></i> <span>Dashboard</span></a>
-    <a routerLink="/panel/offers" routerLinkActive="active" hidden><i class="fa-solid fa-tag"></i>
-      <span>Offers</span></a>
-    <a routerLink="/panel/employes" routerLinkActive="active" hidden><i
-        class="fa-solid fa-people-group"></i><span>People</span></a>
-    <a routerLink="/panel/jobs-details" routerLinkActive="active" hidden><i class="fa-solid fa-briefcase"></i>
-      <span>Jobs
-        Details</span></a>
-    <a routerLink="/panel/chat" routerLinkActive="active" hidden><i class="fa-regular fa-message"></i>
-      <span>Chat</span></a>
-    <a routerLink="/panel/contact" routerLinkActive="active" hidden><i class="fa-solid fa-address-book"></i>
-      <span>Contacts</span></a>
-
-    <!-- Setups -->
-    <div class="nav-item-with-toggle">
-      <a class="top-link" (click)="toggleSetups()" [attr.aria-expanded]="!setupsCollapsed"
-        aria-controls="masterdataExample">
-        <i class="fa fa-layer-group"></i>
-        <span>Setups</span>
-        <span class="chev-icon">
-          <i *ngIf="setupsCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!setupsCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
+    <ng-container *ngFor="let item of topLevelItems">
+      <a *ngIf="item.isVisible" [routerLink]="item.route" routerLinkActive="active">
+        <i [class]="item.icon"></i> <span>{{ item.label }}</span>
       </a>
+    </ng-container>
 
-      <div #masterdata="ngbCollapse" [(ngbCollapse)]="setupsCollapsed" class="collapseStyling"
-        [class.open]="!setupsCollapsed">
-        <div class="collapseDiv">
-          <!-- User Setups (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2">
-            <a class="level-link" (click)="toggleUserSetups()" [attr.aria-expanded]="!userSetupsCollapsed"
-              aria-controls="userSetupsExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>User Setups</span>
-              <span class="chev-icon small">
-                <i *ngIf="userSetupsCollapsed"></i>
-                <i *ngIf="!userSetupsCollapsed"></i>
-              </span>
-            </a>
+    <!-- Menu Groups with nested children -->
+    <ng-container *ngFor="let group of menuGroups">
+      <div class="nav-item-with-toggle" *ngIf="group.isVisible">
+        <a class="top-link" (click)="toggleGroup(group)" [attr.aria-expanded]="!group.collapsed">
+          <i [class]="group.icon"></i>
+          <span>{{ group.label }}</span>
+          <span class="chev-icon">
+            <i *ngIf="group.collapsed" class="fa-solid fa-chevron-right"></i>
+            <i *ngIf="!group.collapsed" class="fa-solid fa-chevron-down"></i>
+          </span>
+        </a>
 
-            <div #generalMasterdata="ngbCollapse" [(ngbCollapse)]="userSetupsCollapsed" class="collapseStyling inner"
-              [class.open]="!userSetupsCollapsed">
-              <div class="collapseDiv">
-                <a routerLink="admin/view-all-users">
-                  <span>Users</span>
+        <div [(ngbCollapse)]="group.collapsed" class="collapseStyling" [class.open]="!group.collapsed">
+          <div class="collapseDiv">
+            <ng-container *ngFor="let child of group.children">
+              <!-- If child has children (nested menu) -->
+              <div class="nav-item-with-toggle level-2" *ngIf="child.children && child.isVisible">
+                <a class="level-link" (click)="toggleMenuItem(child)" [attr.aria-expanded]="!child.collapsed">
+                  <i [class]="child.icon"></i>
+                  <span>{{ child.label }}</span>
+                  <span class="chev-icon small">
+                    <i *ngIf="child.collapsed"></i>
+                    <i *ngIf="!child.collapsed"></i>
+                  </span>
                 </a>
 
-                <a routerLink="/panel/permissions/view-all-rols">
-                  <span>Roles</span>
-                </a>
-
-
+                <div [(ngbCollapse)]="child.collapsed!" class="collapseStyling inner" [class.open]="!child.collapsed">
+                  <div class="collapseDiv">
+                    <ng-container *ngFor="let subChild of child.children">
+                      <a *ngIf="subChild.isVisible" [routerLink]="subChild.route" routerLinkActive="active">
+                        <span>{{ subChild.label }}</span>
+                      </a>
+                    </ng-container>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Configuration (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2">
-            <a class="level-link" (click)="toggleConfiguration()" [attr.aria-expanded]="!configurationCollapsed"
-              aria-controls="configurationExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>Configuration</span>
-              <span class="chev-icon small">
-                <i *ngIf="configurationCollapsed"></i>
-                <i *ngIf="!configurationCollapsed"></i>
-              </span>
-            </a>
+              <!-- If child is a simple link -->
+              <a *ngIf="!child.children && child.isVisible && child.route" [routerLink]="child.route" routerLinkActive="active">
+                <span>{{ child.label }}</span>
+              </a>
 
-            <div #organizationalMasterdata="ngbCollapse" [(ngbCollapse)]="configurationCollapsed"
-              class="collapseStyling inner" [class.open]="!configurationCollapsed">
-              <div class="collapseDiv">
-                <a routerLink="/panel/forms/view-all-forms">
-                  <span>Forms</span>
-                </a>
-                <a routerLink="/panel/table/view-all-lookup-tables">
-                  <span>Lookup Tables</span>
-                </a>
-                <a routerLink="/panel/table/view-all-lookup-enums">
-                  <span>Lookup Enums</span>
-                </a>
-                <a routerLink="/panel/table/view-all-independent-tables">
-                  <span>Independent Tables</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Outsourcing Master Data (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2" hidden>
-            <a class="level-link" (click)="toggleOutsourcingMaster()"
-              [attr.aria-expanded]="!outsourcinggMasterdataCollapsed" aria-controls="outsourcinggMasterdataExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>Outsourcing Master Data</span>
-              <span class="chev-icon small">
-                <i *ngIf="outsourcinggMasterdataCollapsed"></i>
-                <i *ngIf="!outsourcinggMasterdataCollapsed"></i>
-              </span>
-            </a>
-
-            <div #outsourcinggMasterdata="ngbCollapse" [(ngbCollapse)]="outsourcinggMasterdataCollapsed"
-              class="collapseStyling inner" [class.open]="!outsourcinggMasterdataCollapsed">
-              <div class="collapseDiv">
-                <a routerLink="out-sourcing-master-data/view-all-company"><span>Company</span></a>
-                <a routerLink="out-sourcing-master-data/view-all-client"><span>Client</span></a>
-                <a routerLink="out-sourcing-master-data/view-all-customer-master"><span>Customer Master</span></a>
-
-
-
-              </div>
-            </div>
+              <!-- If child is a simple link without route -->
+              <a *ngIf="!child.children && child.isVisible && !child.route">
+                <span>{{ child.label }}</span>
+              </a>
+            </ng-container>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Table -->
-    <div class="nav-item-with-toggle" hidden>
-      <a class="top-link" (click)="toggleTable()" [attr.aria-expanded]="!tableCollapsed">
-        <i class="fa-solid fa-table-list"></i>
-        <span>Tables</span>
-        <span class="chev-icon">
-          <i *ngIf="tableCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!tableCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #table="ngbCollapse" [(ngbCollapse)]="tableCollapsed" class="collapseStyling" [class.open]="!tableCollapsed">
-        <div class="collapseDiv">
-          <!-- <a routerLink="/panel/table/table-listing">
-            <span>View All Tables</span>
-          </a> -->
-
-
-          <a routerLink="/panel/table/view-all-lookup-tables">
-            <span>View All Lookup Table</span>
-          </a>
-          <a routerLink="/panel/table/view-all-lookup-enums">
-            <span>View All Lookup Enums</span>
-          </a>
-          <a routerLink="/panel/table/view-all-independent-tables">
-            <span>View All Independent Tables</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Assessment (two-level) -->
-    <div class="nav-item-with-toggle" hidden>
-      <a class="top-link" (click)="toggleAssessment()" [attr.aria-expanded]="!assesment"
-        aria-controls="assessmentExample">
-        <i class="fa-solid fa-clipboard"></i>
-        <span>Assesment</span>
-        <span class="chev-icon">
-          <i *ngIf="assesment" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!assesment" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #collapse="ngbCollapse" [(ngbCollapse)]="assesment" class="collapseStyling" [class.open]="!assesment">
-        <div class="collapseDiv">
-          <a><span>Design Assesment</span></a>
-          <a><span>Stored Assesment</span></a>
-          <a><span>Received Assesment</span></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Master Data (three-level with toggles on each level) -->
-
-    <div class="nav-item-with-toggle">
-      <a class="top-link" (click)="toggleMasterData()" [attr.aria-expanded]="!masterdataCollapsed"
-        aria-controls="masterdataExample">
-        <i class="fa-solid fa-database"></i>
-        <span>Master Data</span>
-        <span class="chev-icon">
-          <i *ngIf="masterdataCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!masterdataCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #masterdata="ngbCollapse" [(ngbCollapse)]="masterdataCollapsed" class="collapseStyling"
-        [class.open]="!masterdataCollapsed">
-        <div class="collapseDiv">
-          <!-- General Master Data (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2">
-            <a class="level-link" (click)="toggleGeneralMaster()" [attr.aria-expanded]="!generalMasterdataCollapsed"
-              aria-controls="generalMasterdataExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>General Master Data</span>
-              <span class="chev-icon small">
-                <i *ngIf="generalMasterdataCollapsed"></i>
-                <i *ngIf="!generalMasterdataCollapsed"></i>
-              </span>
-            </a>
-
-            <div #generalMasterdata="ngbCollapse" [(ngbCollapse)]="generalMasterdataCollapsed"
-              class="collapseStyling inner" [class.open]="!generalMasterdataCollapsed">
-              <div class="collapseDiv">
-
-                <a routerLink="organizational-master-data/view-all-pay-element"><span>Pay Element</span></a>
-
-                <a routerLink="general-master-data/view-all-skills" routerLinkActive="active"
-                  hidden><span>Skills</span></a>
-                <a routerLink="general-master-data/view-all-id-type" routerLinkActive="active" hidden><span>ID
-                    Type</span></a>
-                <a routerLink="general-master-data/view-all-qualification" routerLinkActive="active"
-                  hidden><span>Qualification</span></a>
-                <a routerLink="general-master-data/view-all-employee-cost" routerLinkActive="active"
-                  hidden><span>Employee
-                    Cost</span></a>
-                <a routerLink="general-master-data/view-all-ramadan-timing" routerLinkActive="active"
-                  hidden><span>Ramadan
-                    Timings</span></a>
-                <a routerLink="general-master-data/view-all-trainings" routerLinkActive="active"
-                  hidden><span>Trainings</span></a>
-                <a routerLink="general-master-data/view-all-job-description" routerLinkActive="active" hidden><span>Job
-                    Description</span></a>
-                <a routerLink="general-master-data/view-all-pre-requisites" routerLinkActive="active" hidden><span>Pre
-                    Requisites</span></a>
-                <a routerLink="general-master-data/view-all-belonging-types" routerLinkActive="active"
-                  hidden><span>Belonging
-                    Types</span></a>
-                <a routerLink="general-master-data/view-all-cost-center" routerLinkActive="active" hidden><span>Cost
-                    Center</span></a>
-                <a routerLink="general-master-data/view-all-work-schedule" routerLinkActive="active" hidden><span>Work
-                    Schedule</span></a>
-                <a routerLink="general-master-data/view-all-designation" routerLinkActive="active"
-                  hidden><span>Designation</span></a>
-                <a routerLink="general-master-data/view-all-job-title" routerLinkActive="active" hidden><span>Job
-                    Title</span></a>
-                <a routerLink="general-master-data/view-all-post-assignment" routerLinkActive="active" hidden><span>Post
-                    Assignment</span></a>
-                <a routerLink="general-master-data/view-all-kpi-questions" routerLinkActive="active" hidden><span>KPI
-                    Questions</span></a>
-                <a routerLink="general-master-data/view-all-employees-grade" routerLinkActive="active"
-                  hidden><span>Employees
-                    Grade</span></a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Organizational Master Data (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2">
-            <a class="level-link" (click)="toggleOrganizationalMaster()"
-              [attr.aria-expanded]="!organizationalMasterdataCollapsed" aria-controls="organizationalMasterdataExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>Attendance Master Data</span>
-              <span class="chev-icon small">
-                <i *ngIf="organizationalMasterdataCollapsed"></i>
-                <i *ngIf="!organizationalMasterdataCollapsed"></i>
-              </span>
-            </a>
-
-            <div #organizationalMasterdata="ngbCollapse" [(ngbCollapse)]="organizationalMasterdataCollapsed"
-              class="collapseStyling inner" [class.open]="!organizationalMasterdataCollapsed">
-              <div class="collapseDiv">
-                <a routerLink="organizational-master-data/hierarchy" hidden><span>Hierarchy</span></a>
-                <a routerLink="organizational-master-data/view-all-outsource-contract" hidden><span>Outsource
-                    Contract</span></a>
-                <a routerLink="organizational-master-data/view-all-projects" hidden><span>Projects</span></a>
-                <a routerLink="organizational-master-data/view-all-location" hidden><span>Location</span></a>
-                <a routerLink="organizational-master-data/view-all-posts" hidden><span>Posts</span></a>
-                <a routerLink="organizational-master-data/view-all-time-type" hidden><span>Time Type</span></a>
-                <a routerLink="organizational-master-data/view-all-tasks" hidden><span>Tasks</span></a>
-                <a routerLink="organizational-master-data/view-all-pay-element" hidden><span>Pay Element</span></a>
-                <a routerLink="organizational-master-data/view-all-leaves" hidden><span>Leaves</span></a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Outsourcing Master Data (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2" hidden>
-            <a class="level-link" (click)="toggleOutsourcingMaster()"
-              [attr.aria-expanded]="!outsourcinggMasterdataCollapsed" aria-controls="outsourcinggMasterdataExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>Outsourcing Master Data</span>
-              <span class="chev-icon small">
-                <i *ngIf="outsourcinggMasterdataCollapsed"></i>
-                <i *ngIf="!outsourcinggMasterdataCollapsed"></i>
-              </span>
-            </a>
-
-            <div #outsourcinggMasterdata="ngbCollapse" [(ngbCollapse)]="outsourcinggMasterdataCollapsed"
-              class="collapseStyling inner" [class.open]="!outsourcinggMasterdataCollapsed">
-              <div class="collapseDiv">
-                <a routerLink="out-sourcing-master-data/view-all-company"><span>Company</span></a>
-                <a routerLink="out-sourcing-master-data/view-all-client"><span>Client</span></a>
-                <a routerLink="out-sourcing-master-data/view-all-customer-master"><span>Customer Master</span></a>
-
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
-    <!-- onboarding -->
-    <div class="nav-item-with-toggle">
-      <a class="top-link" (click)="toggleOnboarding()" [attr.aria-expanded]="!onboardingCollapsed"
-        aria-controls="onboardingExample">
-        <i class="fa-solid fa-user-plus"></i>
-        <span>Onboarding</span>
-        <span class="chev-icon">
-          <i *ngIf="onboardingCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!onboardingCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #onboarding="ngbCollapse" [(ngbCollapse)]="onboardingCollapsed" class="collapseStyling"
-        [class.open]="!onboardingCollapsed">
-        <div class="collapseDiv">
-          <a routerLink="/panel/onboarding/view-all-requisition">
-            <span>Requisition</span>
-          </a>
-          <a routerLink="/panel/onboarding/view-all-candidates">
-            <span>Candidates</span>
-          </a>
-          <a routerLink="/panel/onboarding/hr-candidate-short-listing">
-            <span>HR Candidate Short Listing</span>
-          </a>
-          <a routerLink="/panel/onboarding/view-all-interview-scheduling">
-            <span>Interview Scheduling</span>
-          </a>
-                    <a routerLink="/panel/onboarding/interview-feedback">
-            <span>Interview Feedback</span>
-          </a>
-          <!-- <a routerLink="/panel/onboarding/final-screening">
-            <span>Final Screening</span> 
-          </a>
-            -->
-          <a routerLink="/panel/onboarding/candidate-screening" routerLinkActive="active"><span>Candidate
-              Screening</span></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- forms -->
-    <div class="nav-item-with-toggle" hidden>
-      <a class="top-link" (click)="toggleForms()" [attr.aria-expanded]="!formsCollapsed" aria-controls="formsExample">
-        <i class="fa-solid fa-file-lines"></i>
-        <span>Forms</span>
-        <span class="chev-icon">
-          <i *ngIf="formsCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!formsCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #forms="ngbCollapse" [(ngbCollapse)]="formsCollapsed" class="collapseStyling" [class.open]="!formsCollapsed">
-        <div class="collapseDiv">
-          <a routerLink="/panel/forms/view-all-forms">
-            <span>View All Forms</span>
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- table -->
-
-    <!-- employees (one-level with toggles on each level) -->
-    <div class="nav-item-with-toggle">
-      <a class="top-link" (click)="toggleEmployees()" [attr.aria-expanded]="!employeesCollapsed"
-        aria-controls="employeesExample">
-        <i class="fa-solid fa-users"></i> <span>Employees</span>
-        <span class="chev-icon">
-          <i *ngIf="employeesCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!employeesCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #employees="ngbCollapse" [(ngbCollapse)]="employeesCollapsed" class="collapseStyling"
-        [class.open]="!employeesCollapsed">
-        <div class="collapseDiv">
-          <!-- Employees Master Data (level-2 toggle) -->
-          <div class="nav-item-with-toggle level-2">
-            <a class="level-link" (click)="toggleEmployeesMasterData()"
-              [attr.aria-expanded]="!employeesMasterDataCollapsed" aria-controls="employeesMasterDataExample">
-              <i class="fas fa-angle-double-right"></i>
-              <span>Employees-Master-Data</span>
-              <span class="chev-icon small">
-                <i *ngIf="employeesMasterDataCollapsed"></i>
-                <i *ngIf="!employeesMasterDataCollapsed"></i>
-              </span>
-            </a>
-
-            <div #employeesMasterData="ngbCollapse" [(ngbCollapse)]="employeesMasterDataCollapsed"
-              class="collapseStyling inner" [class.open]="!employeesMasterDataCollapsed">
-              <div class="collapseDiv">
-                <a routerLink="employees-master-data/view-all-employees"
-                  routerLinkActive="active"><span>Employees</span></a>
-                <a routerLink="employees-master-data/view-all-gosiid" routerLinkActive="active"
-                  hidden><span>GOSIID</span></a>
-                <a routerLink="employees-master-data/view-all-departments" routerLinkActive="active"
-                  hidden><span>Departments</span></a>
-                <a routerLink="employees-master-data/view-all-medical-insurance" routerLinkActive="active"
-                  hidden><span>Medical
-                    Insurance</span></a>
-                <a routerLink="employees-master-data/view-all-accommodation" routerLinkActive="active"
-                  hidden><span>Accommodation</span></a>
-                <a routerLink="employees-master-data/view-all-loans" routerLinkActive="active"
-                  hidden><span>Loans</span></a>
-                <a routerLink="employees-master-data/view-all-employee-belongings" routerLinkActive="active"
-                  hidden><span>Employee
-                    Belongings</span></a>
-                <a routerLink="employees-master-data/view-all-employees-category" routerLinkActive="active"
-                  hidden><span>Employees
-                    Category</span></a>
-                <a routerLink="employees-master-data/view-all-project-transfer" routerLinkActive="active"
-                  hidden><span>Project
-                    Transfer</span></a>
-
-
-              </div>
-            </div>
-          </div>
-
-
-
-
-        </div>
-      </div>
-    </div>
-
-    <!-- Requisition Lookups -->
-    <div class="nav-item-with-toggle" hidden>
-      <a class="top-link" (click)="toggleRequisitionLookups()" [attr.aria-expanded]="!requisitionLookupsCollapsed"
-        aria-controls="requisitionLookupsExample">
-        <i class="fa-solid fa-arrows-rotate"></i>
-        <span>Requisition Lookups</span>
-        <span class="chev-icon">
-          <i *ngIf="requisitionLookupsCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!requisitionLookupsCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #requisitionLookups="ngbCollapse" [(ngbCollapse)]="requisitionLookupsCollapsed" class="collapseStyling"
-        [class.open]="!requisitionLookupsCollapsed">
-        <div class="collapseDiv">
-          <a routerLink="/panel/requisition-lookups/create-job-title">
-            <span>Job Title</span>
-          </a>
-
-          <a routerLink="/panel/requisition-lookups/create-employee-category">
-            <span>Employee Category</span>
-          </a>
-
-          <a routerLink="/panel/requisition-lookups/create-department">
-            <span>Department</span>
-          </a>
-
-          <a routerLink="/panel/requisition-lookups/create-branch">
-            <span>Branches</span>
-          </a>
-
-        </div>
-      </div>
-    </div>
-
-
-    <!-- Admin -->
-    <div class="nav-item-with-toggle" hidden>
-      <a class="top-link" (click)="toggleAdmin()" [attr.aria-expanded]="!adminCollapsed" aria-controls="adminExample">
-        <i class="fa-solid fa-user-shield"></i>
-        <span>Admin</span>
-        <span class="chev-icon">
-          <i *ngIf="adminCollapsed" class="fa-solid fa-chevron-right"></i>
-          <i *ngIf="!adminCollapsed" class="fa-solid fa-chevron-down"></i>
-        </span>
-      </a>
-
-      <div #admin="ngbCollapse" [(ngbCollapse)]="adminCollapsed" class="collapseStyling" [class.open]="!adminCollapsed">
-        <div class="collapseDiv">
-          <a routerLink="admin/view-all-users">
-            <span>Users</span>
-          </a>
-
-          <a routerLink="/panel/permissions/view-all-rols">
-            <span>Roles</span>
-          </a>
-
-        </div>
-      </div>
-    </div>
-
-
-
+    </ng-container>
   </div>
 </nav>
