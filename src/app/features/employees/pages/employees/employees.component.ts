@@ -59,37 +59,61 @@ export class EmployeesComponent {
       }
       if (this.title === 'edit') {
         this.formTitle = "Edit Employee"
-
+        // Initialize sidebar tabs for edit mode
+        this.initializeSidebarTabs();
+        this.loadDynamicFields();
       }
       if (this.title === 'create') {
         this.formTitle = "Create New Employee"
-        this.formsService.getFormById('EMPLOYEE_REQUISITION', 'USER_DEFINED').subscribe((res: any) => {
-          const allFields = res.data.fields || [];
-
-          // Map to DTOs to ensure all properties have default values
-          const mappedFields = allFields.map((f: any) => new DynamicFieldDto(f));
-
-          // Separate ROW fields for tabs and other fields for display
-          this.dynamicFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType !== 'ROW');
-          this.rowTableFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType === 'ROW');
-
-          // Add ROW fields as new tabs in sidebar
-          this.rowTableFields.forEach((field: DynamicFieldDto, index: number) => {
-
-            if (field.active) {
-              this.sidebarTabs.push({
-                id: 13 + index,
-                name: field.label,
-                icon: 'fa-table',
-                active: field.active,
-                rowTableField: field // Store reference to the field
-              });
-            }
-
-          });
-        });
-
+        // Initialize sidebar tabs for create mode
+        this.initializeSidebarTabs();
+        this.loadDynamicFields();
       }
+    });
+  }
+
+  // Initialize the base sidebar tabs (tabs 1-12)
+  initializeSidebarTabs(): void {
+    this.sidebarTabs = [
+      { id: 1, name: 'Personal Details', icon: 'fa-user', active: true },
+      { id: 2, name: 'Identification', icon: 'fa-id-card', active: false },
+      { id: 3, name: 'Contact Information', icon: 'fa-phone', active: false },
+      { id: 4, name: 'Job Details', icon: 'fa-briefcase', active: false },
+      { id: 5, name: 'Education', icon: 'fa-graduation-cap', active: false },
+      { id: 6, name: 'Experience', icon: 'fa-building', active: false },
+      { id: 7, name: 'Skills', icon: 'fa-cogs', active: false },
+      { id: 8, name: 'Certifications', icon: 'fa-certificate', active: false },
+      { id: 9, name: 'Documents', icon: 'fa-file-alt', active: false },
+      { id: 10, name: 'Emergency Contact', icon: 'fa-phone-square', active: false },
+      { id: 11, name: 'Banking Details', icon: 'fa-university', active: false },
+      { id: 12, name: 'Dependents', icon: 'fa-users', active: false }
+    ];
+  }
+
+  // Load dynamic fields from the form
+  loadDynamicFields(): void {
+    this.formsService.getFormById('EMPLOYEE_REQUISITION', 'USER_DEFINED').subscribe((res: any) => {
+      const allFields = res.data.fields || [];
+
+      // Map to DTOs to ensure all properties have default values
+      const mappedFields = allFields.map((f: any) => new DynamicFieldDto(f));
+
+      // Separate ROW fields for tabs and other fields for display
+      this.dynamicFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType !== 'ROW');
+      this.rowTableFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType === 'ROW');
+
+      // Add ROW fields as new tabs in sidebar
+      this.rowTableFields.forEach((field: DynamicFieldDto, index: number) => {
+        if (field.active) {
+          this.sidebarTabs.push({
+            id: 13 + index,
+            name: field.label,
+            icon: 'fa-table',
+            active: false,
+            rowTableField: field // Store reference to the field
+          });
+        }
+      });
     });
   }
 
