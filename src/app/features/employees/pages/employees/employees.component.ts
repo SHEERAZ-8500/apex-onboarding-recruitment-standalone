@@ -18,7 +18,7 @@ import { FormsService } from '../../../forms/services/forms.service';
 export class EmployeesComponent {
   title = 'view';
   formTitle = ""
-  
+
   // Services and dependencies
   loaderService: LoaderService;
   formsService: FormsService;
@@ -26,7 +26,7 @@ export class EmployeesComponent {
   activatedRoute: ActivatedRoute;
   employeesService: EmployeesService;
   toastr: ToastrService;
-  
+
   dynamicFields: DynamicFieldDto[] = [];
   rowTableFields: DynamicFieldDto[] = [];
   mode: 'view' | 'create' | 'edit' = 'view';
@@ -48,7 +48,7 @@ export class EmployeesComponent {
     this.loaderService = loaderService;
     this.toastr = toastr;
   }
-  
+
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(data => {
       this.title = data['title'];
@@ -62,12 +62,14 @@ export class EmployeesComponent {
         // Initialize sidebar tabs for edit mode
         this.initializeSidebarTabs();
         this.loadDynamicFields();
+        this.getFormFileds()
       }
       if (this.title === 'create') {
         this.formTitle = "Create New Employee"
         // Initialize sidebar tabs for create mode
         this.initializeSidebarTabs();
         this.loadDynamicFields();
+        this.getFormFileds()
       }
     });
   }
@@ -616,4 +618,23 @@ export class EmployeesComponent {
       }
     });
   }
+
+  getFormFileds() {
+    this.formsService.getFormByFormCode('EMPLOYEE_REQUISITION').subscribe({
+      next: (res: any) => {
+        console.log('Form Fields:', res);
+
+        // safety check
+        if (res?.data?.fields && Array.isArray(res.data.fields)) {
+          res.data.fields.forEach((field: any) => {
+
+          });
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching form fields:', err);
+      }
+    });
+  }
+
 }
