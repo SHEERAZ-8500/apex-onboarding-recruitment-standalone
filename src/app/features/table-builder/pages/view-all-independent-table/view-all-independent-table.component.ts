@@ -6,11 +6,12 @@ import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../../core/services/apis/api.service';
 import { LoaderService } from '../../../../core/services/management-services/loader.service';
 import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-view-all-independent-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, RouterModule, PaginationComponent, NgbDropdownModule],
   templateUrl: './view-all-independent-table.component.html',
   styleUrl: './view-all-independent-table.component.scss'
 })

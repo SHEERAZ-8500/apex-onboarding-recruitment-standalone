@@ -6,11 +6,12 @@ import { LoaderService } from '../../../../core/services/management-services/loa
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-view-all-forms',
   standalone: true,
-  imports: [CommonModule, RouterModule, PaginationComponent],
+  imports: [CommonModule, RouterModule, PaginationComponent, NgbDropdownModule],
   templateUrl: './view-all-forms.component.html',
   styleUrl: './view-all-forms.component.scss'
 })
