@@ -28,7 +28,7 @@ export class CreateNewFormComponent {
 
 
     onSubmit() {
-  if (!this.formData.formCode || !this.formData.displayName) {
+  if (!this.formData.name || !this.formData.code) {
     this.toaster.error('Please fill required fields');
     return;
   }
@@ -48,6 +48,7 @@ export class CreateNewFormComponent {
   );
 }
 
+  
     onReset() {
       this.formData = new CreateFormDto();
     }

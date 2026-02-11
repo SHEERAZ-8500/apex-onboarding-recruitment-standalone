@@ -7,7 +7,12 @@ import { CreateNewUdfComponent } from './pages/create-new-udf/create-new-udf.com
 import { CreateUddComponent } from './pages/create-udd/create-udd.component';
 import { ManageFiledsVisibilityComponent } from './pages/manage-fileds-visibility/manage-fileds-visibility.component';
 import { ViewAllFormsComponent } from './pages/view-all-forms/view-all-forms.component';
-
+import { PayPeriod } from '../forms/pages/pay-period/pay-period';
+import { Shift} from  '../forms/pages/shift/shift';
+import { WorkSchedule } from '../forms/pages/work-schedule/work-schedule';
+import { LeaveApplication } from './pages/leave-application/leave-application';
+import { LeavesMasterData } from './pages/leaves-master-data/leaves-master-data';
+import { Department } from './pages/department/department';
 export const routes: Routes = [
   {
     path: 'view-all-forms',
@@ -36,4 +41,11 @@ export const routes: Routes = [
     path: 'create-new-form',
     component: CreateNewFormComponent
   }
+  ,
+  {path: 'pay-period', component: PayPeriod},
+  {path: 'shift', component: Shift},
+  {path: 'work-schedule', component: WorkSchedule},
+  {path: 'leave-application', component: LeaveApplication},
+  {path: 'leaves-master-data', component: LeavesMasterData},
+  {path: 'department', component: Department}
 ]

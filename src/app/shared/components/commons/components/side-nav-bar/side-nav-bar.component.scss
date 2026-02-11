@@ -84,7 +84,7 @@
 
   /* hover */
   &:hover {
-    background: transparent !important;
+    background: none !important;
     border-radius: 6px; // border radius on hover
 
     span {
@@ -306,7 +306,7 @@
 /* active router link */
 a.active,
 a.router-link-active {
-  background: rgba(108, 92, 231, 0.08);
+  background: none !important;
   color: var(--purple-1);
 }
 

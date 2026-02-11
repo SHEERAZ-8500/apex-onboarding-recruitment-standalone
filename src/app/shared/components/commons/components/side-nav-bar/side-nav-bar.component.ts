@@ -111,7 +111,13 @@ export class SideNavBarComponent implements OnInit {
           isVisible: true,
           collapsed: true,
           children: [
-            { label: 'Pay Element', route: 'organizational-master-data/view-all-pay-element', isVisible: true },
+            { label: 'Department', route: '/panel/forms/department', isVisible: false },
+
+            { label: 'Pay Period', route: '/panel/forms/pay-period', isVisible: true },
+
+            { label: 'Work Schedule', route: '/panel/forms/work-schedule', isVisible: true },
+
+            { label: 'Pay Element', route: 'organizational-master-data/view-all-pay-element', isVisible: false },
             { label: 'Skills', route: 'general-master-data/view-all-skills', isVisible: false },
             { label: 'ID Type', route: 'general-master-data/view-all-id-type', isVisible: false },
             { label: 'Qualification', route: 'general-master-data/view-all-qualification', isVisible: false },
@@ -136,6 +142,9 @@ export class SideNavBarComponent implements OnInit {
           isVisible: true,
           collapsed: true,
           children: [
+            { label: 'Shift', route: '/panel/forms/shift', isVisible: true },
+            { label: 'Leave Application', route: '/panel/forms/leave-application', isVisible: true },
+            { label: 'Leaves Master Data', route: '/panel/forms/leaves-master-data', isVisible: true },
             { label: 'Hierarchy', route: 'organizational-master-data/hierarchy', isVisible: false },
             { label: 'Outsource Contract', route: 'organizational-master-data/view-all-outsource-contract', isVisible: false },
             { label: 'Projects', route: 'organizational-master-data/view-all-projects', isVisible: false },
@@ -321,7 +330,7 @@ export class SideNavBarComponent implements OnInit {
         group.isVisible = isVisible;
         return;
       }
-      
+
       // Check children
       if (group.children) {
         this.updateChildVisibility(group.children, label, isVisible);
