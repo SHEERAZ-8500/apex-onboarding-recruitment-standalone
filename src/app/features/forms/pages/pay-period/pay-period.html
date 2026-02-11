@@ -1,14 +1,14 @@
-<div class="user-form-container">
-    <div class="user-form-card">
+<div class="payperiod-form-container">
+    <div class="payperiod-form-card">
         <div class="form-header">
             <h2 class="form-title">Create New Pay Period</h2>
             <p class="form-subtitle">Fill in the details to create new pay period</p>
         </div>
 
-        <form class="user-form ">
+        <form class="payperiod-form ">
             <div class="form-row">
              <div class="form-group" *ngIf="isFieldActive('gender')">
-                        <label class="input-label">Gender</label>
+                        <label class="input-label">Status</label>
                         <div class="custom-dropdown" (click)="toggleDropdown($event,'status')">
                             <div class="dropdown-selected">
                                 <span>{{ payPeriod.status || 'Select Status' }}</span>

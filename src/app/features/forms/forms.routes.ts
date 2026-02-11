@@ -12,6 +12,7 @@ import { Shift} from  '../forms/pages/shift/shift';
 import { WorkSchedule } from '../forms/pages/work-schedule/work-schedule';
 import { LeaveApplication } from './pages/leave-application/leave-application';
 import { LeavesMasterData } from './pages/leaves-master-data/leaves-master-data';
+import { Department } from './pages/department/department';
 export const routes: Routes = [
   {
     path: 'view-all-forms',
@@ -45,5 +46,6 @@ export const routes: Routes = [
   {path: 'shift', component: Shift},
   {path: 'work-schedule', component: WorkSchedule},
   {path: 'leave-application', component: LeaveApplication},
-  {path: 'leaves-master-data', component: LeavesMasterData}
+  {path: 'leaves-master-data', component: LeavesMasterData},
+  {path: 'department', component: Department}
 ]

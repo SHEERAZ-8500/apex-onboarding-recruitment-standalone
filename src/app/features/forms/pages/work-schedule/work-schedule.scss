@@ -1,4 +1,4 @@
-.user-form-container {
+.work-schedule-form-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +8,7 @@
     background-color: var(--primary-color);
 }
 
-.user-form-card {
+.work-schedule-form-card {
     background-color: var(--second-primary-color);
     border-radius: 16px;
     padding: 40px;
@@ -53,7 +53,7 @@
     }
 }
 
-.user-form {
+.work-schedule-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -287,3 +287,96 @@ select.form-input[size] {
 }
 
 
+/* Horizontal Tabs Styles */
+.horizontal-tabs {
+    margin: 30px 0 20px 0;
+    border-bottom: 2px solid var(--border-color);
+
+    .tabs-container {
+        display: flex;
+        gap: 0;
+        flex-wrap: wrap;
+        overflow-x: auto;
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--white-color-1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+            white-space: nowrap;
+
+            &:hover {
+                color: var(--purple-1);
+                background-color: rgba(var(--purple-1-rgb), 0.1);
+            }
+
+            &.active {
+                color: var(--purple-1);
+                border-bottom-color: var(--purple-1);
+                font-weight: 600;
+            }
+        }
+    }
+}
+.tab-content-section {
+    background-color: var(--primary-color);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
+}
+
+
+/* Dynamic Fields Checkbox Styling */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .form-check-input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 2px; /* rectangular look */
+    background-color: var(--second-primary-color);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .form-check-input:hover {
+    border-color: var(--purple-1);
+  }
+
+  .form-check-input:checked {
+    background-color: var(--purple-1);
+    border-color: var(--purple-1);
+  }
+
+  /* PERFECT centered tick */
+  .form-check-input:checked::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 4px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+  }
+
+  .form-check-label {
+    color: var(--white-color-1);
+    font-size: 14px;
+    cursor: pointer;
+  }
+}

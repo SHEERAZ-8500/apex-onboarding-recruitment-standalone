@@ -54,15 +54,17 @@
       .float { animation: float 3s ease-in-out infinite; }
       .fade-in { animation: fadeIn 0.8s ease-out forwards; }
       .pulse { animation: pulse 2s ease-in-out infinite; }
-      .glow { animation: glow 2s ease-in-out infinite; }
+   
       .slide-in { animation: slideIn 0.6s ease-out forwards; }
       .blink { animation: blink 1s step-end infinite; }
     </style>
     
-    <linearGradient id="grad1Light" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6c5ce7;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
-    </linearGradient>
+    <linearGradient id="grad1Light" x1="0%" y1="0%" x2="100%" y2="0%">
+   <stop offset="25%" style="stop-color:#7fb0d1; stop-opacity:1"/>
+  <stop offset="50%" style="stop-color:#4f89ab; stop-opacity:1"/>  <!-- Base color -->
+  <stop offset="75%" style="stop-color:#3a6e8f; stop-opacity:1"/>
+  <stop offset="100%" style="stop-color:#2a5673; stop-opacity:1"/> <!-- Dark shade -->
+</linearGradient>
     
     <linearGradient id="bgGradLight" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" style="stop-color:#f0f4f8;stop-opacity:1" />
@@ -83,7 +85,7 @@
   </defs>
   
   <!-- Background -->
-  <rect width="1000" height="1000" fill="url(#bgGradLight)"/>
+  <rect width="1000" height="1000" fill="#f3f4f6"/>
   
   <!-- Main login card -->
   <g transform="translate(500, 480)">
@@ -122,7 +124,7 @@
       <!-- Email Icon -->
       <g transform="translate(-195, -64)">
         <rect x="-9" y="-6.5" width="18" height="13" rx="2" 
-              fill="none" stroke="#6c5ce7" stroke-width="1.8"/>
+              fill="none" stroke="#1274ac" stroke-width="1.8"/>
         <path d="M -9,-6.5 L 0,2.5 L 9,-6.5" 
               fill="none" stroke="#6c5ce7" stroke-width="1.8" stroke-linejoin="round"/>
       </g>
@@ -160,9 +162,10 @@
             fill="#f7fafc" stroke="#cbd5e0" stroke-width="1.5"/>
       
       <!-- Lock Icon -->
-      <g transform="translate(-187.5, 26)">
+      <g transform="translate(-195, 26)">
+
         <rect x="-5.5" y="-4" width="11" height="8" rx="1.5" 
-              fill="none" stroke="#6c5ce7" stroke-width="1.8"/>
+              fill="none" stroke="#1274ac" stroke-width="1.8"/>
         <path d="M -2,-4 L -2,-7 Q -2,-9 0,-9 Q 2,-9 2,-7 L 2,-4" 
               stroke="#6c5ce7" stroke-width="1.8" fill="none"/>
       </g>
@@ -185,19 +188,17 @@
     <!-- Remember me & Forgot password -->
     <g class="fade-in" style="animation-delay: 0.7s">
       <!-- Checkbox -->
-      <rect x="-220" y="60" width="16" height="16" rx="4" 
-            fill="#f7fafc" stroke="#6c5ce7" stroke-width="1.8"/>
-      <path d="M -215,66 L -212,70 L -207,63" 
-            fill="none" stroke="#6c5ce7" stroke-width="2" 
-            stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="-219" y="76.5" width="17" height="17" rx="4" fill="#f7fafc" stroke="#1274ac" stroke-width="1.8"/>
+
+     <path d="M -214,86 L -211,89 L -207,80" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       
-      <text x="-195" y="72" font-family="'Segoe UI', sans-serif" 
-            font-size="13" fill="#4a5568">
+      <text x="-195" y="88.5" font-family="'Segoe UI', sans-serif" 
+            font-size="14" fill="#4a5568">
         Remember me
       </text>
       
-      <text x="220" y="72" text-anchor="end" font-family="'Segoe UI', sans-serif" 
-            font-size="13" fill="#6c5ce7" style="cursor: pointer">
+      <text x="220" y="88.5" text-anchor="end" font-family="'Segoe UI', sans-serif" 
+            font-size="13" fill="#1274ac" style="cursor: pointer">
         Forgot Password?
       </text>
     </g>
@@ -205,7 +206,7 @@
     <!-- Sign In Button -->
     <g class="fade-in glow" style="animation-delay: 0.8s">
       <rect x="-220" y="105" width="440" height="50" rx="10" 
-            fill="url(#grad1Light)" filter="url(#shadowLight)"/>
+            fill="url(#grad1Light)" />
       
       <text x="0" y="136" text-anchor="middle" font-family="'Segoe UI', sans-serif" 
             font-size="16" font-weight="600" fill="white">
@@ -283,10 +284,10 @@
   </g>
   
   <!-- Bottom branding -->
-  <text x="500" y="890" text-anchor="middle" font-family="'Segoe UI', sans-serif" 
-        font-size="36" font-weight="700" fill="url(#grad1Light)" class="fade-in">
-    APEX Innovation
-  </text>
+   <text x="500" y="890" text-anchor="middle" font-family="'Segoe UI', sans-serif" 
+          font-size="28" font-weight="700" fill="#1274ac">
+      APEX Innovation
+    </text>
   
   <text x="500" y="925" text-anchor="middle" font-family="'Segoe UI', sans-serif" 
         font-size="20" fill="#4a5568" class="fade-in" style="animation-delay: 0.2s">
@@ -294,7 +295,7 @@
   </text>
   
   <text x="500" y="955" text-anchor="middle" font-family="'Segoe UI', sans-serif" 
-        font-size="14" fill="#718096" class="fade-in" style="animation-delay: 0.3s">
+        font-size="15" fill="#4a5568" class="fade-in" style="animation-delay: 0.3s">
     Secure • Efficient • Innovative
   </text>
 </svg>

@@ -62,10 +62,10 @@ export class LeavesApplicationDto {
  ID: string = ''  ;
   employeeName: string = '';
   leaveType: string = '';
-  formDate: string = '';
+  fromDate: string = '';
   toDate: string = '';
-  reason: string = ''
-  laeaveMode: string = '';
+  reason: string = '';
+  leaveMode: string = '';
   applicationDate: string = '';
  attachment: string = '';
  pendingLeaves: string = '';

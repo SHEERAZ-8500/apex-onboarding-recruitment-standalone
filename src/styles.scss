@@ -88,7 +88,8 @@ body {
     }
 
     a.active {
-      background: rgba(108, 92, 231, 0.15) !important;
+      background: none !important;
+      color: var(--purple-1) !important;
     }
   }
 
