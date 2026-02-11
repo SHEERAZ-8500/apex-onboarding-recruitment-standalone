@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { DatePipe, HashLocationStrategy, LocationStrategy } from '@angular/common';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -20,6 +21,8 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-right',
       preventDuplicates: true,
       closeButton: true
-    })
+    }),
+    DatePipe,
+    { provide: LocationStrategy, useClass: HashLocationStrategy}
   ]
 };
