@@ -258,4 +258,14 @@ export class ApiService {
   deletValueInFromTbale(formCode: string, code: string,status:string) {
     return this.http.patch(`forms/${formCode}/${code}/${status}`,{});
   }
+
+   getAllDepartmentValuesInTable(department: string, page = 0, size = 50) {
+    return this.http.get(`admin/lookups/tables/${department}/values?page=${page}&size=${size}`);
+  }
+    getAllDesignationValuesInTable(designation: string, page = 0, size = 50) {
+    return this.http.get(`admin/lookups/tables/${designation}/values?page=${page}&size=${size}`);
+  }
+  getAllJobTitleValuesInTable(job_title: string, page = 0, size = 50) {
+    return this.http.get(`admin/lookups/tables/${job_title}/values?page=${page}&size=${size}`);
+  }
 }

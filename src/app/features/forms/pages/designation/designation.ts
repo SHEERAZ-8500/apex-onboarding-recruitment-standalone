@@ -13,10 +13,10 @@ import { PaginationComponent } from '../../../../shared/components/commons/compo
   selector: 'app-view-all-lookup-values-in-table',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, PaginationComponent],
-  templateUrl: './department.html',
-  styleUrl: './department.scss'
+  templateUrl: './designation.html',
+  styleUrl: './designation.scss'
 })
-export class Department {
+export class Designation {
 
 
 
@@ -28,7 +28,7 @@ export class Department {
     private activatedRoute: ActivatedRoute
   ) { }
 
-  department!: string;
+  designation!: string;
   currentPage = 0; 
   itemsPerPage = 5;
   totalItems = 0;
@@ -38,7 +38,7 @@ export class Department {
 
 
 ngOnInit() {
-  this.department = 'department';   
+  this.designation = 'designation';  
   this.getLookupData();
 }
 
@@ -60,7 +60,7 @@ ngOnInit() {
 
   getLookupData() {
     this.loader.show();
-    this.api.getAllDepartmentValuesInTable(this.department, this.currentPage, this.itemsPerPage).subscribe({
+    this.api.getAllDesignationValuesInTable(this.designation, this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.loader.hide();
 

@@ -13,6 +13,8 @@ import { WorkSchedule } from '../forms/pages/work-schedule/work-schedule';
 import { LeaveApplication } from './pages/leave-application/leave-application';
 import { LeavesMasterData } from './pages/leaves-master-data/leaves-master-data';
 import { Department } from './pages/department/department';
+import { Designation } from './pages/designation/designation';
+import { JobTitle } from './pages/job-title/job-title';
 export const routes: Routes = [
   {
     path: 'view-all-forms',
@@ -47,5 +49,7 @@ export const routes: Routes = [
   {path: 'work-schedule', component: WorkSchedule},
   {path: 'leave-application', component: LeaveApplication},
   {path: 'leaves-master-data', component: LeavesMasterData},
-  {path: 'department', component: Department}
+  {path: 'department', component: Department},
+  {path: 'designation', component: Designation},
+  {path: 'job_title', component: JobTitle} // Assuming job_title uses the same component as department for now
 ]

@@ -111,7 +111,9 @@ export class SideNavBarComponent implements OnInit {
           isVisible: true,
           collapsed: true,
           children: [
-            { label: 'Department', route: '/panel/forms/department', isVisible: false },
+            { label: 'Department', route: '/panel/forms/department', isVisible: true },
+            { label: 'Designation', route: '/panel/forms/designation', isVisible: true },
+            { label: 'Job Title', route: '/panel/forms/job_title', isVisible: true },
 
             { label: 'Pay Period', route: '/panel/forms/pay-period', isVisible: true },
 

@@ -13,10 +13,10 @@ import { PaginationComponent } from '../../../../shared/components/commons/compo
   selector: 'app-view-all-lookup-values-in-table',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, PaginationComponent],
-  templateUrl: './department.html',
-  styleUrl: './department.scss'
+  templateUrl: './job-title.html',
+  styleUrl: './job-title.scss'
 })
-export class Department {
+export class JobTitle {
 
 
 
@@ -28,8 +28,8 @@ export class Department {
     private activatedRoute: ActivatedRoute
   ) { }
 
-  department!: string;
-  currentPage = 0; 
+  job_title!: string;
+  currentPage = 0; // Backend uses 0-based indexing
   itemsPerPage = 5;
   totalItems = 0;
   totalPages = 0;
@@ -38,7 +38,7 @@ export class Department {
 
 
 ngOnInit() {
-  this.department = 'department';   
+  this.job_title = 'job-title';   
   this.getLookupData();
 }
 
@@ -60,7 +60,7 @@ ngOnInit() {
 
   getLookupData() {
     this.loader.show();
-    this.api.getAllDepartmentValuesInTable(this.department, this.currentPage, this.itemsPerPage).subscribe({
+    this.api.getAllJobTitleValuesInTable(this.job_title, this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.loader.hide();
 
@@ -73,7 +73,7 @@ ngOnInit() {
         }
       },
       error: (err: any) => {
-        console.error('Error fetching lookup values:', err);
+        console.error('Error fetching job title values:', err);
         this.loader.hide();
 
       }
