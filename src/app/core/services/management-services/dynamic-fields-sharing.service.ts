@@ -30,29 +30,44 @@ export class DynamicFieldsSharingService {
         next: (res: any) => {
           const allFields = res.data.fields || [];
 
+          console.log('🔍 Raw fields from backend:', allFields.length);
+
           // Map to DTOs to ensure all properties have default values
           const mappedFields = allFields.map((f: any) => new DynamicFieldDto(f));
 
           // Separate ROW fields for tabs and other fields for display
-          this.dynamicFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType !== 'ROW');
-          this.rowTableFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType === 'ROW');
+          // Filter only active fields
+          this.dynamicFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType !== 'ROW' && f.active);
+          
+          // Filter ROW fields: only active ones, sorted by displayOrder
+          this.rowTableFields = mappedFields
+            .filter((f: DynamicFieldDto) => f.fieldType === 'ROW' && f.active === true)
+            .sort((a: DynamicFieldDto, b: DynamicFieldDto) => (a.displayOrder || 0) - (b.displayOrder || 0));
+
+          console.log('✅ Filtered ROW fields (active only):', this.rowTableFields.map(f => ({ 
+            fieldCode: f.fieldCode, 
+            label: f.label, 
+            active: f.active,
+            displayOrder: f.displayOrder,
+            rowColumns: f.rowColumns?.length || 0
+          })));
 
           // Initialize sidebar tabs with existing tabs
           this.sidebarTabs = [...existingTabs];
           const startingTabId = existingTabs.length > 0 ? existingTabs.length + 1 : 1;
 
-          // Add ROW fields as new tabs in sidebar
+          // Add active ROW fields as new tabs in sidebar (already filtered and sorted)
           this.rowTableFields.forEach((field: DynamicFieldDto, index: number) => {
-            if (field.active) {
-              this.sidebarTabs.push({
-                id: startingTabId + index,
-                name: field.label,
-                icon: 'fa-table',
-                active: field.active,
-                rowTableField: field // Store reference to the field
-              });
-            }
+            this.sidebarTabs.push({
+              id: startingTabId + index,
+              name: field.label,
+              icon: 'fa-table',
+              active: field.active,
+              rowTableField: field // Store reference to the field
+            });
           });
+
+          console.log('✅ Final sidebar tabs:', this.sidebarTabs.map(t => ({ id: t.id, name: t.name })));
 
           // Set first tab as active by default
           if (this.sidebarTabs.length > 0) {

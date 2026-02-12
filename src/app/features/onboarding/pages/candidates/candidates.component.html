@@ -15,29 +15,27 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="input-label">Code <span class="required">*</span></label>
-                        <input type="text" class="form-input" [(ngModel)]="candidate.code" name="id" required [disabled]="title === 'edit'" />
-                            <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.code">
-  Required field is missing
-</div>
+                        <input type="text" class="form-input" [(ngModel)]="candidate.code" name="id" required
+                            [disabled]="title === 'edit'" />
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.code">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('first_name')">
                         <label class="input-label">First Name <span class="required">*</span></label>
                         <input type="text" class="form-input" [(ngModel)]="candidate.first_name" name="first_name"
                             required />
-                                <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.first_name">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.first_name">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('last_name')">
                         <label class="input-label">Last Name <span class="required">*</span></label>
                         <input type="text" class="form-input" [(ngModel)]="candidate.last_name" name="last_name"
                             required />
-                                <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.last_name">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.last_name">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('requisition')">
                         <label class="input-label">Requisition <span class="required">*</span></label>
@@ -59,10 +57,9 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.requisition_code">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.requisition_code">
+                            Required field is missing
+                        </div>
                     </div>
                 </div>
 
@@ -75,20 +72,18 @@
                         <label class="input-label">Email</label>
                         <input type="email" class="form-input" [(ngModel)]="candidate.email" name="email"
                             placeholder="Enter Email" />
-                             <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.email">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.email">
+                            Required field is missing
+                        </div>
                     </div>
 
                     <div class="form-group" *ngIf="isFieldActive('contact_number1')">
                         <label class="input-label">Contact Number 1</label>
                         <input type="text" class="form-input" [(ngModel)]="candidate.contact_number1"
                             name="contact_number1" placeholder="Enter Contact Number" />
-                             <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.contact_number1">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.contact_number1">
+                            Required field is missing
+                        </div>
                     </div>
                 </div>
 
@@ -98,19 +93,17 @@
                         <label class="input-label">Contact Number 2</label>
                         <input type="text" class="form-input" [(ngModel)]="candidate.contact_number2"
                             name="contact_number2" placeholder="Enter Contact Number" />
-                             <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.contact_number2">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.contact_number2">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('application_date')">
                         <label class="input-label">Date of Application</label>
                         <input type="date" class="form-input" [(ngModel)]="candidate.application_date"
                             name="application_date" />
-                             <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.application_date">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.application_date">
+                            Required field is missing
+                        </div>
                     </div>
                     <!-- <div class="form-group">
                         <label class="input-label">Department</label>
@@ -153,19 +146,17 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.designation">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.designation">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('expected_doj')">
                         <label class="input-label"> Expected Date of Joining</label>
                         <input type="date" class="form-input" [(ngModel)]="candidate.expected_doj"
                             name="expected_doj" />
-                             <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.expected_doj">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.expected_doj">
+                            Required field is missing
+                        </div>
 
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('gender')">
@@ -184,18 +175,16 @@
 
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.gender">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.gender">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="input-label">LinkedIn URL</label>
                         <input type="url" class="form-input" [(ngModel)]="candidate.linkedin_url" name="linkedinUrl" />
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.linkedin_url">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.linkedin_url">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="input-label">Religion</label>
@@ -217,10 +206,9 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.religion">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.religion">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="input-label">Country</label>
@@ -238,10 +226,9 @@
 
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.country">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.country">
+                            Required field is missing
+                        </div>
                     </div>
 
 
@@ -260,10 +247,9 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.city">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.city">
+                            Required field is missing
+                        </div>
                     </div>
                     <!-- <div class="form-group">
                         <label class="input-label">Category</label>
@@ -296,10 +282,9 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.onboarding_status">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.onboarding_status">
+                            Required field is missing
+                        </div>
                     </div>
                     <div class="form-group" *ngIf="isFieldActive('status')">
                         <label class="input-label">Candidate Status</label>
@@ -316,10 +301,9 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="error-msg"
-  *ngIf="isSubmitted && !candidate.status">
-  Required field is missing
-</div>
+                        <div class="error-msg" *ngIf="isSubmitted && !candidate.status">
+                            Required field is missing
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="form-row full-width">
@@ -571,7 +555,8 @@
         <div class="form-actions">
             <button type="button" class="btn btn-cancel" (click)="onCancel()"> Cancel</button>
 
-            <button type="submit" class="btn btn-submit" (click)="saveCandidate()">{{title === 'create' ? 'Create Candidate' : (title === 'edit' ? 'Update Candidate' : 'Save Candidate')}}</button>
+            <button type="submit" class="btn btn-submit" (click)="saveCandidate()">{{title === 'create' ? 'Create
+                Candidate' : (title === 'edit' ? 'Update Candidate' : 'Save Candidate')}}</button>
         </div>
 
     </div>

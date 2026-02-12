@@ -459,8 +459,8 @@ export class CandidatesComponent implements OnInit {
           this.selectedDesignationDisplay = data.designation_name || ''
 
           // Populate dynamic fields data from backend
-          let dynamicData = [data.candidate_attachment, data.candidate_experience, data.candidate_qualification, data.candidate_skills];
-          this.populateDynamicFieldsFromBackend(data, dynamicData);
+          console.log('📊 Full candidate data from backend:', data);
+          this.populateDynamicFieldsFromBackend(data);
         }
         if (res.paginator) {
           this.currentPage = res.paginator.currentPage;
@@ -479,8 +479,9 @@ export class CandidatesComponent implements OnInit {
     });
   }
 
-  populateDynamicFieldsFromBackend(data: any, dynamicRowData: any[]) {
+  populateDynamicFieldsFromBackend(data: any) {
 
+    console.log('\n🔄 Starting populateDynamicFieldsFromBackend...');
 
     // Populate single dynamic fields (non-ROW fields)
     this.dynamicFieldsService.dynamicFields.forEach(field => {
@@ -489,43 +490,57 @@ export class CandidatesComponent implements OnInit {
       }
     });
 
-    // Create a mapping of field codes to their backend data
-    const fieldDataMap: any = {
-      'candidate_attachment': data.candidate_attachment,
-      'candidate_experience': data.candidate_experience,
-      'candidate_qualification': data.candidate_qualification,
-      'candidate_skills': data.candidate_skills
-    };
+    console.log('🔍 Available rowTableFields:', this.dynamicFieldsService.rowTableFields.map(f => f.fieldCode));
+    console.log('🔍 Backend data keys:', Object.keys(data).filter(k => 
+      ['candidate_attachment', 'candidate_experience', 'candidate_qualification', 'candidate_skills'].includes(k)
+    ));
 
     // Populate ROW table fields with backend data by matching field codes
     this.dynamicFieldsService.rowTableFields.forEach((field) => {
+      console.log(`\n📋 Processing field: ${field.fieldCode}`);
+      console.log(`   Label: ${field.label}`);
+      console.log(`   Has rowColumns: ${!!field.rowColumns}, Count: ${field.rowColumns?.length || 0}`);
+      
+      // Get the data for this specific field by fieldCode directly from data object
+      let rowDataArray = data[field.fieldCode];
 
-      // Get the data for this specific field by fieldCode
-      let rowDataArray = fieldDataMap[field.fieldCode];
+      console.log(`   Data type: ${Array.isArray(rowDataArray) ? 'array' : typeof rowDataArray}`);
+      console.log(`   Data:`, rowDataArray);
 
-      if (rowDataArray) {
+      if (rowDataArray && Array.isArray(rowDataArray) && rowDataArray.length > 0) {
+        console.log(`   ✅ Found ${rowDataArray.length} rows for ${field.fieldCode}`);
 
-        // Handle if it's already an array or convert to array
-        if (!Array.isArray(rowDataArray)) {
-          rowDataArray = [rowDataArray];
-        }
+        // Get the first row of data
+        const rowData = rowDataArray[0];
 
-        // If backend sends array of rows, populate the first row
-        if (rowDataArray.length > 0 && field.rowColumns) {
-          const rowData = rowDataArray[0]; // Get first row
+        if (rowData && typeof rowData === 'object' && field.rowColumns) {
+          console.log(`   Column codes in field:`, field.rowColumns.map((c: any) => c.fieldCode));
+          console.log(`   Keys in row data:`, Object.keys(rowData));
 
-          if (rowData && typeof rowData === 'object') {
-            field.rowColumns.forEach((column: any) => {
-              if (rowData[column.fieldCode] !== undefined && rowData[column.fieldCode] !== null) {
-                column.selectedValue = rowData[column.fieldCode];
-                console.log(`Set ${field.fieldCode}.${column.fieldCode} = ${rowData[column.fieldCode]}`);
-              }
-            });
-          }
+          // Populate each column with its corresponding value
+          field.rowColumns.forEach((column: any) => {
+            if (rowData[column.fieldCode] !== undefined && rowData[column.fieldCode] !== null) {
+              column.selectedValue = rowData[column.fieldCode];
+              console.log(`   ✅ Set ${field.fieldCode}.${column.fieldCode} = "${rowData[column.fieldCode]}"`);
+            } else {
+              console.log(`   ⚠️ No data for column: ${column.fieldCode}`);
+            }
+          });
+        } else {
+          console.log(`   ❌ Invalid row data structure for ${field.fieldCode}`);
         }
       } else {
+        if (!rowDataArray) {
+          console.log(`   ❌ No data found in backend response for ${field.fieldCode}`);
+        } else if (!Array.isArray(rowDataArray)) {
+          console.log(`   ❌ Data is not an array for ${field.fieldCode}:`, typeof rowDataArray);
+        } else {
+          console.log(`   ⚠️ Empty array for ${field.fieldCode}`);
+        }
       }
     });
+
+    console.log('\n✅ Dynamic fields population completed\n');
   }
   deleteCandidate(value: any) {
     let status = ''
