@@ -301,7 +301,7 @@ export class CandidatesComponent implements OnInit {
       delete (this.candidate as any).candidate_skills;
       delete (this.candidate as any).public_id;
       delete (this.candidate as any).requisition_public_id;
-      delete (this.candidate as any).requisition;
+      delete (this.candidate as any).requisition_code;
       delete (this.candidate as any).requisition_name;
       delete (this.candidate as any).department_public_id;
       delete (this.candidate as any).department_name;
