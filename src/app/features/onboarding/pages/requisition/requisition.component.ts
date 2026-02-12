@@ -248,7 +248,8 @@ export class RequisitionComponent implements OnInit {
     this.activeDropdown = '';
   }
   selectHiringManager(field: string, value: string, event: Event) {
-
+    event.stopPropagation();
+    
     if (field === 'hiring_manager') this.hiringManagerDropDownValue = value;
 
     (this.requisition as any)[field] = value;
