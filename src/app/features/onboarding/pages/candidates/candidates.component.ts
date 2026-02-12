@@ -250,7 +250,7 @@ export class CandidatesComponent implements OnInit {
 
     if (field === 'requisition' && value.code) {
       // For requisition, store code and display summary
-      this.candidate.requisition_code = value.code;
+      this.candidate.requisition = value.code;
       this.requisitionDisplayValue = value.summary;
     } else if (field === 'designation') {
       this.candidate.designation = value.code;
@@ -283,7 +283,7 @@ export class CandidatesComponent implements OnInit {
       !this.candidate.code ||
       !this.candidate.first_name ||
       !this.candidate.last_name ||
-      !this.candidate.requisition_code
+      !this.candidate.requisition
 
     ) {
       this.toastr.warning('Please fill all required fields');
@@ -294,14 +294,14 @@ export class CandidatesComponent implements OnInit {
     delete (this.candidate as any).designation;
     delete (this.candidate as any).category;
     delete (this.candidate as any).remarks;
-    if (this.title === 'edit' || this.title === 'create') {
+    if (this.title === 'edit') {
       delete (this.candidate as any).candidate_attachment;
       delete (this.candidate as any).candidate_experience;
       delete (this.candidate as any).candidate_qualification;
       delete (this.candidate as any).candidate_skills;
       delete (this.candidate as any).public_id;
       delete (this.candidate as any).requisition_public_id;
-      delete (this.candidate as any).requisition_code;
+      delete (this.candidate as any).requisition;
       delete (this.candidate as any).requisition_name;
       delete (this.candidate as any).department_public_id;
       delete (this.candidate as any).department_name;
