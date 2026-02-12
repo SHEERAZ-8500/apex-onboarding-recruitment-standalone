@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
-import { CandidateDto } from '../../dtos/candidate.dto';
+import { CandidateCreateDto, CandidateDto } from '../../dtos/candidate.dto';
 import { RequisitionDto } from '../../dtos/requisition.dto';
 import { LookupDto, LookupDtoWhenTypeForm, CandidateTableListingDto } from '../../../../shared/models/common/common-dto-';
 import { ToastrService } from 'ngx-toastr';
@@ -25,7 +25,7 @@ export class CandidatesComponent implements OnInit {
   formTitle = "";
 
   // Section-wise candidate data
-  candidate: CandidateDto = new CandidateDto();
+  candidate: CandidateCreateDto = new CandidateCreateDto();
 
   currentPage = 0; // Backend uses 0-based indexing
   itemsPerPage = 7;
@@ -430,7 +430,7 @@ export class CandidatesComponent implements OnInit {
 
   resetForm(): void {
     // Reset candidate object
-    this.candidate = new CandidateDto();
+    this.candidate = new CandidateCreateDto();
     // Reset dropdown display values
     this.genderEnumArray = [];
     this.candidateEnumArray = [];
