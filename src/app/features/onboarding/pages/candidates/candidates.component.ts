@@ -294,7 +294,7 @@ export class CandidatesComponent implements OnInit {
     delete (this.candidate as any).designation;
     delete (this.candidate as any).category;
     delete (this.candidate as any).remarks;
-    if (this.title === 'edit') {
+    if (this.title === 'edit' || this.title === 'view') {
       delete (this.candidate as any).candidate_attachment;
       delete (this.candidate as any).candidate_experience;
       delete (this.candidate as any).candidate_qualification;
