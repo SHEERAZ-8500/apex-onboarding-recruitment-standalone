@@ -97,8 +97,7 @@ export class FormsService {
   getLokupTableByCode(code: any) {
     return this.http.get(`admin/lookups/tables/${code}/values`);
   }
-
   getLokupTableByCodeWithFormType(code: any) {
-    return this.http.get(`admin/lookups/tables/${code}/values?filter=FORM_TYPE`);
+    return this.http.get(`forms/${code}/submissions`);
   }
 }

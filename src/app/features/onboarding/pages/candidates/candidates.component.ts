@@ -407,6 +407,7 @@ export class CandidatesComponent implements OnInit {
     });
   }
   fetchLookupOptionsWhenLokupTypeForm(fieldCode: string): void {
+    
     this.formsService.getLokupTableByCodeWithFormType(fieldCode).subscribe({
       next: (res: any) => {
 
