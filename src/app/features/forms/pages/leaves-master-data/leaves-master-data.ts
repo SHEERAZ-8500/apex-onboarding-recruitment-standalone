@@ -3,10 +3,10 @@
   import { CommonModule } from '@angular/common';
   import { FormsModule } from '@angular/forms';
   import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
-  import { LeavesMasterDataDto } from '../../dtos/create-form.dto';
+  import { LeavesMasterDataDto } from '../../../master-data-forms/dtos/master-date.dto';
   import { ToastrService } from 'ngx-toastr';
   import { LoaderService } from '../../../../core/services/management-services/loader.service';
-  import { FormsService } from '../../../forms/services/forms.service';
+  import { FormsService } from '../../services/forms.service';
   // import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
   
 @Component({

@@ -8,15 +8,16 @@ import { LoaderService } from '../../../../core/services/management-services/loa
 import { ApiService } from '../../../../core/services/apis/api.service';
 import { ViewLookupValuesInTableDto } from '../../../../shared/models/common/common-dto-';
 import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+import { MasterDataService } from '../../services/master-data.service';
 
 @Component({
   selector: 'app-view-all-lookup-values-in-table',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, PaginationComponent],
-  templateUrl: './job-title.html',
-  styleUrl: './job-title.scss'
+  templateUrl: './designation.html',
+  styleUrl: './designation.scss'
 })
-export class JobTitle {
+export class Designation {
 
 
 
@@ -24,23 +25,23 @@ export class JobTitle {
     private router: Router,
     private toastr: ToastrService,
     private loader: LoaderService,
-    private api: ApiService,
+    private masterDataService: MasterDataService, 
     private activatedRoute: ActivatedRoute
   ) { }
 
-  job_title!: string;
-  currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 5;
+  designation!: string;
+  currentPage = 0;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
   paginatedLookupValues: ViewLookupValuesInTableDto[] = [];
 
 
 
-ngOnInit() {
-  this.job_title = 'job-title';   
-  this.getLookupData();
-}
+  ngOnInit() {
+    this.designation = 'designation';
+    this.getLookupData();
+  }
 
 
 
@@ -60,7 +61,7 @@ ngOnInit() {
 
   getLookupData() {
     this.loader.show();
-    this.api.getAllJobTitleValuesInTable(this.job_title, this.currentPage, this.itemsPerPage).subscribe({
+    this.masterDataService.getAllDesignationValuesInTable(this.designation, this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.loader.hide();
 
@@ -73,7 +74,7 @@ ngOnInit() {
         }
       },
       error: (err: any) => {
-        console.error('Error fetching job title values:', err);
+        console.error('Error fetching lookup values:', err);
         this.loader.hide();
 
       }

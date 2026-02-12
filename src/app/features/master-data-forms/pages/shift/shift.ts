@@ -1,25 +1,25 @@
+
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
-import { PayPeriodDto } from '../../dtos/create-form.dto';
+import {  ShiftDto } from '../../../master-data-forms/dtos/master-date.dto';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../core/services/management-services/loader.service';
 import { FormsService } from '../../../forms/services/forms.service';
 import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
 
-
 @Component({
-  selector: 'app-pay-period',
-    standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './pay-period.html',
-  styleUrl: './pay-period.scss',
+  selector: 'app-shift',
+  imports: [CommonModule, FormsModule, RouterModule],
+  standalone: true,
+  templateUrl: './shift.html',
+  styleUrl: './shift.scss',
 })
-export class PayPeriod {
+export class Shift {
 
-  payPeriod: PayPeriodDto = new PayPeriodDto();
+ shift: ShiftDto = new ShiftDto();
   activeDropdown: string = '';
   backendFieldsMap: Record<string, boolean> = {};
   fieldConfigMap: Record<string, any> = {};
@@ -27,6 +27,17 @@ export class PayPeriod {
   sidebarTabs: any[] = [];
   activeTabId: number = 1;
   statusEnumArray: any[] = [];
+
+weekDays = [
+  { name: 'Monday' },
+  { name: 'Tuesday' },
+  { name: 'Wednesday' },
+  { name: 'Thursday' },
+  { name: 'Friday' },
+  { name: 'Saturday' },
+  { name: 'Sunday' }
+];
+
 
   constructor(
      private router: Router,
@@ -38,7 +49,7 @@ export class PayPeriod {
    ) { }
 
     ngOnInit(): void {
-         this.dynamicFieldsService.loadDynamicFields('PAY_PERIOD', 'USER_DEFINED', [])
+         this.dynamicFieldsService.loadDynamicFields('SHIFT', 'USER_DEFINED', [])
           .then(() => {
             // Get tabs from service
             this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
@@ -59,7 +70,7 @@ export class PayPeriod {
       }
 
         getFormFileds() {
-    this.formsService.getFormByFormCode('PAY_PERIOD').subscribe({
+    this.formsService.getFormByFormCode('SHIFT').subscribe({
       next: (res: any) => {
         console.log('Form Fields:', res);
 
@@ -111,8 +122,7 @@ export class PayPeriod {
  selectOption(field: string, value: any, event: Event) {
     event.stopPropagation();
    
-    (this.payPeriod as any)[field] = value.code;
+    (this.shift as any)[field] = value.code;
     this.activeDropdown = '';
   }
-
 }

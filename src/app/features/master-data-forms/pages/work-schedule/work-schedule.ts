@@ -1,64 +1,65 @@
+
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
-import { LeavesApplicationDto } from '../../dtos/create-form.dto';
+import { WorkScheduleDto } from '../../../master-data-forms/dtos/master-date.dto';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../core/services/management-services/loader.service';
 import { FormsService } from '../../../forms/services/forms.service';
-// import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
 
 @Component({
-  selector: 'app-leave-application',
-  imports: [ CommonModule, FormsModule, RouterModule],
+  selector: 'app-work-schedule',
+  imports: [CommonModule, FormsModule, RouterModule],
   standalone: true,
-  templateUrl: './leave-application.html',
-  styleUrl: './leave-application.scss',
+  templateUrl: './work-schedule.html',
+  styleUrl: './work-schedule.scss',
 })
-export class LeaveApplication {
+export class WorkSchedule {
 
-leaveApplication: LeavesApplicationDto = new LeavesApplicationDto();
+  workSchedule: WorkScheduleDto = new WorkScheduleDto();
   activeDropdown: string = '';
   backendFieldsMap: Record<string, boolean> = {};
   fieldConfigMap: Record<string, any> = {};
   // Sidebar Tabs Data
   sidebarTabs: any[] = [];
   activeTabId: number = 1;
-  statusEnumArray: any[] = [];
+  shiftEnumArray: any[] = [];
+  payPeriodEnumArray: any[] = [];
 
   constructor(
-     private router: Router,
-     public dynamicFieldsService: DynamicFieldsSharingService,
-     private toastr: ToastrService,
-     private loader: LoaderService,
-     private formsService: FormsService,
-     private activatedRoute: ActivatedRoute
-   ) { }
+    private router: Router,
+    public dynamicFieldsService: DynamicFieldsSharingService,
+    private toastr: ToastrService,
+    private loader: LoaderService,
+    private formsService: FormsService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
-    ngOnInit(): void {
-         this.dynamicFieldsService.loadDynamicFields('LEAVE_APPLICATION', 'USER_DEFINED', [])
-          .then(() => {
-            // Get tabs from service
-            this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
-            this.activeTabId = this.dynamicFieldsService.activeTabId;
-            console.log('sidebarTabs:', this.sidebarTabs);
-            if (this.sidebarTabs.length > 1) {
-              console.log('rowTableField:', this.sidebarTabs[1]?.rowTableField);
-            }
-            this.loader.hide();
-          })
-                  .catch((err) => {
-            console.error('Error loading dynamic fields:', err);
-            this.toastr.error('Failed to load dynamic fields');
-            this.loader.hide();
-          });
-        this.getFormFileds();
+  ngOnInit(): void {
+    this.dynamicFieldsService.loadDynamicFields('WORK_SCHEDULE', 'USER_DEFINED', [])
+      .then(() => {
+        // Get tabs from service
+        this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
+        this.activeTabId = this.dynamicFieldsService.activeTabId;
+        console.log('sidebarTabs:', this.sidebarTabs);
+        if (this.sidebarTabs.length > 1) {
+          console.log('rowTableField:', this.sidebarTabs[1]?.rowTableField);
+        }
+        this.loader.hide();
+      })
+      .catch((err) => {
+        console.error('Error loading dynamic fields:', err);
+        this.toastr.error('Failed to load dynamic fields');
+        this.loader.hide();
+      });
+    this.getFormFileds();
 
-      }
+  }
 
-        getFormFileds() {
-    this.formsService.getFormByFormCode('LEAVE_APPLICATION').subscribe({
+  getFormFileds() {
+    this.formsService.getFormByFormCode('WORK_SCHEDULE').subscribe({
       next: (res: any) => {
         console.log('Form Fields:', res);
 
@@ -86,7 +87,7 @@ leaveApplication: LeavesApplicationDto = new LeavesApplicationDto();
   }
 
 
-    @HostListener('document:click', ['$event'])
+  @HostListener('document:click', ['$event'])
   closeDropdowns(event: Event) {
     this.activeDropdown = '';
     this.dynamicFieldsService.closeAllDropdowns();
@@ -98,7 +99,7 @@ leaveApplication: LeavesApplicationDto = new LeavesApplicationDto();
     this.dynamicFieldsService.setActiveTab(tabId);
   }
 
-    // Dropdown toggle
+  // Dropdown toggle
   toggleDropdown(event: Event, dropdownId: string) {
     event.stopPropagation();
 
@@ -107,10 +108,10 @@ leaveApplication: LeavesApplicationDto = new LeavesApplicationDto();
     this.activeDropdown = this.activeDropdown === dropdownId ? '' : dropdownId;
   }
 
- selectOption(field: string, value: any, event: Event) {
+  selectOption(field: string, value: any, event: Event) {
     event.stopPropagation();
-   
-    (this.leaveApplication as any)[field] = value.code;
+
+    (this.workSchedule as any)[field] = value.code;
     this.activeDropdown = '';
   }
 

@@ -27,7 +27,7 @@ export class ViewAllTabsValuesInTableComponent {
 
   lookupName!: string;
   currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 5;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
   paginatedTabsValues: ViewTTabsValuesInTableDto[] = [];

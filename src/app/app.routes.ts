@@ -44,6 +44,7 @@ export const routes: Routes = [
         { path: 'employees-master-data', loadChildren: () => import('../app/features/employees/employees.routes').then(m => m.routes) },
       { path: 'forms', loadChildren: () => import('../app/features/forms/forms.routes').then(m => m.routes) },
       { path: 'onboarding', loadChildren: () => import('../app/features/onboarding/onboarding.routes').then(m => m.routes) },
+      {path: 'master-data', loadChildren: () => import('../app/features/master-data-forms/master-data.routes').then(m => m.routes)}
 
 
 

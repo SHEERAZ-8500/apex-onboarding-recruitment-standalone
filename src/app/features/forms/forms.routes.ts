@@ -7,14 +7,14 @@ import { CreateNewUdfComponent } from './pages/create-new-udf/create-new-udf.com
 import { CreateUddComponent } from './pages/create-udd/create-udd.component';
 import { ManageFiledsVisibilityComponent } from './pages/manage-fileds-visibility/manage-fileds-visibility.component';
 import { ViewAllFormsComponent } from './pages/view-all-forms/view-all-forms.component';
-import { PayPeriod } from '../forms/pages/pay-period/pay-period';
-import { Shift} from  '../forms/pages/shift/shift';
-import { WorkSchedule } from '../forms/pages/work-schedule/work-schedule';
-import { LeaveApplication } from './pages/leave-application/leave-application';
+import { PayPeriod } from '../master-data-forms/pages/pay-period/pay-period';
+import { Shift} from  '../master-data-forms/pages/shift/shift';
+import { WorkSchedule } from '../master-data-forms/pages/work-schedule/work-schedule';
+import { LeaveApplication } from '../master-data-forms/pages/leave-application/leave-application';
 import { LeavesMasterData } from './pages/leaves-master-data/leaves-master-data';
-import { Department } from './pages/department/department';
-import { Designation } from './pages/designation/designation';
-import { JobTitle } from './pages/job-title/job-title';
+import { Department } from '../master-data-forms/pages/department/department';
+import { Designation } from '../master-data-forms/pages/designation/designation';
+import { JobTitle } from '../master-data-forms/pages/job-title/job-title';
 export const routes: Routes = [
   {
     path: 'view-all-forms',
@@ -43,13 +43,6 @@ export const routes: Routes = [
     path: 'create-new-form',
     component: CreateNewFormComponent
   }
-  ,
-  {path: 'pay-period', component: PayPeriod},
-  {path: 'shift', component: Shift},
-  {path: 'work-schedule', component: WorkSchedule},
-  {path: 'leave-application', component: LeaveApplication},
-  {path: 'leaves-master-data', component: LeavesMasterData},
-  {path: 'department', component: Department},
-  {path: 'designation', component: Designation},
-  {path: 'job_title', component: JobTitle} // Assuming job_title uses the same component as department for now
+  
+  
 ]

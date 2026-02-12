@@ -23,7 +23,7 @@ export class ViewAllUsersComponent {
   }
 
   currentPage = 1;
-  itemsPerPage = 10;
+  itemsPerPage = 7;
   paginatedUsersList: any[] = [];
 
   get totalPages() {

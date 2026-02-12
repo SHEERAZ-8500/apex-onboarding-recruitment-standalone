@@ -1,65 +1,65 @@
-
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
-import { PayPeriodDto, ShiftDto, WorkScheduleDto } from '../../dtos/create-form.dto';
+import { PayPeriodDto } from '../../../master-data-forms/dtos/master-date.dto';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../core/services/management-services/loader.service';
 import { FormsService } from '../../../forms/services/forms.service';
+import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+
 
 @Component({
-  selector: 'app-work-schedule',
-  imports: [CommonModule, FormsModule, RouterModule],
-  standalone: true,
-  templateUrl: './work-schedule.html',
-  styleUrl: './work-schedule.scss',
+  selector: 'app-pay-period',
+    standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './pay-period.html',
+  styleUrl: './pay-period.scss',
 })
-export class WorkSchedule {
+export class PayPeriod {
 
-  workSchedule: WorkScheduleDto = new WorkScheduleDto();
+  payPeriod: PayPeriodDto = new PayPeriodDto();
   activeDropdown: string = '';
   backendFieldsMap: Record<string, boolean> = {};
   fieldConfigMap: Record<string, any> = {};
   // Sidebar Tabs Data
   sidebarTabs: any[] = [];
   activeTabId: number = 1;
-  shiftEnumArray: any[] = [];
-  payPeriodEnumArray: any[] = [];
+  statusEnumArray: any[] = [];
 
   constructor(
-    private router: Router,
-    public dynamicFieldsService: DynamicFieldsSharingService,
-    private toastr: ToastrService,
-    private loader: LoaderService,
-    private formsService: FormsService,
-    private activatedRoute: ActivatedRoute
-  ) { }
+     private router: Router,
+     public dynamicFieldsService: DynamicFieldsSharingService,
+     private toastr: ToastrService,
+     private loader: LoaderService,
+     private formsService: FormsService,
+     private activatedRoute: ActivatedRoute
+   ) { }
 
-  ngOnInit(): void {
-    this.dynamicFieldsService.loadDynamicFields('WORK_SCHEDULE', 'USER_DEFINED', [])
-      .then(() => {
-        // Get tabs from service
-        this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
-        this.activeTabId = this.dynamicFieldsService.activeTabId;
-        console.log('sidebarTabs:', this.sidebarTabs);
-        if (this.sidebarTabs.length > 1) {
-          console.log('rowTableField:', this.sidebarTabs[1]?.rowTableField);
-        }
-        this.loader.hide();
-      })
-      .catch((err) => {
-        console.error('Error loading dynamic fields:', err);
-        this.toastr.error('Failed to load dynamic fields');
-        this.loader.hide();
-      });
-    this.getFormFileds();
+    ngOnInit(): void {
+         this.dynamicFieldsService.loadDynamicFields('PAY_PERIOD', 'USER_DEFINED', [])
+          .then(() => {
+            // Get tabs from service
+            this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
+            this.activeTabId = this.dynamicFieldsService.activeTabId;
+            console.log('sidebarTabs:', this.sidebarTabs);
+            if (this.sidebarTabs.length > 1) {
+              console.log('rowTableField:', this.sidebarTabs[1]?.rowTableField);
+            }
+            this.loader.hide();
+          })
+                  .catch((err) => {
+            console.error('Error loading dynamic fields:', err);
+            this.toastr.error('Failed to load dynamic fields');
+            this.loader.hide();
+          });
+        this.getFormFileds();
 
-  }
+      }
 
-  getFormFileds() {
-    this.formsService.getFormByFormCode('WORK_SCHEDULE').subscribe({
+        getFormFileds() {
+    this.formsService.getFormByFormCode('PAY_PERIOD').subscribe({
       next: (res: any) => {
         console.log('Form Fields:', res);
 
@@ -87,7 +87,7 @@ export class WorkSchedule {
   }
 
 
-  @HostListener('document:click', ['$event'])
+    @HostListener('document:click', ['$event'])
   closeDropdowns(event: Event) {
     this.activeDropdown = '';
     this.dynamicFieldsService.closeAllDropdowns();
@@ -99,7 +99,7 @@ export class WorkSchedule {
     this.dynamicFieldsService.setActiveTab(tabId);
   }
 
-  // Dropdown toggle
+    // Dropdown toggle
   toggleDropdown(event: Event, dropdownId: string) {
     event.stopPropagation();
 
@@ -108,10 +108,10 @@ export class WorkSchedule {
     this.activeDropdown = this.activeDropdown === dropdownId ? '' : dropdownId;
   }
 
-  selectOption(field: string, value: any, event: Event) {
+ selectOption(field: string, value: any, event: Event) {
     event.stopPropagation();
-
-    (this.workSchedule as any)[field] = value.code;
+   
+    (this.payPeriod as any)[field] = value.code;
     this.activeDropdown = '';
   }
 

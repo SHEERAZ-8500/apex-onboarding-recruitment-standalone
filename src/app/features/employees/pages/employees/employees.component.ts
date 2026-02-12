@@ -126,7 +126,7 @@ export class EmployeesComponent {
   showViewModal = false;
 
   // Table Controls
-  itemsPerPage = 10;
+  itemsPerPage = 7;
   currentPage = 1;
   searchText = '';
   selectedErp = '';

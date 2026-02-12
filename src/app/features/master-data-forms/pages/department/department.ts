@@ -5,18 +5,19 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../core/services/management-services/loader.service';
-import { ApiService } from '../../../../core/services/apis/api.service';
 import { ViewLookupValuesInTableDto } from '../../../../shared/models/common/common-dto-';
 import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+import { MasterDataService } from '../../services/master-data.service';
+
 
 @Component({
   selector: 'app-view-all-lookup-values-in-table',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule, PaginationComponent],
-  templateUrl: './designation.html',
-  styleUrl: './designation.scss'
+  templateUrl: './department.html',
+  styleUrl: './department.scss'
 })
-export class Designation {
+export class Department {
 
 
 
@@ -24,13 +25,13 @@ export class Designation {
     private router: Router,
     private toastr: ToastrService,
     private loader: LoaderService,
-    private api: ApiService,
+    private masterDataService: MasterDataService,
     private activatedRoute: ActivatedRoute
   ) { }
 
-  designation!: string;
+  department!: string;
   currentPage = 0; 
-  itemsPerPage = 5;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
   paginatedLookupValues: ViewLookupValuesInTableDto[] = [];
@@ -38,7 +39,7 @@ export class Designation {
 
 
 ngOnInit() {
-  this.designation = 'designation';  
+  this.department = 'department';   
   this.getLookupData();
 }
 
@@ -60,7 +61,7 @@ ngOnInit() {
 
   getLookupData() {
     this.loader.show();
-    this.api.getAllDesignationValuesInTable(this.designation, this.currentPage, this.itemsPerPage).subscribe({
+    this.masterDataService.getAllDepartmentValuesInTable(this.department, this.currentPage, this.itemsPerPage).subscribe({
       next: (res: any) => {
         this.loader.hide();
 

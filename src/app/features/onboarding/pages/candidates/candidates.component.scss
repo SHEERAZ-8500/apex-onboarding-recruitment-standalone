@@ -130,6 +130,15 @@
     padding-bottom: 6px;
 }
 
+.input-error {
+  border: 1px solid #dc3545;
+}
+
+.error-msg {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+}
 
 
 /* Form rows and inputs */

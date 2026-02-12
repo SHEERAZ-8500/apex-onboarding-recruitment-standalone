@@ -22,6 +22,7 @@ export class InterviewFeedbackComponent {
   interviewListing: InterviewDto[] = [];
   selectedInterviewId: string = '';
   interviewerPublicId: string = '';
+  isSubmitted = false;
   // Dropdown state
   activeDropdown: string = '';
   selectedCandidateId: string = '';
@@ -98,6 +99,7 @@ export class InterviewFeedbackComponent {
   }
 
   saveInterviewFeedback(): void {
+    
     if (!this.selectedCandidateId) {
       this.toastr.warning('Please select a candidate');
       return;

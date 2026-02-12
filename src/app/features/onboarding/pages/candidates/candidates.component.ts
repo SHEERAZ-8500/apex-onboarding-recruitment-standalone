@@ -28,9 +28,10 @@ export class CandidatesComponent implements OnInit {
   candidate: CandidateDto = new CandidateDto();
 
   currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 5;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
+  isSubmitted = false;
 
   // Dropdown state
   activeDropdown: string = '';
@@ -276,7 +277,7 @@ export class CandidatesComponent implements OnInit {
 
   // Save candidate data
   saveCandidate(): void {
-
+    this.isSubmitted = true;
 
     if (
       !this.candidate.code ||
@@ -445,13 +446,13 @@ export class CandidatesComponent implements OnInit {
 
   getCandidateData() {
 
-    this.onboardingService.getAllCandidatesTables(this.currentPage, this.itemsPerPage,this.editCandidatePublicId).subscribe({
+    this.onboardingService.getAllCandidatesTables(this.currentPage, this.itemsPerPage, this.editCandidatePublicId).subscribe({
       next: (res: any) => {
         this.loader.hide();
 
         this.candidateTableListArray = res.data || [];
         if (this.title === 'edit') {
-          
+
           this.candidate = this.candidateTableListArray.find(c => c.public_id === this.editCandidatePublicId) as any;
           let data = this.candidateTableListArray.find(c => c.public_id === this.editCandidatePublicId) as any
           this.requisitionDisplayValue = data.requisition_name || ''
@@ -528,7 +529,7 @@ export class CandidatesComponent implements OnInit {
   }
   deleteCandidate(value: any) {
     let status = ''
-    
+
     if (value.is_active) {
       status = 'deactivate'
     } else {

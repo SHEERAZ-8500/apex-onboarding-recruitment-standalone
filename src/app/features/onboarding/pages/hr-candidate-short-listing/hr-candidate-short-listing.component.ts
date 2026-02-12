@@ -23,7 +23,7 @@ export class HrCandidateShortListingComponent {
 
   // Pagination properties
   currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 10;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
   selectAll: boolean = false;

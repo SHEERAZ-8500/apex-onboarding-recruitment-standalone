@@ -1,25 +1,24 @@
-
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicFieldsSharingService } from '../../../../core/services/management-services/dynamic-fields-sharing.service';
-import { PayPeriodDto, ShiftDto } from '../../dtos/create-form.dto';
+import { LeavesApplicationDto } from '../../../master-data-forms/dtos/master-date.dto';
 import { ToastrService } from 'ngx-toastr';
 import { LoaderService } from '../../../../core/services/management-services/loader.service';
 import { FormsService } from '../../../forms/services/forms.service';
-import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
+// import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
 
 @Component({
-  selector: 'app-shift',
-  imports: [CommonModule, FormsModule, RouterModule],
+  selector: 'app-leave-application',
+  imports: [ CommonModule, FormsModule, RouterModule],
   standalone: true,
-  templateUrl: './shift.html',
-  styleUrl: './shift.scss',
+  templateUrl: './leave-application.html',
+  styleUrl: './leave-application.scss',
 })
-export class Shift {
+export class LeaveApplication {
 
- shift: ShiftDto = new ShiftDto();
+leaveApplication: LeavesApplicationDto = new LeavesApplicationDto();
   activeDropdown: string = '';
   backendFieldsMap: Record<string, boolean> = {};
   fieldConfigMap: Record<string, any> = {};
@@ -38,7 +37,7 @@ export class Shift {
    ) { }
 
     ngOnInit(): void {
-         this.dynamicFieldsService.loadDynamicFields('SHIFT', 'USER_DEFINED', [])
+         this.dynamicFieldsService.loadDynamicFields('LEAVE_APPLICATION', 'USER_DEFINED', [])
           .then(() => {
             // Get tabs from service
             this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
@@ -59,7 +58,7 @@ export class Shift {
       }
 
         getFormFileds() {
-    this.formsService.getFormByFormCode('SHIFT').subscribe({
+    this.formsService.getFormByFormCode('LEAVE_APPLICATION').subscribe({
       next: (res: any) => {
         console.log('Form Fields:', res);
 
@@ -111,7 +110,8 @@ export class Shift {
  selectOption(field: string, value: any, event: Event) {
     event.stopPropagation();
    
-    (this.shift as any)[field] = value.code;
+    (this.leaveApplication as any)[field] = value.code;
     this.activeDropdown = '';
   }
+
 }

@@ -1,49 +1,103 @@
 <div class="shift-form-container">
-    <div class="shift-form-card">
-        <div class="form-header">
-            <h2 class="form-title">Create New Shift</h2>
-            <p class="form-subtitle">Fill in the details to create new shift</p>
+  <div class="shift-form-card">
+    <div class="form-header header-with-status">
+      <div>
+        <h2 class="form-title">Create New Shift</h2>
+        <p class="form-subtitle">Fill in the details to create new shift</p>
+      </div>
+
+      <div class="checkbox-group"  *ngIf="isFieldActive('is_active')">
+        <label class="checkbox-label">
+          <input type="checkbox" class="checkbox-input" [(ngModel)]="shift.status" name="status" />
+          <span class="checkbox-text">Status</span>
+        </label>
+      </div>
+    </div>
+
+
+    <form class="shift-form">
+      <div class="form-row">
+
+        <div class="form-group">
+          <label class="input-label"> Shift Code</label>
+          <input type="text" class="form-input" [(ngModel)]="shift.shiftCode" name="shiftCode"
+            placeholder="Enter code" />
         </div>
 
-        <form class="shift-form">
-            <div class="form-row">
-             
-                <div class="form-group">
-                    <label class="input-label"> Shift Code</label>
-                    <input type="text" class="form-input" [(ngModel)]="shift.shiftCode" name="shiftCode"
-                        placeholder="Enter code" />
-                </div>
-
-                <div class="form-group">
-                    <label class="input-label">Shift Name</label>
-                    <input type="text" class="form-input" [(ngModel)]="shift.shiftName" name="shiftName"
-                        placeholder="Enter shift name" />
-                </div>
-                 <div class="form-row" *ngIf="isFieldActive('is_active')">
-          <div class="form-group checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" class="checkbox-input" [(ngModel)]="shift.status" name="status" />
-              <span class="checkbox-text">Active</span>
-            </label>
-          </div>
+        <div class="form-group">
+          <label class="input-label">Shift Name</label>
+          <input type="text" class="form-input" [(ngModel)]="shift.shiftName" name="shiftName"
+            placeholder="Enter shift name" />
         </div>
-            </div>
 
-        
+      </div>
 
-         
-            <div class="form-row full-width">
-                    <div class="form-group">
-                        <label class="input-label">Remarks</label>
-                        <textarea class="form-input" [(ngModel)]="shift.remarks" name="remarks" rows="4"
-                            placeholder="Enter your feedback and remarks here..."></textarea>
-                    </div>
-                </div>
 
-                     <!-- Dynamic Fields Section -->
+
+
+      <div class="form-row full-width">
+        <div class="form-group">
+          <label class="input-label">Remarks</label>
+          <textarea class="form-input" [(ngModel)]="shift.remarks" name="remarks" rows="4"
+            placeholder="Enter your feedback and remarks here..."></textarea>
+        </div>
+      </div>
+
+
+      <table class="min-w-full text-sm border-separate border-spacing-y-2 ">
+        <thead>
+          <tr class="text-gray-400 text-left text-xs uppercase tracking-wider">
+
+            <th class="px-3 py-2">Day</th>
+
+            <th class="px-3 py-2">Start Time</th>
+            <th class="px-3 py-2">Break Hours</th>
+            <th class="px-3 py-2">End Time</th>
+            <th class="px-3 py-2">Week Off</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let day of weekDays" class="bg-[#1e293b] hover:bg-[#27354a] rounded-lg">
+
+            <td class="px-3 py-3 font-medium">
+              {{ day.name }}
+            </td>
+            <!-- Start Time -->
+            <td class="px-3 py-3">
+              <input type="time" class="bg-[#0f172a] border border-gray-600 rounded px-2 py-1 w-full text-gray-200">
+            </td>
+            <!-- Break Hours -->
+            <td class="px-3 py-3">
+              <input type="number" min="0"
+                class="bg-[#0f172a] border border-gray-600 rounded px-2 py-1 w-full text-gray-200" placeholder="0">
+            </td>
+
+            <!-- End Time -->
+            <td class="px-3 py-3">
+              <input type="time" class="bg-[#0f172a] border border-gray-600 rounded px-2 py-1 w-full text-gray-200">
+            </td>
+
+            <!-- Week Off -->
+            <td class="px-3 py-3 text-center ">
+              <input type="checkbox" class="w-4 h-4 checkbox-input" >
+            </td>
+
+
+
+            <td class="px-3 py-3 font-medium"></td>
+
+
+
+
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Dynamic Fields Section -->
       <div class="dynamic-fields-section"
         *ngIf="dynamicFieldsService.dynamicFields.length > 0 && (!sidebarTabs.length || activeTabId === 1)">
-        <h3 class="section-heading">Additional Information</h3>
+        <!-- <h3 class="section-heading">Additional Information</h3> -->
         <div class="form-row">
           <ng-container *ngFor="let field of dynamicFieldsService.dynamicFields">
             <div class="form-group" *ngIf="field.active">
@@ -256,11 +310,11 @@
         </form>
       </div>
 
-            <div class="form-footer">
-                <button type="button" class="cancel-btn" >Cancel</button>
-                <button type="submit" class="submit-btn" >Create Shift</button>
+      <div class="form-footer">
+        <button type="button" class="cancel-btn">Cancel</button>
+        <button type="submit" class="submit-btn">Create Shift</button>
 
-            </div>
-        </form>
-    </div>
+      </div>
+    </form>
+  </div>
 </div>

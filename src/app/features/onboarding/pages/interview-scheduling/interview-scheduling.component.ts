@@ -27,10 +27,11 @@ export class InterviewSchedulingComponent implements OnInit {
 
 
   currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 5;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
   editInterviewPublicId: string = '';
+  isSubmitted = false;
 
   // Dropdown States
   isCandidateDropdownOpen: boolean = false;
@@ -321,7 +322,7 @@ export class InterviewSchedulingComponent implements OnInit {
   // Save interview scheduling data
   saveInterview(): void {
 
-
+ this.isSubmitted = true;
     if (
       !this.interview.candidate ||
       !this.interview.interview_date ||

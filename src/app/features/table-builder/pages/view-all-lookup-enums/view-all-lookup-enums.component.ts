@@ -42,7 +42,7 @@ routeNUmber: number = 1;
     candidate.interested = value;
   }
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 7;
   paginatedFormList: any[] = [];
 
   get totalPages() {

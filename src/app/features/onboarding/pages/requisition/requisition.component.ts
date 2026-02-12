@@ -26,12 +26,13 @@ export class RequisitionComponent implements OnInit {
   // Form fields as DTO
   requisition: RequisitionDto = new RequisitionDto();
   currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 5;
+  itemsPerPage = 7;
   totalItems = 0;
   totalPages = 0;
   editJobRequisitionCode = '';
   // Dropdown state
   activeDropdown: string = '';
+  
 
   // Dropdown options
   departments: LookupDto[] = [];
@@ -51,6 +52,7 @@ export class RequisitionComponent implements OnInit {
   designationDropDownValue: string = '';
   hiringManagerDropDownValue: string = '';
   editRequisitionPublicId: string = '';
+  isSubmitted = false;
   constructor(
     private router: Router,
     public dynamicFieldsService: DynamicFieldsSharingService,
@@ -267,6 +269,7 @@ export class RequisitionComponent implements OnInit {
 
   // Save requisition data
   saveRequisition(): void {
+     this.isSubmitted = true;
 
     if (
       !this.requisition.requisition_name ||
@@ -280,9 +283,10 @@ export class RequisitionComponent implements OnInit {
       return;
     }
     // Remove hiring_manager if its source is 'current user'
-    if (this.fieldConfigMap['hiring_manager']?.source === 'CURRENT_USER') {
-      delete (this.requisition as any).hiring_manager;
-    }
+   if (this.fieldConfigMap['hiring_manager']?.source === 'CURRENT_USER') {
+  (this.requisition as any).hiring_manager = null;
+}
+
 
     const completeData = this.dynamicFieldsService.getCompleteFormData(this.requisition);
     // console.log('Saving Requisition Data:', completeData);
