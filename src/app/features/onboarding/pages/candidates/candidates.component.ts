@@ -97,7 +97,10 @@ export class CandidatesComponent implements OnInit {
             // Get tabs from service
             this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
             this.activeTabId = this.dynamicFieldsService.activeTabId;
-
+            const field = this.sidebarTabs[this.activeTabId - 1]?.rowTableField;
+            if (field) {
+              this.dynamicFieldsService.initializeRowTable(field);
+            }
             // Now load candidate data after dynamic fields are ready
             this.getCandidateData();
 
@@ -125,6 +128,9 @@ export class CandidatesComponent implements OnInit {
       }
       if (this.title === 'create') {
         this.formTitle = "Create New Skill"
+        // Clear any existing row table data from previous session
+        this.dynamicFieldsService.rowTableData = {};
+
         this.dynamicFieldsService.loadDynamicFields('CANDIDATE', 'USER_DEFINED', [])
           .then(() => {
             // Get tabs from service
@@ -285,6 +291,32 @@ export class CandidatesComponent implements OnInit {
     }
   }
 
+  // Add current row data to table
+  addRowToTable(): void {
+    const field = this.sidebarTabs[this.activeTabId - 1]?.rowTableField;
+    if (!field) return;
+
+    const added = this.dynamicFieldsService.addRowFromCurrentFields(field);
+    if (added) {
+      this.toastr.success('Entry added successfully');
+    } else {
+      this.toastr.warning('Please fill at least one field');
+    }
+  }
+
+  // Remove row from table
+  removeRowFromTable(fieldCode: string, index: number): void {
+    this.dynamicFieldsService.removeRow(fieldCode, index);
+    this.toastr.success('Entry removed successfully');
+  }
+
+  // Get saved rows for current tab
+  getSavedRowsForCurrentTab(): any[] {
+    const field = this.sidebarTabs[this.activeTabId - 1]?.rowTableField;
+    if (!field) return [];
+    return this.dynamicFieldsService.getSavedRows(field.fieldCode);
+  }
+
   // Save candidate data
   saveCandidate(): void {
     this.isSubmitted = true;
@@ -320,15 +352,19 @@ export class CandidatesComponent implements OnInit {
       delete (this.candidate as any).designation_public_id;
       delete (this.candidate as any).designation_name;
       delete (this.candidate as any).created_date;
+      // delete (this.candidate as any).is_active;
+
 
 
     }
+    // debugger
+    // console.log("RowTableData:", this.dynamicFieldsService.rowTableData);
 
 
     this.candidate.onboarding_status = 'IN_PROGRESS';
     this.candidate.status = 'APPLIED';
 
-    const completeData = this.dynamicFieldsService.getCompleteFormData(this.candidate);
+    const completeData = this.dynamicFieldsService.getCompleteFormDataMultiple(this.candidate);
 
     if (this.title === 'create') {
       this.loader.show();
@@ -338,6 +374,8 @@ export class CandidatesComponent implements OnInit {
         next: (res: any) => {
           this.toastr.success('Candidate data saved successfully');
           this.loader.hide();
+          // Clear row table data after successful save
+          this.dynamicFieldsService.rowTableData = {};
           this.router.navigate(['/panel/onboarding/view-all-candidates']);
         },
         error: (err: any) => {
@@ -347,9 +385,26 @@ export class CandidatesComponent implements OnInit {
         }
       });
     } else {
+      // const cleanedRows: any = {};
+
+      // Object.keys(completeData.rows).forEach(tableKey => {
+
+      //   cleanedRows[tableKey] = completeData.rows[tableKey].map((row: any) => {
+
+      //     const { is_active, created_date, ...rest } = row;
+      //     return rest;
+
+      //   });
+
+      // });
+
+      // completeData.rows = cleanedRows;
+
       this.formsService.updateFormData('CANDIDATE', this.candidate.code, completeData).subscribe({
         next: (res: any) => {
           this.toastr.success('Candidate data updated successfully');
+          // Clear row table data after successful update
+          this.dynamicFieldsService.rowTableData = {};
           this.router.navigate(['/panel/onboarding/view-all-candidates']);
         }
         , error: (err: any) => {
@@ -467,7 +522,7 @@ export class CandidatesComponent implements OnInit {
           let data = this.candidateTableListArray.find(c => c.public_id === this.editCandidatePublicId) as any
           this.requisitionDisplayValue = data.requisition_name || ''
           this.selectedDesignationDisplay = data.designation_name || ''
-
+          this.candidate.requisition = data.requisition_code || ''
           // Populate dynamic fields data from backend
           console.log('📊 Full candidate data from backend:', data);
           this.populateDynamicFieldsFromBackend(data);
@@ -520,25 +575,9 @@ export class CandidatesComponent implements OnInit {
       if (rowDataArray && Array.isArray(rowDataArray) && rowDataArray.length > 0) {
         console.log(`   ✅ Found ${rowDataArray.length} rows for ${field.fieldCode}`);
 
-        // Get the first row of data
-        const rowData = rowDataArray[0];
-
-        if (rowData && typeof rowData === 'object' && field.rowColumns) {
-          console.log(`   Column codes in field:`, field.rowColumns.map((c: any) => c.fieldCode));
-          console.log(`   Keys in row data:`, Object.keys(rowData));
-
-          // Populate each column with its corresponding value
-          field.rowColumns.forEach((column: any) => {
-            if (rowData[column.fieldCode] !== undefined && rowData[column.fieldCode] !== null) {
-              column.selectedValue = rowData[column.fieldCode];
-              console.log(`   ✅ Set ${field.fieldCode}.${column.fieldCode} = "${rowData[column.fieldCode]}"`);
-            } else {
-              console.log(`   ⚠️ No data for column: ${column.fieldCode}`);
-            }
-          });
-        } else {
-          console.log(`   ❌ Invalid row data structure for ${field.fieldCode}`);
-        }
+        // Populate the entire table with all rows from backend
+        this.dynamicFieldsService.populateRowTableFromBackend(field.fieldCode, rowDataArray);
+        console.log(`   ✅ Populated table with ${rowDataArray.length} rows`);
       } else {
         if (!rowDataArray) {
           console.log(`   ❌ No data found in backend response for ${field.fieldCode}`);

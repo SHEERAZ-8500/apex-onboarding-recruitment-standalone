@@ -206,6 +206,7 @@ export class DynamicFieldsSharingService {
    */
   selectRowColumnOption(column: any, option: any, event: Event): void {
     event.stopPropagation();
+    debugger
     if (column.fieldType === 'LOOKUP_ENUM') {
       column.selectedValue = option;
     } else {
@@ -213,6 +214,24 @@ export class DynamicFieldsSharingService {
     }
     column.isDropdownOpen = false;
   }
+selectRowColumnOptionMutliple(column: any, option: any, event: Event, row: any): void {
+  event.stopPropagation();
+
+  if (column.fieldType === 'LOOKUP_ENUM') {
+    column.selectedValue = option;
+    if (row && column.fieldCode) {
+      row[column.fieldCode] = option; // row data me bhi assign karo
+    }
+  } else {
+    const value = option.id || option.code || option;
+    column.selectedValue = value;
+    if (row && column.fieldCode) {
+      row[column.fieldCode] = value; // row data me assign karo
+    }
+  }
+
+  column.isDropdownOpen = false;
+}
 
   /**
    * Get display text for selected option in row column
@@ -275,6 +294,9 @@ export class DynamicFieldsSharingService {
       }
     });
   }
+getRowTableFieldsDataMutlipleTbas(): { [key: string]: any[] } {
+  return JSON.parse(JSON.stringify(this.rowTableData));
+}
 
   /**
    * Get all row table fields data in required format for saving
@@ -328,6 +350,55 @@ export class DynamicFieldsSharingService {
       rows: this.getRowTableFieldsData()
     };
   }
+    getCompleteFormDataMultiple(staticFormData: any): any {
+    return {
+      data: {
+        ...staticFormData,
+        ...this.dynamicFieldsData,
+      },
+      rows: this.getRowTableFieldsDataMutlipleTbas()
+    };
+  }
+  /**
+   * Add current field values to saved table and clear form
+   */
+  addRowFromCurrentFields(field: any): boolean {
+    if (!this.rowTableData[field.fieldCode]) {
+      this.rowTableData[field.fieldCode] = [];
+    }
+
+    const newRow: any = {};
+    let hasValue = false;
+
+    // Copy current field values to new row object
+    field.rowColumns.forEach((column: any) => {
+      newRow[column.fieldCode] = column.selectedValue || null;
+      if (column.selectedValue !== null && column.selectedValue !== undefined && column.selectedValue !== '') {
+        hasValue = true;
+      }
+    });
+
+    // Only add if at least one field has value
+    if (hasValue) {
+      this.rowTableData[field.fieldCode].push(newRow);
+      this.clearCurrentRowFields(field);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Clear current row fields after adding to table
+   */
+  clearCurrentRowFields(field: any): void {
+    field.rowColumns.forEach((column: any) => {
+      column.selectedValue = null;
+    });
+  }
+
+  /**
+   * Add empty row (for backward compatibility)
+   */
   addRow(field: any) {
 
     if (!this.rowTableData[field.fieldCode]) {
@@ -345,16 +416,30 @@ export class DynamicFieldsSharingService {
   removeRow(fieldCode: string, index: number) {
     this.rowTableData[fieldCode].splice(index, 1);
   }
+  /**
+   * Initialize row table for a field (don't auto-add row)
+   */
   initializeRowTable(field: any) {
-
     if (!this.rowTableData[field.fieldCode]) {
       this.rowTableData[field.fieldCode] = [];
     }
+  }
 
-    // agar empty hai to first row auto create karo
-    if (this.rowTableData[field.fieldCode].length === 0) {
-      this.addRow(field);
+  /**
+   * Get saved rows for a specific field
+   */
+  getSavedRows(fieldCode: string): any[] {
+    return this.rowTableData[fieldCode] || [];
+  }
+
+  /**
+   * Populate table from backend data
+   */
+  populateRowTableFromBackend(fieldCode: string, data: any[]): void {
+    if (!this.rowTableData[fieldCode]) {
+      this.rowTableData[fieldCode] = [];
     }
+    this.rowTableData[fieldCode] = data || [];
   }
 
 }
