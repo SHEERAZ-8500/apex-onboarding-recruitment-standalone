@@ -102,6 +102,10 @@ export class HrCandidateShortListingComponent {
   }
 
   shortlistCandidateBySingle(publicId: any) {
+    // Find the candidate to handle toggle state
+    const candidate = this.candidateList.find(c => c.publicId === publicId);
+    if (!candidate) return;
+
     const data = {
       publicIds: [publicId]
     };
@@ -112,6 +116,8 @@ export class HrCandidateShortListingComponent {
       this.allCandidates();
     }, error => {
       this.loader.hide();
+      // Revert the toggle state on error
+      candidate.selected = false;
       this.toaster.error(error.error.message || 'Error shortlisting candidate');
     });
   }
@@ -135,9 +141,12 @@ export class HrCandidateShortListingComponent {
       this.loader.hide();
     }, error => {
       this.loader.hide();
+      // Revert all toggles back to false on error
+      this.candidateList.forEach((candidate) => {
+        candidate.selected = false;
+      });
       this.toaster.error(error.error.message || 'Error shortlisting candidate');
       this.selectAll = false;
-
     });
   }
   deleteRequisition(value: any) {
