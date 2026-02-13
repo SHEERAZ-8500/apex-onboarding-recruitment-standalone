@@ -130,6 +130,11 @@ export class CandidatesComponent implements OnInit {
             // Get tabs from service
             this.sidebarTabs = this.dynamicFieldsService.sidebarTabs;
             this.activeTabId = this.dynamicFieldsService.activeTabId;
+            const field = this.sidebarTabs[this.activeTabId - 1]?.rowTableField;
+            if (field) {
+              this.dynamicFieldsService.initializeRowTable(field);
+            }
+
             this.loader.hide();
           })
           .catch((err) => {
@@ -273,6 +278,11 @@ export class CandidatesComponent implements OnInit {
   setActiveTab(tabId: number): void {
     this.activeTabId = tabId;
     this.dynamicFieldsService.setActiveTab(tabId);
+    const field = this.sidebarTabs[this.activeTabId - 1]?.rowTableField;
+
+    if (field) {
+      this.dynamicFieldsService.initializeRowTable(field);
+    }
   }
 
   // Save candidate data
@@ -408,7 +418,7 @@ export class CandidatesComponent implements OnInit {
     });
   }
   fetchLookupOptionsWhenLokupTypeForm(fieldCode: string): void {
-    
+
     this.formsService.getLokupTableByCodeWithFormType(fieldCode).subscribe({
       next: (res: any) => {
 
@@ -491,7 +501,7 @@ export class CandidatesComponent implements OnInit {
     });
 
     console.log('🔍 Available rowTableFields:', this.dynamicFieldsService.rowTableFields.map(f => f.fieldCode));
-    console.log('🔍 Backend data keys:', Object.keys(data).filter(k => 
+    console.log('🔍 Backend data keys:', Object.keys(data).filter(k =>
       ['candidate_attachment', 'candidate_experience', 'candidate_qualification', 'candidate_skills'].includes(k)
     ));
 
@@ -500,7 +510,7 @@ export class CandidatesComponent implements OnInit {
       console.log(`\n📋 Processing field: ${field.fieldCode}`);
       console.log(`   Label: ${field.label}`);
       console.log(`   Has rowColumns: ${!!field.rowColumns}, Count: ${field.rowColumns?.length || 0}`);
-      
+
       // Get the data for this specific field by fieldCode directly from data object
       let rowDataArray = data[field.fieldCode];
 

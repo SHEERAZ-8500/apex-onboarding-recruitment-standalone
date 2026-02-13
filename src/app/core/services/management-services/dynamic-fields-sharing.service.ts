@@ -10,7 +10,10 @@ export class DynamicFieldsSharingService {
   dynamicFields: DynamicFieldDto[] = [];
   dynamicFieldsData: { [key: string]: any } = {};
   rowTableFields: DynamicFieldDto[] = [];
-  rowTableData: { [fieldCode: string]: { [columnCode: string]: any } } = {};
+  rowTableData: {
+    [fieldCode: string]: Array<{ [columnCode: string]: any }>
+  } = {};
+
 
   // Sidebar Tabs
   sidebarTabs: any[] = [];
@@ -38,15 +41,15 @@ export class DynamicFieldsSharingService {
           // Separate ROW fields for tabs and other fields for display
           // Filter only active fields
           this.dynamicFields = mappedFields.filter((f: DynamicFieldDto) => f.fieldType !== 'ROW' && f.active);
-          
+
           // Filter ROW fields: only active ones, sorted by displayOrder
           this.rowTableFields = mappedFields
             .filter((f: DynamicFieldDto) => f.fieldType === 'ROW' && f.active === true)
             .sort((a: DynamicFieldDto, b: DynamicFieldDto) => (a.displayOrder || 0) - (b.displayOrder || 0));
 
-          console.log('✅ Filtered ROW fields (active only):', this.rowTableFields.map(f => ({ 
-            fieldCode: f.fieldCode, 
-            label: f.label, 
+          console.log('✅ Filtered ROW fields (active only):', this.rowTableFields.map(f => ({
+            fieldCode: f.fieldCode,
+            label: f.label,
             active: f.active,
             displayOrder: f.displayOrder,
             rowColumns: f.rowColumns?.length || 0
@@ -325,4 +328,33 @@ export class DynamicFieldsSharingService {
       rows: this.getRowTableFieldsData()
     };
   }
+  addRow(field: any) {
+
+    if (!this.rowTableData[field.fieldCode]) {
+      this.rowTableData[field.fieldCode] = [];
+    }
+
+    const newRow: any = {};
+
+    field.rowColumns.forEach((column: any) => {
+      newRow[column.fieldCode] = null;
+    });
+
+    this.rowTableData[field.fieldCode].push(newRow);
+  }
+  removeRow(fieldCode: string, index: number) {
+    this.rowTableData[fieldCode].splice(index, 1);
+  }
+  initializeRowTable(field: any) {
+
+    if (!this.rowTableData[field.fieldCode]) {
+      this.rowTableData[field.fieldCode] = [];
+    }
+
+    // agar empty hai to first row auto create karo
+    if (this.rowTableData[field.fieldCode].length === 0) {
+      this.addRow(field);
+    }
+  }
+
 }
