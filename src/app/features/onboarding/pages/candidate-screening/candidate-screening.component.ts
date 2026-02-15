@@ -39,13 +39,13 @@ export class CandidateScreeningComponent implements OnInit {
   // Dropdown options
   candidateIds: string[] = ['CAN-001', 'CAN-002', 'CAN-003', 'CAN-004'];
   statuses: string[] = [
-    'APPLIED',
-    'SHORTLISTED',
-    'INTERVIEW_SCHEDULED',
-    'INTERVIEWED',
+    // 'APPLIED',
+    // 'SHORTLISTED',
+    // 'INTERVIEW_SCHEDULED',
+    // 'INTERVIEWED',
     'SELECTED',
     'REJECTED',
-    'CONVERTED'
+    // 'CONVERTED'
   ];
 
   payFrequencies: string[] = [];
@@ -169,19 +169,30 @@ export class CandidateScreeningComponent implements OnInit {
   }
 
   saveCandidateScreening(): void {
-    if (!this.candidateScreening.status || !this.candidateScreening.dateOfJoining) {
-      this.toastr.warning('Please fill all required fields');
-      return;
-    }
-
-    // Validate salary rows
-    for (let row of this.candidateScreening.salaryRows) {
-      if (!row.payElement || !row.amount || !row.payFrequency || !row.currency || !row.effectiveDate) {
-        this.toastr.warning('Please fill all required salary row fields');
+    if (this.candidateScreening.status === 'SELECTED') {
+      if (!this.candidateScreening.status || !this.candidateScreening.dateOfJoining) {
+        this.toastr.warning('Please fill all required fields');
         return;
       }
+
+      // Validate salary rows
+      for (let row of this.candidateScreening.salaryRows) {
+        if (!row.payElement || !row.amount || !row.payFrequency || !row.currency || !row.effectiveDate) {
+          this.toastr.warning('Please fill all required salary row fields');
+          return;
+        }
+      }
+      this.candidateScreening.salaryRows[0].payElement = this.selectedPaymentElement;
+
+    } else {
+      if (!this.candidateScreening.status) {
+        this.toastr.warning('Please fill all required fields');
+        return;
+      }
+      delete (this.candidateScreening as any).salaryRows;
+
     }
-    this.candidateScreening.salaryRows[0].payElement = this.selectedPaymentElement;
+
     // const completeData = this.dynamicFieldsService.getCompleteFormData(this.candidateScreening);
     this.loader.show();
     this.onboardingService.saveCandidateScreening(this.selectedCandidateId, this.candidateScreening).subscribe({
@@ -189,7 +200,7 @@ export class CandidateScreeningComponent implements OnInit {
         this.toastr.success('Candidate screening saved successfully');
         this.loader.hide();
         this.resetForm();
-        this.router.navigate(['/panel/onboarding/hr-candidate-short-listing']);
+        // this.router.navigate(['/panel/onboarding/hr-candidate-short-listing']);
       }
       , error: (err: any) => {
         this.loader.hide();
@@ -249,7 +260,7 @@ export class CandidateScreeningComponent implements OnInit {
     return this.backendFieldsMap[fieldCode] !== false;
   }
   allCandidate() {
-    this.onboardingService.getAllCandidates('', 0, 90).subscribe({
+    this.onboardingService.getAllCandidates('INTERVIEWED', 0, 90).subscribe({
       next: (res: any) => {
         console.log('All Candidates:', res);
         this.candidateLisitng = res.data || [];
@@ -276,7 +287,7 @@ export class CandidateScreeningComponent implements OnInit {
     });
   }
   getEnumOptions(fieldCode: string): void {
-    
+
     if (this.currencies.length > 0 && fieldCode === 'currency') {
       return
     }

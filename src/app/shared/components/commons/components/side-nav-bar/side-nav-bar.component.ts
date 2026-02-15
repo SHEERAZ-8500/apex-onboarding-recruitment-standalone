@@ -207,6 +207,8 @@ export class SideNavBarComponent implements OnInit {
           collapsed: true,
           children: [
             { label: 'Employees', route: 'employees-master-data/view-all-employees', isVisible: true },
+            { label: 'Onboarding Employees', route: 'employees-master-data/onboarding-employees', isVisible: true },
+
             { label: 'GOSIID', route: 'employees-master-data/view-all-gosiid', isVisible: false },
             { label: 'Departments', route: 'employees-master-data/view-all-departments', isVisible: false },
             { label: 'Medical Insurance', route: 'employees-master-data/view-all-medical-insurance', isVisible: false },

@@ -52,7 +52,7 @@ export class InterviewFeedbackComponent {
 
   loadCandidates(): void {
     this.loader.show();
-    this.onboardingService.getAllCandidates('INTERVIEWED').subscribe({
+    this.onboardingService.getAllCandidates('INTERVIEW_SCHEDULED').subscribe({
       next: (res: any) => {
         this.candidateLisitng = res.data || [];
         this.loader.hide();

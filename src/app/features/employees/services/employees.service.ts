@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OnboardingEmployeesListResponseDto } from '../dtos/onboarding-employees-list.dto';
+import { OnboardingEmployeeDetailResponseDto } from '../dtos/confirm-onboarding-employee.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +46,25 @@ export class EmployeesService {
 
   getLokupTableByCode(code: any) {
     return this.http.get(`admin/lookups/tables/${code}/values`);
+  }
+
+  onboardEmployeeListing(page: number = 0, size: number = 10, employmentStatus: string = 'ONBOARDING'): Observable<OnboardingEmployeesListResponseDto> {
+    return this.http.get<OnboardingEmployeesListResponseDto>(`onboarding?page=${page}&size=${size}&employmentStatus=${employmentStatus}`);
+  }
+
+  getOnboardingEmployeeById(formCode: string, code: string): Observable<OnboardingEmployeeDetailResponseDto> {
+    return this.http.get<OnboardingEmployeeDetailResponseDto>(`forms/${formCode}/by-code/${code}`);
+  }
+  getLookupEnumByCode(code: any) {
+    return this.http.get(`admin/lookups/enums/${code}`);
+  }
+  startOnboardingEmployee(employeePublicId: string) {
+    return this.http.post(`onboarding/${employeePublicId}/start`,{});
+  }
+  addEmployee(formcode:string,code:string,data: any) {
+    return this.http.patch(`forms/${formcode}/${code}`, data);
+  }
+  confirmOnboardingEmployee(employeePublicId: string) {
+    return this.http.post(`onboarding/${employeePublicId}/complete`, {});
   }
 }

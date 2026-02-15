@@ -21,6 +21,8 @@ export class OnboardingService {
     }
   }
 
+
+
   getAllCandidatesTables(page = 0, size = 20, candidatePublicId = '') {
     return this.http.get(`recruitment/candidates/records?isActive=true&page=${page}&size=${size}&candidatePublicId=${candidatePublicId}`);
   }
@@ -39,7 +41,7 @@ export class OnboardingService {
   }
 
   getSelectedCandidatesInterview(publicIds: string[]) {
-    return this.http.get(`recruitment/candidates/${publicIds}/interviews?status=SCHEDULED&page=0&size=90`);
+    return this.http.get(`recruitment/interviews/records?interviewStatus=SCHEDULED&page=0&size=90&candidatePublicId=${publicIds.join(',')}`);
   }
 
   interviewFeedback(interviewPublicId: string, data: any) {
