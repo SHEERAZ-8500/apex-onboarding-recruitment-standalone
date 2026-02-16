@@ -143,7 +143,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
       const formValue = this.confirmForm.getRawValue();
       // Add your submit logic here
       if (this.onbaordingStatus === 'NOT_STARTED') {
-         this.employeesService.startOnboardingEmployee(this.employeePublicId).subscribe({
+        this.employeesService.startOnboardingEmployee(this.employeePublicId).subscribe({
           next: (response: any) => {
             console.log('Onboarding started:', response);
             this.createEmployee()
@@ -154,7 +154,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
         });
       } else {
         this.createEmployee();
-       
+
       }
     }
   }
@@ -196,8 +196,13 @@ export class ConfirmOnboardingEmployee implements OnInit {
       });
       const formValue = this.confirmForm.getRawValue();
       delete (formValue as any).email;
-
-      this.employeesService.addEmployee('EMPLOYEE', this.employeeCode, formValue).subscribe({
+      let payload = {
+        data: {
+          ...formValue
+        },
+        rows: {}
+      }
+      this.employeesService.addEmployee('EMPLOYEE', this.employeeCode, payload).subscribe({
         next: (response: any) => {
           this.toastr.success('Employee confirmed successfully!');
           this.confirmEmployee();
