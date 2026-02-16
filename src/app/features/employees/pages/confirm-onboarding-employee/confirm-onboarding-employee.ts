@@ -22,15 +22,34 @@ export class ConfirmOnboardingEmployee implements OnInit {
   genderOptions: string[] = []
   maritalStatusOptions: string[] = [];
   religionOptions: string[] = [];
+  employeeTypeOptions: string[] = [];
   employeePublicId: string = '';
+  lookupTableCodesObj: any = {
+    employee_category: '',
+    department: '',
+    company_branch: '',
+    job_title: ''
+
+  };
   enumGroupOptions: string[] = [
     "blood_group",
     "disability_type",
     "gender",
     "marital_status",
-    "religion"
+    "religion",
+    "employee_type"
 
   ];
+  lookupTableCodes: string[] = [
+    "employee_category",
+    "department",
+    "company_branch",
+    "job_title"
+  ];
+  employeeCategoryOptions: any[] = [];
+  departmentOptions: any[] = []
+  companyBranchOptions: any[] = [];
+  jobTitleOptions: any[] = [];
   constructor(
     private employeesService: EmployeesService,
     private loaderService: LoaderService,
@@ -43,6 +62,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
     for (const enumCode of this.enumGroupOptions) {
       this.getEnumsValues(enumCode);
     }
+
   }
 
   ngOnInit() {
@@ -91,6 +111,9 @@ export class ConfirmOnboardingEmployee implements OnInit {
         this.employeeDetails = response.data;
         this.populateForm(response.data);
         this.employeePublicId = response.data.publicId;
+        for (const lookupCode of this.lookupTableCodes) {
+          this.fetchAllLookupValues(lookupCode);
+        }
         this.loaderService.hide();
       },
       error: (error: any) => {
@@ -121,6 +144,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
       this.employeesService.startOnboardingEmployee(this.employeePublicId).subscribe({
         next: (response: any) => {
           console.log('Onboarding started:', response);
+          this.createEmployee()
         },
         error: (error: any) => {
           console.error('Error starting onboarding:', error);
@@ -146,6 +170,9 @@ export class ConfirmOnboardingEmployee implements OnInit {
         else if (code === 'religion') {
           this.religionOptions = response.data.values;
         }
+        else if (code === 'employee_type') {
+          this.employeeTypeOptions = response.data.values;
+        }
       },
       error: (error: any) => {
         console.error(`Error fetching enum values for ${code}:`, error);
@@ -154,6 +181,13 @@ export class ConfirmOnboardingEmployee implements OnInit {
   }
   createEmployee() {
     if (this.confirmForm.valid) {
+      this.confirmForm.setValue({
+        job_title: this.lookupTableCodesObj.job_title,
+        department: this.lookupTableCodesObj.department,
+        // company_branch: this.lookupTableCodesObj.company_branch,
+        // employee_category: this.lookupTableCodesObj.employee_category
+
+      });
       const formValue = this.confirmForm.getRawValue();
 
       this.employeesService.addEmployee('EMPLOYEE', this.employeeCode, formValue).subscribe({
@@ -170,16 +204,64 @@ export class ConfirmOnboardingEmployee implements OnInit {
   }
   confirmEmployee() {
 
-      this.employeesService.confirmOnboardingEmployee(this.employeePublicId).subscribe({
-        next: (response: any) => {
-          // this.toastr.success('Employee confirmed successfully!');
-          this.location.back();
-        },
-        error: (error: any) => {
-          // console.error('Error confirming employee:', error);
-          // this.toastr.error('Failed to confirm employee. Please try again.');
+    this.employeesService.confirmOnboardingEmployee(this.employeePublicId).subscribe({
+      next: (response: any) => {
+        // this.toastr.success('Employee confirmed successfully!');
+        this.location.back();
+      },
+      error: (error: any) => {
+        // console.error('Error confirming employee:', error);
+        // this.toastr.error('Failed to confirm employee. Please try again.');
+      }
+    });
+
+  }
+
+  fetchAllLookupValues(code: string) {
+    this.employeesService.getLokupTableByCode(code).subscribe({
+      next: (response: any) => {
+        if (code === 'employee_category') {
+          this.employeeCategoryOptions = response.data;
+          let employeeCategoryControl = this.confirmForm.get('employee_category');
+          let findingValue = this.employeeCategoryOptions.find((option: any) => option.code === employeeCategoryControl?.value);
+
+          if (findingValue) {
+            employeeCategoryControl?.setValue(findingValue.name);
+            this.lookupTableCodesObj.employee_category = findingValue.code;
+          }
         }
-      });
-    
+        else if (code === 'department') {
+          
+          this.departmentOptions = response.data;
+          let departmentControl = this.confirmForm.get('department');
+          let findingValue = this.departmentOptions.find((option: any) => option.code === departmentControl?.value);
+          if (findingValue) {
+            departmentControl?.setValue(findingValue.name);
+            this.lookupTableCodesObj.department = findingValue.code;
+          }
+        }
+        else if (code === 'company_branch') {
+          this.companyBranchOptions = response.data;
+          let companyBranchControl = this.confirmForm.get('company_branch');
+          let findingValue = this.companyBranchOptions.find((option: any) => option.code === companyBranchControl?.value);
+          if (findingValue) {
+            companyBranchControl?.setValue(findingValue.name);
+            this.lookupTableCodesObj.company_branch = findingValue.code;
+          }
+        }
+        else if (code === 'job_title') {
+          this.jobTitleOptions = response.data;
+          let jobTitleControl = this.confirmForm.get('job_title');
+          let findingValue = this.jobTitleOptions.find((option: any) => option.code === jobTitleControl?.value);
+          if (findingValue) {
+            jobTitleControl?.setValue(findingValue.name);
+            this.lookupTableCodesObj.job_title = findingValue.code;
+          }
+        }
+      },
+      error: (error: any) => {
+        console.error(`Error fetching lookup values for ${code}:`, error);
+      }
+    });
   }
 }
