@@ -48,7 +48,7 @@ export class SideNavBarComponent implements OnInit {
           isVisible: true,
           collapsed: true,
           children: [
-            { label: 'Users', route: 'admin/view-all-users', isVisible: true },
+            { label: 'Users', route: '/panel/admin/view-all-users', isVisible: true },
             { label: 'Roles', route: '/panel/permissions/view-all-rols', isVisible: true }
           ]
         },
@@ -70,9 +70,9 @@ export class SideNavBarComponent implements OnInit {
           isVisible: false,
           collapsed: true,
           children: [
-            { label: 'Company', route: 'out-sourcing-master-data/view-all-company', isVisible: true },
-            { label: 'Client', route: 'out-sourcing-master-data/view-all-client', isVisible: true },
-            { label: 'Customer Master', route: 'out-sourcing-master-data/view-all-customer-master', isVisible: true }
+            { label: 'Company', route: '/panel/out-sourcing-master-data/view-all-company', isVisible: true },
+            { label: 'Client', route: '/panel/out-sourcing-master-data/view-all-client', isVisible: true },
+            { label: 'Customer Master', route: '/panel/out-sourcing-master-data/view-all-customer-master', isVisible: true }
           ]
         }
       ]
@@ -119,23 +119,23 @@ export class SideNavBarComponent implements OnInit {
 
             { label: 'Work Schedule', route: '/panel/master-data/work-schedule', isVisible: true },
 
-            { label: 'Pay Element', route: 'organizational-master-data/view-all-pay-element', isVisible: false },
-            { label: 'Skills', route: 'general-master-data/view-all-skills', isVisible: false },
-            { label: 'ID Type', route: 'general-master-data/view-all-id-type', isVisible: false },
-            { label: 'Qualification', route: 'general-master-data/view-all-qualification', isVisible: false },
-            { label: 'Employee Cost', route: 'general-master-data/view-all-employee-cost', isVisible: false },
-            { label: 'Ramadan Timings', route: 'general-master-data/view-all-ramadan-timing', isVisible: false },
-            { label: 'Trainings', route: 'general-master-data/view-all-trainings', isVisible: false },
-            { label: 'Job Description', route: 'general-master-data/view-all-job-description', isVisible: false },
-            { label: 'Pre Requisites', route: 'general-master-data/view-all-pre-requisites', isVisible: false },
-            { label: 'Belonging Types', route: 'general-master-data/view-all-belonging-types', isVisible: false },
-            { label: 'Cost Center', route: 'general-master-data/view-all-cost-center', isVisible: false },
-            { label: 'Work Schedule', route: 'general-master-data/view-all-work-schedule', isVisible: false },
-            { label: 'Designation', route: 'general-master-data/view-all-designation', isVisible: false },
-            { label: 'Job Title', route: 'general-master-data/view-all-job-title', isVisible: false },
-            { label: 'Post Assignment', route: 'general-master-data/view-all-post-assignment', isVisible: false },
-            { label: 'KPI Questions', route: 'general-master-data/view-all-kpi-questions', isVisible: false },
-            { label: 'Employees Grade', route: 'general-master-data/view-all-employees-grade', isVisible: false }
+            { label: 'Pay Element', route: '/panel/organizational-master-data/view-all-pay-element', isVisible: false },
+            { label: 'Skills', route: '/panel/general-master-data/view-all-skills', isVisible: false },
+            { label: 'ID Type', route: '/panel/general-master-data/view-all-id-type', isVisible: false },
+            { label: 'Qualification', route: '/panel/general-master-data/view-all-qualification', isVisible: false },
+            { label: 'Employee Cost', route: '/panel/general-master-data/view-all-employee-cost', isVisible: false },
+            { label: 'Ramadan Timings', route: '/panel/general-master-data/view-all-ramadan-timing', isVisible: false },
+            { label: 'Trainings', route: '/panel/general-master-data/view-all-trainings', isVisible: false },
+            { label: 'Job Description', route: '/panel/general-master-data/view-all-job-description', isVisible: false },
+            { label: 'Pre Requisites', route: '/panel/general-master-data/view-all-pre-requisites', isVisible: false },
+            { label: 'Belonging Types', route: '/panel/general-master-data/view-all-belonging-types', isVisible: false },
+            { label: 'Cost Center', route: '/panel/general-master-data/view-all-cost-center', isVisible: false },
+            { label: 'Work Schedule', route: '/panel/general-master-data/view-all-work-schedule', isVisible: false },
+            { label: 'Designation', route: '/panel/general-master-data/view-all-designation', isVisible: false },
+            { label: 'Job Title', route: '/panel/general-master-data/view-all-job-title', isVisible: false },
+            { label: 'Post Assignment', route: '/panel/general-master-data/view-all-post-assignment', isVisible: false },
+            { label: 'KPI Questions', route: '/panel/general-master-data/view-all-kpi-questions', isVisible: false },
+            { label: 'Employees Grade', route: '/panel/general-master-data/view-all-employees-grade', isVisible: false }
           ]
         },
         {
@@ -147,15 +147,15 @@ export class SideNavBarComponent implements OnInit {
             { label: 'Shift', route: '/panel/master-data/shift', isVisible: true },
             { label: 'Leave Application', route: '/panel/master-data/leave-application', isVisible: true },
             { label: 'Leaves Master Data', route: '/panel/master-data/leaves-master-data', isVisible: true },
-            { label: 'Hierarchy', route: 'organizational-master-data/hierarchy', isVisible: false },
-            { label: 'Outsource Contract', route: 'organizational-master-data/view-all-outsource-contract', isVisible: false },
-            { label: 'Projects', route: 'organizational-master-data/view-all-projects', isVisible: false },
-            { label: 'Location', route: 'organizational-master-data/view-all-location', isVisible: false },
-            { label: 'Posts', route: 'organizational-master-data/view-all-posts', isVisible: false },
-            { label: 'Time Type', route: 'organizational-master-data/view-all-time-type', isVisible: false },
-            { label: 'Tasks', route: 'organizational-master-data/view-all-tasks', isVisible: false },
-            { label: 'Pay Element', route: 'organizational-master-data/view-all-pay-element', isVisible: false },
-            { label: 'Leaves', route: 'organizational-master-data/view-all-leaves', isVisible: false }
+            { label: 'Hierarchy', route: '/panel/organizational-master-data/hierarchy', isVisible: false },
+            { label: 'Outsource Contract', route: '/panel/organizational-master-data/view-all-outsource-contract', isVisible: false },
+            { label: 'Projects', route: '/panel/organizational-master-data/view-all-projects', isVisible: false },
+            { label: 'Location', route: '/panel/organizational-master-data/view-all-location', isVisible: false },
+            { label: 'Posts', route: '/panel/organizational-master-data/view-all-posts', isVisible: false },
+            { label: 'Time Type', route: '/panel/organizational-master-data/view-all-time-type', isVisible: false },
+            { label: 'Tasks', route: '/panel/organizational-master-data/view-all-tasks', isVisible: false },
+            { label: 'Pay Element', route: '/panel/organizational-master-data/view-all-pay-element', isVisible: false },
+            { label: 'Leaves', route: '/panel/organizational-master-data/view-all-leaves', isVisible: false }
           ]
         },
         {
@@ -164,9 +164,9 @@ export class SideNavBarComponent implements OnInit {
           isVisible: false,
           collapsed: true,
           children: [
-            { label: 'Company', route: 'out-sourcing-master-data/view-all-company', isVisible: true },
-            { label: 'Client', route: 'out-sourcing-master-data/view-all-client', isVisible: true },
-            { label: 'Customer Master', route: 'out-sourcing-master-data/view-all-customer-master', isVisible: true }
+            { label: 'Company', route: '/panel/out-sourcing-master-data/view-all-company', isVisible: true },
+            { label: 'Client', route: '/panel/out-sourcing-master-data/view-all-client', isVisible: true },
+            { label: 'Customer Master', route: '/panel/out-sourcing-master-data/view-all-customer-master', isVisible: true }
           ]
         }
       ]
@@ -206,17 +206,17 @@ export class SideNavBarComponent implements OnInit {
           isVisible: true,
           collapsed: true,
           children: [
-            { label: 'Employees', route: 'employees-master-data/view-all-employees', isVisible: true },
-            { label: 'Onboarding Employees', route: 'employees-master-data/onboarding-employees', isVisible: true },
+            { label: 'Employees', route: '/panel/employees-master-data/view-all-employees', isVisible: true },
+            { label: 'Onboarding Employees', route: '/panel/employees-master-data/onboarding-employees', isVisible: true },
 
-            { label: 'GOSIID', route: 'employees-master-data/view-all-gosiid', isVisible: false },
-            { label: 'Departments', route: 'employees-master-data/view-all-departments', isVisible: false },
-            { label: 'Medical Insurance', route: 'employees-master-data/view-all-medical-insurance', isVisible: false },
-            { label: 'Accommodation', route: 'employees-master-data/view-all-accommodation', isVisible: false },
-            { label: 'Loans', route: 'employees-master-data/view-all-loans', isVisible: false },
-            { label: 'Employee Belongings', route: 'employees-master-data/view-all-employee-belongings', isVisible: false },
-            { label: 'Employees Category', route: 'employees-master-data/view-all-employees-category', isVisible: false },
-            { label: 'Project Transfer', route: 'employees-master-data/view-all-project-transfer', isVisible: false }
+            { label: 'GOSIID', route: '/panel/employees-master-data/view-all-gosiid', isVisible: false },
+            { label: 'Departments', route: '/panel/employees-master-data/view-all-departments', isVisible: false },
+            { label: 'Medical Insurance', route: '/panel/employees-master-data/view-all-medical-insurance', isVisible: false },
+            { label: 'Accommodation', route: '/panel/employees-master-data/view-all-accommodation', isVisible: false },
+            { label: 'Loans', route: '/panel/employees-master-data/view-all-loans', isVisible: false },
+            { label: 'Employee Belongings', route: '/panel/employees-master-data/view-all-employee-belongings', isVisible: false },
+            { label: 'Employees Category', route: '/panel/employees-master-data/view-all-employees-category', isVisible: false },
+            { label: 'Project Transfer', route: '/panel/employees-master-data/view-all-project-transfer', isVisible: false }
           ]
         }
       ]
@@ -239,7 +239,7 @@ export class SideNavBarComponent implements OnInit {
       isVisible: false,
       collapsed: true,
       children: [
-        { label: 'Users', route: 'admin/view-all-users', isVisible: true },
+        { label: 'Users', route: '/panel/admin/view-all-users', isVisible: true },
         { label: 'Roles', route: '/panel/permissions/view-all-rols', isVisible: true }
       ]
     }
