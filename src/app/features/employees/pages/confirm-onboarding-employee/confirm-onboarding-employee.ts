@@ -50,6 +50,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
   departmentOptions: any[] = []
   companyBranchOptions: any[] = [];
   jobTitleOptions: any[] = [];
+  onbaordingStatus: string = '';
   constructor(
     private employeesService: EmployeesService,
     private loaderService: LoaderService,
@@ -68,6 +69,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.employeeCode = params['code'];
+      this.onbaordingStatus = params['status'];
       if (this.employeeCode) {
         this.fetchOnboardingEmployeeDetails('EMPLOYEE', this.employeeCode);
       }
@@ -139,17 +141,21 @@ export class ConfirmOnboardingEmployee implements OnInit {
   onSubmit() {
     if (this.confirmForm.valid) {
       const formValue = this.confirmForm.getRawValue();
-      console.log('Form Submitted:', formValue);
       // Add your submit logic here
-      this.employeesService.startOnboardingEmployee(this.employeePublicId).subscribe({
-        next: (response: any) => {
-          console.log('Onboarding started:', response);
-          this.createEmployee()
-        },
-        error: (error: any) => {
-          console.error('Error starting onboarding:', error);
-        }
-      });
+      if (this.onbaordingStatus === 'NOT_STARTED') {
+         this.employeesService.startOnboardingEmployee(this.employeePublicId).subscribe({
+          next: (response: any) => {
+            console.log('Onboarding started:', response);
+            this.createEmployee()
+          },
+          error: (error: any) => {
+            console.error('Error starting onboarding:', error);
+          }
+        });
+      } else {
+        this.createEmployee();
+       
+      }
     }
   }
   getEnumsValues(code: string) {
@@ -181,7 +187,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
   }
   createEmployee() {
     if (this.confirmForm.valid) {
-      this.confirmForm.setValue({
+      this.confirmForm.patchValue({
         job_title: this.lookupTableCodesObj.job_title,
         department: this.lookupTableCodesObj.department,
         // company_branch: this.lookupTableCodesObj.company_branch,
@@ -190,7 +196,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
       });
       const formValue = this.confirmForm.getRawValue();
       delete (formValue as any).email;
-      
+
       this.employeesService.addEmployee('EMPLOYEE', this.employeeCode, formValue).subscribe({
         next: (response: any) => {
           this.toastr.success('Employee confirmed successfully!');
@@ -232,7 +238,7 @@ export class ConfirmOnboardingEmployee implements OnInit {
           }
         }
         else if (code === 'department') {
-          
+
           this.departmentOptions = response.data;
           let departmentControl = this.confirmForm.get('department');
           let findingValue = this.departmentOptions.find((option: any) => option.code === departmentControl?.value);

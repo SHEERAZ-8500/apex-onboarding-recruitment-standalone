@@ -51,9 +51,9 @@ export class OnbaordingEmployeesList implements OnInit {
     this.fetchOnboardingEmployees(page - 1); // Convert 1-based to 0-based for API
   }
 
-  confirmEmployee(code: string): void {
+  confirmEmployee(employe:any): void {
     this.router.navigate(['/panel/employees-master-data/confirm-onboarding-employee'], {
-      queryParams: { code: code }
+      queryParams: { code: employe.code ,status: employe.onboarding_status}
     });
   }
 }
