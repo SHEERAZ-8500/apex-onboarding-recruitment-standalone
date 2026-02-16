@@ -189,7 +189,8 @@ export class ConfirmOnboardingEmployee implements OnInit {
 
       });
       const formValue = this.confirmForm.getRawValue();
-
+      delete (formValue as any).email;
+      
       this.employeesService.addEmployee('EMPLOYEE', this.employeeCode, formValue).subscribe({
         next: (response: any) => {
           this.toastr.success('Employee confirmed successfully!');

@@ -206,7 +206,7 @@ export class DynamicFieldsSharingService {
    */
   selectRowColumnOption(column: any, option: any, event: Event): void {
     event.stopPropagation();
-    debugger
+    
     if (column.fieldType === 'LOOKUP_ENUM') {
       column.selectedValue = option;
     } else {
