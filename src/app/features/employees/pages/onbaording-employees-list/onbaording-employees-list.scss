@@ -1,6 +1,6 @@
 .onboarding-employees-container {
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--second-primary-color);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -18,13 +18,13 @@
       margin: 0;
       font-size: 24px;
       font-weight: 600;
-      color: #333;
+      color: var( --text-secondary);
     }
 
     .total-items {
       margin: 0;
       font-size: 14px;
-      color: #666;
+      color: var(--text-primary);
     }
   }
 
@@ -40,7 +40,7 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: var(--purple-1);
       border-radius: 4px;
     }
 
@@ -60,18 +60,21 @@
     table-layout: auto;
 
     thead {
-      background-color: #f8f9fa;
+      background-color: var(--primary-color);
+      text-align: center;
       
       tr {
-        border-bottom: 2px solid #dee2e6;
+        border-bottom: 1px solid var(--border-color);
+        
       }
+
 
       th {
         padding: 12px 16px;
         text-align: left;
         font-weight: 600;
         font-size: 14px;
-        color: #495057;
+        color: var(--text-primary);
         white-space: nowrap;
         
         &:nth-child(1) { min-width: 140px; } // Employee Code
@@ -89,11 +92,11 @@
 
     tbody {
       tr {
-        border-bottom: 1px solid #dee2e6;
+        border-bottom: 1px solid var(--border-color);
         transition: background-color 0.2s ease;
 
         &:hover {
-          background-color: #f8f9fa;
+          background-color: transparent;
         }
 
         &:last-child {
@@ -104,13 +107,14 @@
       td {
         padding: 12px 16px;
         font-size: 14px;
-        color: #212529;
+        color: var(--text-primary);
         vertical-align: middle;
+        
 
         &.no-data {
           text-align: center;
           padding: 40px;
-          color: #6c757d;
+          color: var(--text-secondary);
           font-style: italic;
         }
       }
@@ -126,30 +130,35 @@
     text-transform: uppercase;
     white-space: nowrap;
 
-    &.status-onboarding {
-      background-color: #fff3cd;
-      color: #856404;
-    }
+  &.status-onboarding {
+  background-color: #fff8e1;
+  color: #a67c00;
+}
 
-    &.status-in_progress {
-      background-color: #cfe2ff;
-      color: #084298;
-    }
+&.status-in_progress {
+  background-color: #e8f1ff;
+  color: #1d4ed8;
+}
 
-    &.status-active {
-      background-color: #d1e7dd;
-      color: #0f5132;
-    }
+&.status-active {
+  background-color: #e6f7ee;
+  color: #15803d;
+}
 
-    &.status-completed {
-      background-color: #d1e7dd;
-      color: #0f5132;
-    }
+&.status-completed {
+  background-color: #e6f7ee;
+  color: #15803d;
+}
 
-    &.status-pending {
-      background-color: #f8d7da;
-      color: #842029;
-    }
+&.status-pending {
+  background-color: #fdecec;
+  color: #b42318;
+}
+
+&.status-not_started {
+  background-color: #f1f3f5;
+  color: #495057;
+}
   }
 
   .action-btn {
@@ -162,7 +171,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    color: #28a745;
+    color: var(--purple-1);
 
     &:hover {
       background-color: #d4edda;
