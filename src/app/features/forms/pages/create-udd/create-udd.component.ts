@@ -56,7 +56,7 @@ export class CreateUddComponent implements OnInit {
     });
     if (stepValue === '1') {
       this.loader.show();
-      this.apiService.getAllLookUpTables().subscribe({
+      this.apiService.getAllLookUpTables(0, 999).subscribe({
         next: (response: any) => {
           // console.log('Lookup Tables:', response);
           this.selectTable = response.data;
@@ -69,7 +69,7 @@ export class CreateUddComponent implements OnInit {
       });
     } else if (stepValue === '2') {
       this.loader.show();
-      this.apiService.getAllLookupEnums().subscribe({
+      this.apiService.getAllLookupEnums(0, 999).subscribe({
         next: (response: any) => {
           // console.log('Lookup Enums:', response);  
           this.selectTable = response.data;

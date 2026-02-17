@@ -32,8 +32,8 @@ export class FormsService {
     return this.http.patch(`forms/${formCode}/${code}`, data);
   }
 
-  getUserAllForms() {
-    return this.http.get(`forms`);
+  getUserAllForms(page: number = 0, size: number = 10) {
+    return this.http.get(`forms?page=${page}&size=${size}`);
   }
 
   createNewUDF(formCode: any, data: any) {

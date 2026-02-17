@@ -41,7 +41,7 @@ export class CreateNewRowComponent implements OnInit {
 
   loadIndependentTables(): void {
     this.loader.show();
-    this.apiService.getAllIndependentTables().subscribe({
+    this.apiService.getAllIndependentTables(0, 999).subscribe({
       next: (response: any) => {
         console.log('Independent Row Tables:', response);
         this.selectTable = response.data;

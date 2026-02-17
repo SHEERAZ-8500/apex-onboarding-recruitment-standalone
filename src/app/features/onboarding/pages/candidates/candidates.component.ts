@@ -172,6 +172,12 @@ export class CandidatesComponent implements OnInit {
 
   }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getCandidateData();
+  }
+
 
   // filteredRequisitions() {
   //   if (!this.searchText.trim()) return this.requisition;

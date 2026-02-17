@@ -72,6 +72,12 @@ export class HrCandidateShortListingComponent {
     this.allCandidates();
   }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.allCandidates();
+  }
+
 
   toggleActive(form: any, index: number, event: Event) {
     event.preventDefault();

@@ -19,6 +19,11 @@ export class ViewAllFormsComponent {
   routeNUmber: number = 1;
   FormList: FormDto[] = [];
   formId: string = '';
+  currentPage = 0; // Backend uses 0-based indexing
+  itemsPerPage = 10;
+  totalItems = 0;
+  totalPages = 0;
+
   constructor(private formsService: FormsService, private route: ActivatedRoute, private loader: LoaderService, private toaster: ToastrService,
   ) {
 
@@ -27,9 +32,17 @@ export class ViewAllFormsComponent {
   getAllFormlist() {
     this.routeNUmber = 1;
     this.loader.show();
-    this.formsService.getUserAllForms().subscribe((res: any) => {
+    this.formsService.getUserAllForms(this.currentPage, this.itemsPerPage).subscribe((res: any) => {
       this.FormList = res.data;
       console.log(this.FormList);
+      
+      // Update pagination metadata from API response
+      if (res.paginator) {
+        this.currentPage = res.paginator.currentPage;
+        this.totalItems = res.paginator.totalItems;
+        this.totalPages = res.paginator.totalPages;
+      }
+      
       this.loader.hide();
     }, error => {
       this.loader.hide();
@@ -46,21 +59,9 @@ export class ViewAllFormsComponent {
   setInterest(candidate: any, value: boolean | null) {
     candidate.interested = value;
   }
-  currentPage = 1;
-  itemsPerPage = 7;
-
-  get totalPages() {
-    return Math.ceil(this.FormList.length / this.itemsPerPage);
-  }
 
   get totalPagesArray() {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
-  get paginatedFormList() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.FormList.slice(start, end);
   }
 
   ngOnInit() {
@@ -68,10 +69,17 @@ export class ViewAllFormsComponent {
   }
 
   changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
+    const apiPage = page - 1;
+    if (apiPage < 0 || apiPage >= this.totalPages) return;
+    this.currentPage = apiPage;
+    this.getAllFormlist();
   }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getAllFormlist();
+  }
 
   toggleActive(form: FormDto, index: number, event: Event) {
     event.preventDefault();

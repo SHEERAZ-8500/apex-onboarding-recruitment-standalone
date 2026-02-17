@@ -202,7 +202,7 @@ export class CreateNewRowInTableComponent implements OnInit {
 
   // Load Lookup Table Options
   loadLookupTableOptions(column: TableColumn): void {
-    this.tableBuilderService.getAllLookUpTables().subscribe({
+    this.tableBuilderService.getAllLookUpTables(0, 999).subscribe({
       next: (res: any) => {
         column.lookupOptions = res.data || [];
       },
@@ -216,7 +216,7 @@ export class CreateNewRowInTableComponent implements OnInit {
 
   // Load Lookup Enum Options  
   loadLookupEnumOptions(column: TableColumn): void {
-    this.tableBuilderService.getAllLookupEnums().subscribe({
+    this.tableBuilderService.getAllLookupEnums(0, 999).subscribe({
       next: (res: any) => {
         column.lookupOptions = res.data || [];
       },

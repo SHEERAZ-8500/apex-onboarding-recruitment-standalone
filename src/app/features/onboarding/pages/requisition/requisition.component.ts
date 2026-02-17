@@ -149,7 +149,12 @@ export class RequisitionComponent implements OnInit {
     if (apiPage < 0 || apiPage >= this.totalPages) return;
     this.currentPage = apiPage;
     this.getRequisitionData();
+  }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getRequisitionData();
   }
 
 

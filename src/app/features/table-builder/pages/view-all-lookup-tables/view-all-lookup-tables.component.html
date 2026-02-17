@@ -23,7 +23,7 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let c of paginatedFormList; let i = index"
+                    <tr *ngFor="let c of FormList; let i = index"
                         class="bg-[#1e293b] hover:bg-[#27354a] rounded-lg">
                         <td class="px-3 py-3 font-medium">{{ c.displayName }}</td>
 
@@ -56,8 +56,14 @@
         </div>
 
         <!-- ✅ Pagination -->
-        <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalPagesArray]="totalPagesArray"
-            (pageChange)="changePage($event)">
+        <app-pagination 
+            [currentPage]="currentPage + 1" 
+            [totalPages]="totalPages" 
+            [totalPagesArray]="totalPagesArray"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalItems"
+            (pageChange)="changePage($event)"
+            (itemsPerPageChange)="onItemsPerPageChange($event)">
         </app-pagination>
     </section>
 </section>

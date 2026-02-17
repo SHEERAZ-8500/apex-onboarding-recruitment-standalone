@@ -20,8 +20,8 @@ export class AdminService {
     return this.http.get(`admin/roles/${publicId}`);
   }
 
-  getAllUser() {
-    return this.http.get('admin/users');
+  getAllUser(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/users?page=${page}&size=${size}`);
   }
 
   getUserAllroles() {

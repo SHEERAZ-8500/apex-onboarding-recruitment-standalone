@@ -5,30 +5,26 @@ import { LoaderService } from '../../../../core/services/management-services/loa
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
+import { PaginationComponent } from '../../../../shared/components/commons/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-view-all-users',
   standalone: true,
-  imports: [CommonModule, NgbDropdownModule, RouterModule],
+  imports: [CommonModule, NgbDropdownModule, RouterModule, PaginationComponent],
   templateUrl: './view-all-users.component.html',
   styleUrl: './view-all-users.component.scss'
 })
 export class ViewAllUsersComponent {
   usersList: any[] = [];
   totalItems: number = 0;
-  totalPagesCount: number = 0;
+  totalPages: number = 0;
 
   constructor(private adminService: AdminService, private toastr: ToastrService, private loader: LoaderService) {
 
   }
 
-  currentPage = 1;
-  itemsPerPage = 7;
-  paginatedUsersList: any[] = [];
-
-  get totalPages() {
-    return this.totalPagesCount || Math.ceil(this.totalItems / this.itemsPerPage);
-  }
+  currentPage = 0; // Backend uses 0-based indexing
+  itemsPerPage = 10;
 
   get totalPagesArray() {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
@@ -40,14 +36,17 @@ export class ViewAllUsersComponent {
 
   loadUsers() {
     this.loader.show();
-    this.adminService.getAllUser().subscribe({
+    this.adminService.getAllUser(this.currentPage, this.itemsPerPage).subscribe({
       next: (response: any) => {
         this.loader.hide();
         this.usersList = response.data;
-        this.totalItems = response.paginator.totalItems;
-        this.totalPagesCount = response.paginator.totalPages;
-        this.currentPage = response.paginator.currentPage + 1; // Backend 0-indexed
-        this.paginatedUsersList = this.usersList;
+        
+        // Update pagination metadata from API response
+        if (response.paginator) {
+          this.currentPage = response.paginator.currentPage;
+          this.totalItems = response.paginator.totalItems;
+          this.totalPages = response.paginator.totalPages;
+        }
       }
       ,
       error: (error) => {
@@ -60,8 +59,15 @@ export class ViewAllUsersComponent {
 
 
   changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
+    const apiPage = page - 1;
+    if (apiPage < 0 || apiPage >= this.totalPages) return;
+    this.currentPage = apiPage;
+    this.loadUsers();
+  }
+
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
     this.loadUsers();
   }
 

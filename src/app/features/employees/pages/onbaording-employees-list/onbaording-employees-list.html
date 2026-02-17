@@ -60,6 +60,9 @@
     [currentPage]="currentPage"
     [totalPages]="totalPages"
     [totalPagesArray]="totalPagesArray"
+    [itemsPerPage]="itemsPerPage"
+    [totalItems]="totalItems"
     (pageChange)="onPageChange($event)"
+    (itemsPerPageChange)="onItemsPerPageChange($event)"
   ></app-pagination>
 </div>

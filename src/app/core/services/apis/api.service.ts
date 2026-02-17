@@ -100,8 +100,8 @@ export class ApiService {
   createLookupEnum(data: any) {
     return this.http.post('admin/lookups/enums', data);
   }
-  getAllLookupEnums() {
-    return this.http.get(`admin/lookups/enums`);
+  getAllLookupEnums(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/lookups/enums?page=${page}&size=${size}`);
   }
   getLookupEnumByCode(code: any) {
     return this.http.get(`admin/lookups/enums/${code}`);
@@ -136,11 +136,11 @@ export class ApiService {
   createRowInTable(data: any) {
     return this.http.post(`api/admin/row-tables`, data);
   }
-  getAllLookUpTables() {
-    return this.http.get(`admin/lookups/tables`);
+  getAllLookUpTables(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/lookups/tables?page=${page}&size=${size}`);
   }
-  getAllIndependentTables() {
-    return this.http.get(`admin/row-tables?filter=ALL`);
+  getAllIndependentTables(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/row-tables?filter=ALL&page=${page}&size=${size}`);
   }
   createIndependentTable(data: any) {
     return this.http.post('admin/row-tables', data);
@@ -158,8 +158,8 @@ export class ApiService {
   updateFormData(formCode: any, code: any, data: any) {
     return this.http.patch(`forms/${formCode}/${code}`, data);
   }
-  getUserAllForms() {
-    return this.http.get(`forms`);
+  getUserAllForms(page: number = 0, size: number = 10) {
+    return this.http.get(`forms?page=${page}&size=${size}`);
   }
   createNewUDF(formCode: any, data: any) {
     return this.http.post(`admin/forms/${formCode}/fields/basic`, data);

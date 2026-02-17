@@ -12,8 +12,8 @@ export class TableBuilderService {
     return this.http.post('admin/lookups/tables', data);
   }
 
-  getAllLookUpTables() {
-    return this.http.get(`admin/lookups/tables`);
+  getAllLookUpTables(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/lookups/tables?page=${page}&size=${size}`);
   }
 
   getLokupTableByCode(code: any) {
@@ -46,8 +46,8 @@ export class TableBuilderService {
     return this.http.post('admin/lookups/enums', data);
   }
 
-  getAllLookupEnums() {
-    return this.http.get(`admin/lookups/enums`);
+  getAllLookupEnums(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/lookups/enums?page=${page}&size=${size}`);
   }
 
   getLookupEnumByCode(code: any) {
@@ -67,8 +67,8 @@ export class TableBuilderService {
     return this.http.post('admin/row-tables', data);
   }
 
-  getAllIndependentTables() {
-    return this.http.get(`admin/row-tables?filter=ALL`);
+  getAllIndependentTables(page: number = 0, size: number = 10) {
+    return this.http.get(`admin/row-tables?filter=ALL&page=${page}&size=${size}`);
   }
 
   createRowInTable(data: any) {

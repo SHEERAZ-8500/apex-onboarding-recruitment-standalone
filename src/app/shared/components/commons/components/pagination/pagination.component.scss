@@ -1,1 +1,17 @@
 // Pagination component styles
+
+.dark-mode-dropdown {
+  background-color: #2d3748 !important;
+  color: #e2e8f0 !important;
+  border-color: #4a5568 !important;
+
+  option {
+    background-color: #2d3748;
+    color: #e2e8f0;
+  }
+
+  &:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+  }
+}

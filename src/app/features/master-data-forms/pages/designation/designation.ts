@@ -58,6 +58,12 @@ export class Designation {
     this.getLookupData();
   }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getLookupData();
+  }
+
 
   getLookupData() {
     this.loader.show();

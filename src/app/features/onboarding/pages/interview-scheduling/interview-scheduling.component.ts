@@ -163,6 +163,12 @@ export class InterviewSchedulingComponent implements OnInit {
 
   }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getInterviewsData();
+  }
+
 
   // filteredRequisitions() {
   //   if (!this.searchText.trim()) return this.requisition;

@@ -24,14 +24,15 @@ export class OnbaordingEmployeesList implements OnInit {
   totalPages: number = 1;
   totalPagesArray: number[] = [];
   totalItems: number = 0;
+  itemsPerPage: number = 10;
 
   ngOnInit() {
-    this.fetchOnboardingEmployees(0);
+    this.fetchOnboardingEmployees(0, this.itemsPerPage);
   }
   
-  fetchOnboardingEmployees(page: number = 0) {
+  fetchOnboardingEmployees(page: number = 0, size: number = 10) {
     this.loaderService.show();
-    this.employeesService.onboardEmployeeListing(page).subscribe({
+    this.employeesService.onboardEmployeeListing(page, size).subscribe({
       next: (response: OnboardingEmployeesListResponseDto) => {
         this.onboardingEmployees = response.data;
         this.currentPage = response.paginator.currentPage + 1; // Convert 0-based to 1-based
@@ -48,7 +49,12 @@ export class OnbaordingEmployeesList implements OnInit {
   }
 
   onPageChange(page: number): void {
-    this.fetchOnboardingEmployees(page - 1); // Convert 1-based to 0-based for API
+    this.fetchOnboardingEmployees(page - 1, this.itemsPerPage); // Convert 1-based to 0-based for API
+  }
+
+  onItemsPerPageChange(size: number): void {
+    this.itemsPerPage = size;
+    this.fetchOnboardingEmployees(0, size); // Reset to first page
   }
 
   confirmEmployee(employe:any): void {

@@ -26,9 +26,9 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let user of paginatedUsersList; let i = index"
+                    <tr *ngFor="let user of usersList; let i = index"
                         class="bg-[#1e293b] hover:bg-[#27354a] rounded-lg">
-                        <td class="px-3 py-3 font-medium">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                        <td class="px-3 py-3 font-medium">{{ currentPage * itemsPerPage + i + 1 }}</td>
                         <td class="px-3 py-3 font-medium">{{ user.firstName }}</td>
                         <td class="px-3 py-3 font-medium">{{ user.lastName }}</td>
                         <td class="px-3 py-3 text-gray-400">{{ user.email }}</td>
@@ -58,26 +58,14 @@
         </div>
 
         <!-- ✅ Pagination -->
-        <div class="d-flex justify-content-end mt-3 me-3">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item" [class.disabled]="currentPage === 1">
-                        <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
-                            &laquo;
-                        </a>
-                    </li>
-
-                    <li class="page-item" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
-                        <a class="page-link" (click)="changePage(page)">{{ page }}</a>
-                    </li>
-
-                    <li class="page-item" [class.disabled]="currentPage === totalPages">
-                        <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
-                            &raquo;
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <app-pagination 
+            [currentPage]="currentPage + 1" 
+            [totalPages]="totalPages" 
+            [totalPagesArray]="totalPagesArray"
+            [itemsPerPage]="itemsPerPage"
+            [totalItems]="totalItems"
+            (pageChange)="changePage($event)"
+            (itemsPerPageChange)="onItemsPerPageChange($event)">
+        </app-pagination>
     </section>
 </section>

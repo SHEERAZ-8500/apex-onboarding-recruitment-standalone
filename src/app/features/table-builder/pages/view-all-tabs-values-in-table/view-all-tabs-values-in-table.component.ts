@@ -61,6 +61,11 @@ export class ViewAllTabsValuesInTableComponent {
     this.getTabsData();
   }
 
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getTabsData();
+  }
 
   getTabsData() {
     this.loader.show();

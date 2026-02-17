@@ -208,7 +208,7 @@ export class CreateNewIndependentTableComponent implements OnInit {
 
   // Load Lookup Table Options
   loadLookupTableOptions(column: TableColumn): void {
-    this.apiService.getAllLookUpTables().subscribe({
+    this.apiService.getAllLookUpTables(0, 999).subscribe({
       next: (res: any) => {
         this.cachedLookupTables = res.data || [];
         column.lookupOptions = this.cachedLookupTables!;
@@ -229,7 +229,7 @@ export class CreateNewIndependentTableComponent implements OnInit {
 
   // Load Lookup Enum Options  
   loadLookupEnumOptions(column: TableColumn): void {
-    this.apiService.getAllLookupEnums().subscribe({
+    this.apiService.getAllLookupEnums(0, 999).subscribe({
       next: (res: any) => {
         this.cachedLookupEnums = res.data || [];
         column.lookupOptions = this.cachedLookupEnums!;
@@ -250,7 +250,7 @@ export class CreateNewIndependentTableComponent implements OnInit {
 
   // Load Row Table Options
   loadRowTableOptions(column: TableColumn): void {
-    this.apiService.getAllIndependentTables().subscribe({
+    this.apiService.getAllIndependentTables(0, 999).subscribe({
       next: (res: any) => {
         this.cachedRowTables = res.data || [];
         column.lookupOptions = this.cachedRowTables!;

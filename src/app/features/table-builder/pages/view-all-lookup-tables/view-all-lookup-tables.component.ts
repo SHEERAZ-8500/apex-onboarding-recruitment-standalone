@@ -16,9 +16,14 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './view-all-lookup-tables.component.scss'
 })
 export class ViewAllLookupTablesComponent {
- routeNUmber: number = 1;
-  FormList: any[] = []
+  routeNUmber: number = 1;
+  FormList: any[] = [];
   formId: string = '';
+  currentPage = 0; // Backend uses 0-based indexing
+  itemsPerPage = 10;
+  totalItems = 0;
+  totalPages = 0;
+
   constructor(private apiService: ApiService, private route: ActivatedRoute, private loader: LoaderService) {
 
   }
@@ -26,10 +31,17 @@ export class ViewAllLookupTablesComponent {
   getAllTablesList() {
     this.routeNUmber = 1;
     this.loader.show();
-    this.apiService.getAllLookUpTables().subscribe((res: any) => {
+    this.apiService.getAllLookUpTables(this.currentPage, this.itemsPerPage).subscribe((res: any) => {
       this.FormList = res.data;
       console.log(this.FormList);
-      this.updatePagination();
+      
+      // Update pagination metadata from API response
+      if (res.paginator) {
+        this.currentPage = res.paginator.currentPage;
+        this.totalItems = res.paginator.totalItems;
+        this.totalPages = res.paginator.totalPages;
+      }
+      
       this.loader.hide();
 
     }, error => {
@@ -41,34 +53,25 @@ export class ViewAllLookupTablesComponent {
   setInterest(candidate: any, value: boolean | null) {
     candidate.interested = value;
   }
-  currentPage = 1;
-  itemsPerPage = 7;
-  paginatedFormList: any[] = [];
-
-  get totalPages() {
-    return Math.ceil(this.FormList.length / this.itemsPerPage);
-  }
 
   get totalPagesArray() {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   ngOnInit() {
-    this.updatePagination();
-
     this.getAllTablesList();
-
-  }
-
-  updatePagination() {
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    this.paginatedFormList = this.FormList.slice(start, end);
   }
 
   changePage(page: number) {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.updatePagination();
+    const apiPage = page - 1;
+    if (apiPage < 0 || apiPage >= this.totalPages) return;
+    this.currentPage = apiPage;
+    this.getAllTablesList();
+  }
+
+  onItemsPerPageChange(size: number) {
+    this.itemsPerPage = size;
+    this.currentPage = 0; // Reset to first page
+    this.getAllTablesList();
   }
 }
