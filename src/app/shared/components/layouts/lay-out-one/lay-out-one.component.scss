@@ -7,16 +7,19 @@
 
   .sid-navbar {
     transition: width 0.4s ease, all 0.6s ease;
+    flex-shrink: 0;
   }
 
   .main-content {
     width: 100%;
-
+    min-width: 0; // Important: allows flexbox child to shrink below content size
+    overflow-x: hidden;
   }
 
   .landig-pages {
     height: 98vh;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-inline-end: 8px;
   }
 

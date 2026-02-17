@@ -397,7 +397,43 @@ export class EmployeesComponent {
     };
   }
 
+  // Validate required dynamic fields and tab fields
+  validateDynamicFields(): boolean {
+    // Validate dynamic fields
+    for (const field of this.dynamicFields) {
+      if (field.required && field.active) {
+        const value = this.dynamicFieldsData[field.fieldCode];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          this.toastr.warning(`Please fill required field: ${field.label}`);
+          return false;
+        }
+      }
+    }
+
+    // Validate row table fields
+    for (const field of this.rowTableFields) {
+      if (field.rowColumns) {
+        for (const column of field.rowColumns) {
+          if (column.required) {
+            const value = column.selectedValue;
+            if (!value || (typeof value === 'string' && value.trim() === '')) {
+              this.toastr.warning(`Please fill required field: ${column.label || column.name}`);
+              return false;
+            }
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
   saveEmployee() {
+    // Validate dynamic fields and tabs
+    if (!this.validateDynamicFields()) {
+      return;
+    }
+
     // Prepare complete data with dynamic fields
     const completeData = {
       data: {

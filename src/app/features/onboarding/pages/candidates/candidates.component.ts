@@ -28,7 +28,7 @@ export class CandidatesComponent implements OnInit {
   candidate: CandidateCreateDto = new CandidateCreateDto();
 
   currentPage = 0; // Backend uses 0-based indexing
-  itemsPerPage = 7;
+  itemsPerPage = 10;
   totalItems = 0;
   totalPages = 0;
   isSubmitted = false;
@@ -302,6 +302,19 @@ export class CandidatesComponent implements OnInit {
     const field = this.sidebarTabs[this.activeTabId - 1]?.rowTableField;
     if (!field) return;
 
+    // Validate required fields before adding
+    if (field.rowColumns) {
+      for (const column of field.rowColumns) {
+        if (column.required) {
+          const value = column.selectedValue;
+          if (!value || (typeof value === 'string' && value.trim() === '')) {
+            this.toastr.warning(`Please fill required field: ${column.label || column.name}`);
+            return;
+          }
+        }
+      }
+    }
+
     const added = this.dynamicFieldsService.addRowFromCurrentFields(field);
     if (added) {
       this.toastr.success('Entry added successfully');
@@ -323,6 +336,40 @@ export class CandidatesComponent implements OnInit {
     return this.dynamicFieldsService.getSavedRows(field.fieldCode);
   }
 
+  // Validate required dynamic fields and tab fields
+  validateDynamicFields(): boolean {
+    // Validate dynamic fields
+    for (const field of this.dynamicFieldsService.dynamicFields) {
+      if (field.required && field.active) {
+        const value = this.dynamicFieldsService.dynamicFieldsData[field.fieldCode];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          this.toastr.warning(`Please fill required field: ${field.label}`);
+          return false;
+        }
+      }
+    }
+
+    // Validate tab row fields - check if saved rows exist instead of selectedValue
+    for (const tab of this.sidebarTabs) {
+      if (tab.rowTableField && tab.rowTableField.rowColumns) {
+        // Check if any column in this tab is required
+        const hasRequiredColumns = tab.rowTableField.rowColumns.some((col: any) => col.required);
+        
+        if (hasRequiredColumns) {
+          // Check if there are saved rows for this tab
+          const savedRows = this.dynamicFieldsService.getSavedRows(tab.rowTableField.fieldCode);
+          
+          if (!savedRows || savedRows.length === 0) {
+            this.toastr.warning(`Please add at least one entry for: ${tab.name}`);
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
   // Save candidate data
   saveCandidate(): void {
     this.isSubmitted = true;
@@ -337,6 +384,14 @@ export class CandidatesComponent implements OnInit {
       this.toastr.warning('Please fill all required fields');
       return;
     }
+
+    // Validate dynamic fields and tabs
+    if (!this.validateDynamicFields()) {
+      return;
+    }
+
+    
+
 
 
     delete (this.candidate as any).designation;

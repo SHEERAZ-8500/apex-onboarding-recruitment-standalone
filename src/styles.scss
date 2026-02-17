@@ -186,6 +186,47 @@ body {
   text-align: left;
 }
 
+/* Fix table overflow when sidebar opens */
+.table-main-div {
+  overflow-x: auto !important;
+  width: 100%;
+  display: block;
+  
+  > div {
+    overflow-x: auto !important;
+    width: 100%;
+  }
+  
+  .overflow-x-auto {
+    overflow-x: auto !important;
+    width: 100%;
+  }
+  
+  table {
+    width: 100%;
+    table-layout: auto;
+    
+    th, td {
+      white-space: nowrap;
+    }
+  }
+}
+
+/* Ensure container-fluid doesn't break on overflow */
+.container-fluid {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+section.container-fluid {
+  overflow-x: visible;
+  
+  .table-main-div {
+    overflow-x: auto;
+  }
+}
+
 
 
 input[type="time"]::-webkit-calendar-picker-indicator {

@@ -74,10 +74,16 @@
               </label>
 
               <!-- String Input -->
-              <input *ngIf="field.fieldType === 'STRING'" type="text" class="form-input"
+              <input *ngIf="field.fieldType === 'STRING' && field.fieldCode !== 'remarks'" type="text" class="form-input"
                 [placeholder]="'Enter ' + field.label"
                 [(ngModel)]="dynamicFieldsService.dynamicFieldsData[field.fieldCode]" [name]="field.fieldCode"
                 [attr.maxlength]="field.maxLength">
+
+              <!-- String Textarea for Remarks -->
+              <textarea *ngIf="field.fieldType === 'STRING' && field.fieldCode === 'remarks'" class="form-input" rows="3"
+                [placeholder]="'Enter ' + field.label"
+                [(ngModel)]="dynamicFieldsService.dynamicFieldsData[field.fieldCode]" [name]="field.fieldCode"
+                [attr.maxlength]="field.maxLength"></textarea>
 
               <!-- Number Input -->
               <input *ngIf="field.fieldType === 'NUMBER'" type="number" class="form-input"
@@ -192,9 +198,14 @@
                 </label>
 
                 <!-- String Input -->
-                <input *ngIf="column.fieldType === 'STRING'" type="text" class="form-input"
+                <input *ngIf="column.fieldType === 'STRING' && column.fieldCode !== 'remarks'" type="text" class="form-input"
                   [placeholder]="'Enter ' + (column.label || column.name)" [(ngModel)]="column.selectedValue"
                   [name]="column.fieldCode" [attr.maxlength]="column.maxLength">
+
+                <!-- String Textarea for Remarks -->
+                <textarea *ngIf="column.fieldType === 'STRING' && column.fieldCode === 'remarks'" class="form-input" rows="3"
+                  [placeholder]="'Enter ' + (column.label || column.name)" [(ngModel)]="column.selectedValue"
+                  [name]="column.fieldCode" [attr.maxlength]="column.maxLength"></textarea>
 
                 <!-- Number Input -->
                 <input *ngIf="column.fieldType === 'NUMBER'" type="number" class="form-input"

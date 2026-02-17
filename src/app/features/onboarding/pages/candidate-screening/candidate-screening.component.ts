@@ -168,6 +168,37 @@ export class CandidateScreeningComponent implements OnInit {
     this.dynamicFieldsService.setActiveTab(tabId);
   }
 
+  // Validate required dynamic fields and tab fields
+  validateDynamicFields(): boolean {
+    // Validate dynamic fields
+    for (const field of this.dynamicFieldsService.dynamicFields) {
+      if (field.required && field.active) {
+        const value = this.dynamicFieldsService.dynamicFieldsData[field.fieldCode];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          this.toastr.warning(`Please fill required field: ${field.label}`);
+          return false;
+        }
+      }
+    }
+
+    // Validate tab row fields
+    for (const tab of this.sidebarTabs) {
+      if (tab.rowTableField && tab.rowTableField.rowColumns) {
+        for (const column of tab.rowTableField.rowColumns) {
+          if (column.required) {
+            const value = column.selectedValue;
+            if (!value || (typeof value === 'string' && value.trim() === '')) {
+              this.toastr.warning(`Please fill required field: ${column.label || column.name}`);
+              return false;
+            }
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
   saveCandidateScreening(): void {
     if (this.candidateScreening.status === 'SELECTED') {
       if (!this.candidateScreening.status || !this.candidateScreening.dateOfJoining) {
@@ -191,6 +222,11 @@ export class CandidateScreeningComponent implements OnInit {
       }
       delete (this.candidateScreening as any).salaryRows;
 
+    }
+
+    // Validate dynamic fields and tabs
+    if (!this.validateDynamicFields()) {
+      return;
     }
 
     // const completeData = this.dynamicFieldsService.getCompleteFormData(this.candidateScreening);
