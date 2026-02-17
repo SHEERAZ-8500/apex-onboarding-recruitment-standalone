@@ -10,13 +10,13 @@
         <tr>
           <th>Employee Code</th>
           <th>Full Name</th>
-          <th>Email</th>
+          <!-- <th>Email</th> -->
           <th>Department</th>
           <th>Job Title</th>
           <th>Employment Status</th>
           <th>Onboarding Status</th>
-          <th>Date of Joining</th>
-          <th>Created Date</th>
+          <!-- <th>Date of Joining</th> -->
+          <!-- <th>Created Date</th> -->
           <th>Action</th>
         </tr>
       </thead>
@@ -24,7 +24,7 @@
         <tr *ngFor="let employee of onboardingEmployees">
           <td>{{ employee.code }}</td>
           <td>{{ employee.full_name }}</td>
-          <td>{{ employee.email }}</td>
+          <!-- <td>{{ employee.email }}</td> -->
           <td>{{ employee.department_name }}</td>
           <td>{{ employee.job_title_name }}</td>
           <td>
@@ -37,8 +37,8 @@
               {{ employee.onboarding_status }}
             </span>
           </td>
-          <td>{{ employee.date_of_joining | date: 'MMM dd, yyyy' }}</td>
-          <td>{{ employee.created_date | date: 'MMM dd, yyyy HH:mm' }}</td>
+          <!-- <td>{{ employee.date_of_joining | date: 'MMM dd, yyyy' }}</td> -->
+          <!-- <td>{{ employee.created_date | date: 'MMM dd, yyyy HH:mm' }}</td> -->
           <td>
             <button class="action-btn" (click)="confirmEmployee(employee)" title="Confirm Onboarding">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

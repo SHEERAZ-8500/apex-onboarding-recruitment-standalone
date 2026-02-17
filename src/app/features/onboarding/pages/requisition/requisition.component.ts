@@ -297,7 +297,7 @@ export class RequisitionComponent implements OnInit {
 
       this.formsService.saveFormData('JOB_REQUISITION', completeData).subscribe({
         next: (res: any) => {
-          this.toastr.success('Requisition saved successfully');
+          this.toastr.success('Requisition created successfully');
           this.loader.hide();
           // Reset form after successful save
           this.resetForm();
