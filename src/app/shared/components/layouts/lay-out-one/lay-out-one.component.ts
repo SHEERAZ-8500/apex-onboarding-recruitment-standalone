@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ToggleService } from '../../../../core/services/management-services/ToggleService';
-import { ThemeService } from '../../../../core/services/management-services/Theme.service';
 import { SideNavBarComponent } from '../../commons/components/side-nav-bar/side-nav-bar.component';
 import { HeaderComponent } from '../../commons/components/header/header.component';
 
@@ -15,19 +14,9 @@ import { HeaderComponent } from '../../commons/components/header/header.componen
 })
 export class LayOutOneComponent {
   isOpen = true;
-  constructor(private toggleService: ToggleService, public themeService: ThemeService) { }
-  // Current Theme: {{ themeService.isLightTheme ? 'Light' : 'Dark' }}
+  constructor(private toggleService: ToggleService) { }
   ngOnInit() {
     this.toggleService.sidebarOpen$.subscribe(open => this.isOpen = open);
   }
-   isLightTheme = false;
 
-  toggleLightTheme() {
-    this.isLightTheme = !this.isLightTheme;
-    if (this.isLightTheme) {
-      document.documentElement.classList.add('light-theme');
-    } else {
-      document.documentElement.classList.remove('light-theme');
-    }
-  }
 }

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "apex-onboarding-recruitment": {
+    "burj-quaid": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "apex-onboarding-recruitment:build:production"
+              "buildTarget": "burj-quaid:build:production"
             },
             "development": {
-              "buildTarget": "apex-onboarding-recruitment:build:development"
+              "buildTarget": "burj-quaid:build:development"
             }
           },
           "defaultConfiguration": "development"

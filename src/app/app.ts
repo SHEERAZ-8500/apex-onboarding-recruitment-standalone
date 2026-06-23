@@ -9,5 +9,5 @@ import { LoaderComponent } from './shared/components/commons/components/loader/l
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('apex-onboarding-recruitment');
+  protected readonly title = signal('burj-quaid');
 }

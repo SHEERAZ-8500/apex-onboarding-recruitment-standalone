@@ -4,7 +4,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../service/auth.service';
 import { EncryptionService } from '../../../../core/services/management-services/encryption.service';
-import { ThemeService } from '../../../../core/services/management-services/Theme.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgOtpInputModule } from 'ng-otp-input';
@@ -35,7 +34,6 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
   otp: string = '';
 
   constructor(
-    private themeService: ThemeService,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
@@ -44,12 +42,7 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Subscribe to theme changes
-    this.themeService.isLightTheme$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(isLight => {
-        this.isLightTheme = isLight;
-      });
+  
 
     // Check route to determine view
     this.route.url.pipe(takeUntil(this.destroy$)).subscribe(segments => {

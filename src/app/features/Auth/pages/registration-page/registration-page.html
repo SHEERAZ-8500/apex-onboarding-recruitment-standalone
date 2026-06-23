@@ -1,0 +1,315 @@
+<div class="auth-screen">
+
+  <!-- LEFT — Hero (full image, never cropped) -->
+  <section class="auth-hero" aria-hidden="true">
+    <img
+      class="auth-hero__image"
+      src="assets/burj-khalifa.jpg.jpeg"
+      alt=""
+    />
+    <div class="auth-hero__overlay"></div>
+    <div class="auth-hero__content">
+      <span class="auth-hero__eyebrow">A New Icon A New Standard</span>
+      <h2 class="auth-hero__title">Own a piece<br>of the  <span style="color: var(--gold);">Burj Quaid</span></h2>
+      <p class="auth-hero__caption">Premium addresses, curated for investors who see further.</p>
+    </div>
+  </section>
+
+  <!-- RIGHT — Registration panel -->
+  <section class="auth-panel">
+    <div class="auth-panel__inner">
+
+      <!-- Heading — OUTSIDE the card now -->
+      <header class="auth-heading">
+        <p class="auth-heading__welcome">Welcome</p>
+        <h1>Register Yourself</h1>
+      </header>
+
+      <!-- Breadcrumb steps — heading ke neeche, card se pehle -->
+      <nav class="steps" aria-label="Registration steps">
+        <button
+          type="button"
+          class="steps__item"
+          [class.is-active]="currentStep === 1"
+          [class.is-done]="currentStep > 1"
+          (click)="goToStep(1)"
+        >
+          <span class="steps__index">1</span>
+          <span class="steps__label">Step 1</span>
+        </button>
+
+        <span class="steps__divider" [class.is-filled]="currentStep > 1"></span>
+
+        <button
+          type="button"
+          class="steps__item"
+          [class.is-active]="currentStep === 2"
+          [class.is-done]="currentStep > 2"
+          [disabled]="maxStepReached < 2"
+          (click)="goToStep(2)"
+        >
+          <span class="steps__index">2</span>
+          <span class="steps__label">Step 2</span>
+        </button>
+
+        <span class="steps__divider" [class.is-filled]="currentStep > 2"></span>
+
+        <button
+          type="button"
+          class="steps__item"
+          [class.is-active]="currentStep === 3"
+          [disabled]="maxStepReached < 3"
+          (click)="goToStep(3)"
+        >
+          <span class="steps__index">3</span>
+          <span class="steps__label">Step 3</span>
+        </button>
+      </nav>
+
+      <!-- Registration Card — only the form lives here now -->
+      <div class="auth-card">
+
+        <form class="auth-form" (ngSubmit)="onRegister()" novalidate>
+
+          <!-- STEP 1 — Personal info -->
+          <ng-container *ngIf="currentStep === 1">
+
+            <div class="row g-3 mx-0">
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="firstName">First Name</label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    class="form-control"
+                    placeholder="John"
+                    [(ngModel)]="model.firstName"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="lastName">Last Name</label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Doe"
+                    [(ngModel)]="model.lastName"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mx-0">
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="contactNumber">Contact Number</label>
+                  <input
+                    id="contactNumber"
+                    name="contactNumber"
+                    type="tel"
+                    class="form-control"
+                    placeholder="03XX-XXXXXXX"
+                    [(ngModel)]="model.contactNumber"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="cnicNumber">CNIC Number</label>
+                  <input
+                    id="cnicNumber"
+                    name="cnicNumber"
+                    type="text"
+                    class="form-control"
+                    placeholder="XXXXX-XXXXXXX-X"
+                    [(ngModel)]="model.cnicNumber"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-form__actions auth-form__actions--end">
+              <button type="button" class="btn btn--primary" (click)="goNext()">Continue</button>
+            </div>
+
+          </ng-container>
+
+          <!-- STEP 2 — Location -->
+          <ng-container *ngIf="currentStep === 2">
+
+            <div class="row g-3 mx-0">
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="city">City</label>
+                  <input
+                    id="city"
+                    name="city"
+                    type="text"
+                    class="form-control"
+                    placeholder="Lahore"
+                    [(ngModel)]="model.city"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="area">Area</label>
+                  <input
+                    id="area"
+                    name="area"
+                    type="text"
+                    class="form-control"
+                    placeholder="DHA Phase 5"
+                    [(ngModel)]="model.area"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mx-0">
+              <div class="col-12">
+                <div class="field">
+                  <label for="address">Address</label>
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    class="form-control"
+                    placeholder="House / Street / Block"
+                    [(ngModel)]="model.address"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-form__actions">
+              <button type="button" class="btn btn--ghost" (click)="goBack()">Back</button>
+              <button type="button" class="btn btn--primary" (click)="goNext()">Continue</button>
+            </div>
+
+          </ng-container>
+
+          <!-- STEP 3 — Family & education -->
+          <ng-container *ngIf="currentStep === 3">
+
+            <div class="row g-3 mx-0">
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="age">Age</label>
+                  <input
+                    id="age"
+                    name="age"
+                    type="number"
+                    class="form-control"
+                    placeholder="28"
+                    [(ngModel)]="model.age"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="fatherName">Father Name</label>
+                  <input
+                    id="fatherName"
+                    name="fatherName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Father's full name"
+                    [(ngModel)]="model.fatherName"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3 mx-0">
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="motherName">Mother Name</label>
+                  <input
+                    id="motherName"
+                    name="motherName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Mother's full name"
+                    [(ngModel)]="model.motherName"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <div class="field">
+                  <label for="education">Education</label>
+                  <input
+                    id="education"
+                    name="education"
+                    type="text"
+                    class="form-control"
+                    placeholder="e.g. Bachelors"
+                    [(ngModel)]="model.education"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-form__actions">
+              <button type="button" class="btn btn--ghost" (click)="goBack()">Back</button>
+              <button type="submit" class="btn btn--primary" [disabled]="isSubmitting">
+                <span *ngIf="!isSubmitting">Register Now</span>
+                <span *ngIf="isSubmitting" class="btn__spinner" aria-label="Registering"></span>
+              </button>
+            </div>
+
+          </ng-container>
+
+        </form>
+
+      </div>
+      <!-- /Registration Card -->
+
+      <!-- Feature strip — outside card -->
+      <ul class="features">
+        <li class="features__item" *ngFor="let f of features">
+          <span class="features__icon">
+            <svg *ngIf="f.icon === 'building'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="5" y="3" width="14" height="18" rx="1" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M10 21v-3h4v3" stroke="currentColor" stroke-width="1.4"/>
+            </svg>
+            <svg *ngIf="f.icon === 'shield'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3l7 3v5c0 5-3.2 8-7 10-3.8-2-7-5-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <svg *ngIf="f.icon === 'chart'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 20V10M9.5 20V6M15 20v-7M20.5 20V4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <svg *ngIf="f.icon === 'headset'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 13v-1a8 8 0 1 1 16 0v1" stroke="currentColor" stroke-width="1.4"/>
+              <rect x="3" y="13" width="4" height="6" rx="1.4" stroke="currentColor" stroke-width="1.4"/>
+              <rect x="17" y="13" width="4" height="6" rx="1.4" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M19 19.5c0 1.4-1.6 2.5-4 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="features__text">
+            <strong>{{ f.title }}</strong>
+            <small>{{ f.subtitle }}</small>
+          </span>
+        </li>
+      </ul>
+
+    </div>
+  </section>
+</div>

@@ -7,7 +7,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class EncryptionService {
 
-  private secretKey = 'apex-employee-management-secret-key'; 
+  private secretKey = 'burj-quaid-secret-key'; 
 
   encrypt(data: any): string {
     const dataString = JSON.stringify(data);
