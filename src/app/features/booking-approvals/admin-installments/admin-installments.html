@@ -1,0 +1,346 @@
+<section class="container-fluid p-0 installments-page">
+  <div class="d-flex justify-content-between align-items-center mb-3 page-header">
+    <div class="page-title">
+      <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <a routerLink="/panel/dashboard">Dashboard</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Installments Administration</span>
+      </nav>
+
+      <h3>Installment Payments</h3>
+      <p>Generate schedules and audit submitted installment payment proofs.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-outline-secondary" type="button" (click)="refresh()" [disabled]="isLoading">
+        <i class="bi bi-arrow-clockwise"></i>
+        Refresh
+      </button>
+
+      <button class="btn btn-primary" type="button" (click)="openGenerateModal()">
+        <i class="bi bi-calendar-plus"></i>
+        Generate Schedule
+      </button>
+    </div>
+  </div>
+
+  <div class="card installments-card">
+    <div class="card-header">
+      <div class="status-tabs">
+        <button
+          *ngFor="let status of statuses"
+          type="button"
+          class="status-tab"
+          [class.active]="selectedStatus === status"
+          (click)="onStatusChange(status)"
+        >
+          {{ status }}
+        </button>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Booking ID</th>
+              <th>Installment Amount</th>
+              <th>Due Date</th>
+              <th>Submitted At</th>
+              <th>Paid At</th>
+              <th>Payment Proof</th>
+              <th>Status</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngIf="isLoading">
+              <td colspan="9" class="text-center py-5 text-muted">
+                Loading installments...
+              </td>
+            </tr>
+
+            <tr *ngIf="!isLoading && installments.length === 0">
+              <td colspan="9" class="text-center py-5 text-muted">
+                No {{ selectedStatus.toLowerCase() }} installments found.
+              </td>
+            </tr>
+
+            <tr *ngFor="let installment of installments; let i = index">
+              <td>{{ getInstallmentNumber(installment, i) }}</td>
+
+              <td>
+                <span class="booking-id" [title]="installment.bookingPublicId">
+                  {{ installment.bookingPublicId }}
+                </span>
+              </td>
+
+              <td>
+                {{ installment.amount | number: '1.2-2' }}
+              </td>
+
+              <td>
+                {{ installment.dueDate | date: 'dd MMM yyyy' }}
+              </td>
+
+              <td>
+                {{
+                  installment.submittedAt
+                    ? (installment.submittedAt | date: 'dd MMM yyyy, hh:mm a')
+                    : '-'
+                }}
+              </td>
+
+              <td>
+                {{
+                  installment.paidAt
+                    ? (installment.paidAt | date: 'dd MMM yyyy, hh:mm a')
+                    : '-'
+                }}
+              </td>
+
+              <td>
+                <a
+                  *ngIf="getProofUrl(installment) as proofUrl"
+                  [href]="proofUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="proof-link"
+                >
+                  <i class="bi bi-file-earmark-image"></i>
+                  View Proof
+                </a>
+
+                <span *ngIf="!getProofUrl(installment)" class="text-muted">-</span>
+              </td>
+
+              <td>
+                <span class="status-badge" [ngClass]="statusClass(installment.status)">
+                  {{ installment.status }}
+                </span>
+              </td>
+
+              <td class="text-end">
+                <div *ngIf="canAudit(installment)" class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-success"
+                    (click)="openVerifyModal(installment)"
+                    [disabled]="isSaving"
+                  >
+                    Verify
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    (click)="openRejectModal(installment)"
+                    [disabled]="isSaving"
+                  >
+                    Reject
+                  </button>
+                </div>
+
+                <span *ngIf="!canAudit(installment)" class="text-muted">—</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between align-items-center">
+      <span class="text-muted small">
+        Showing page {{ paginator.totalPages ? paginator.currentPage + 1 : 0 }}
+        of {{ paginator.totalPages }} · {{ paginator.totalItems }} total records
+      </span>
+
+      <div class="pagination-actions">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="previousPage()"
+          [disabled]="page === 0 || isLoading"
+        >
+          Previous
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="nextPage()"
+          [disabled]="page >= paginator.totalPages - 1 || isLoading || paginator.totalPages === 0"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Generate Schedule Modal -->
+<div *ngIf="showGenerateModal" class="modal-backdrop-custom">
+  <div class="custom-modal">
+    <div class="custom-modal__header">
+      <div>
+        <h5>Generate Installment Schedule</h5>
+        <p>Create a schedule only for an accepted booking.</p>
+      </div>
+
+      <button type="button" class="modal-close" (click)="closeGenerateModal()" [disabled]="isSaving">
+        ×
+      </button>
+    </div>
+
+    <div class="custom-modal__body">
+      <div class="alert alert-info mb-3">
+        Existing schedules cannot be regenerated after payment evidence has been submitted.
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Booking Public ID <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="selectedBookingPublicId"
+          [disabled]="isSaving"
+          placeholder="Enter accepted booking public ID"
+        />
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Number of Installments <span class="text-danger">*</span></label>
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            [(ngModel)]="generateForm.numberOfInstallments"
+            [disabled]="isSaving"
+          />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Frequency (Months) <span class="text-danger">*</span></label>
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            [(ngModel)]="generateForm.frequencyMonths"
+            [disabled]="isSaving"
+          />
+        </div>
+      </div>
+
+      <div class="mb-0">
+        <label class="form-label">First Due Date <span class="text-danger">*</span></label>
+        <input
+          type="date"
+          class="form-control"
+          [(ngModel)]="generateForm.firstDueDate"
+          [disabled]="isSaving"
+        />
+      </div>
+    </div>
+
+    <div class="custom-modal__footer">
+      <button type="button" class="btn btn-light" (click)="closeGenerateModal()" [disabled]="isSaving">
+        Cancel
+      </button>
+
+      <button type="button" class="btn btn-primary" (click)="generateSchedule()" [disabled]="isSaving">
+        <span *ngIf="!isSaving">Generate Schedule</span>
+        <span *ngIf="isSaving">Generating...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Verify Modal -->
+<div *ngIf="showVerifyModal" class="modal-backdrop-custom">
+  <div class="custom-modal custom-modal--small">
+    <div class="custom-modal__header">
+      <div>
+        <h5>Verify Payment</h5>
+        <p>Confirm this installment payment proof.</p>
+      </div>
+
+      <button type="button" class="modal-close" (click)="closeVerifyModal()" [disabled]="isSaving">
+        ×
+      </button>
+    </div>
+
+    <div class="custom-modal__body">
+      <p class="mb-2">
+        Are you sure you want to verify this payment?
+      </p>
+
+      <div class="verification-details" *ngIf="selectedInstallment">
+        <div>
+          <span>Amount</span>
+          <strong>{{ selectedInstallment.amount | number: '1.2-2' }}</strong>
+        </div>
+
+        <div>
+          <span>Due Date</span>
+          <strong>{{ selectedInstallment.dueDate | date: 'dd MMM yyyy' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="custom-modal__footer">
+      <button type="button" class="btn btn-light" (click)="closeVerifyModal()" [disabled]="isSaving">
+        Cancel
+      </button>
+
+      <button type="button" class="btn btn-success" (click)="verifyInstallment()" [disabled]="isSaving">
+        <span *ngIf="!isSaving">Yes, Verify</span>
+        <span *ngIf="isSaving">Verifying...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Modal -->
+<div *ngIf="showRejectModal" class="modal-backdrop-custom">
+  <div class="custom-modal custom-modal--small">
+    <div class="custom-modal__header">
+      <div>
+        <h5>Reject Payment Proof</h5>
+        <p>The customer will be able to upload a new proof.</p>
+      </div>
+
+      <button type="button" class="modal-close" (click)="closeRejectModal()" [disabled]="isSaving">
+        ×
+      </button>
+    </div>
+
+    <div class="custom-modal__body">
+      <label class="form-label">
+        Rejection Reason <span class="text-danger">*</span>
+      </label>
+
+      <textarea
+        rows="4"
+        class="form-control"
+        [(ngModel)]="rejectReason"
+        [disabled]="isSaving"
+        placeholder="For example: Provided deposit receipt copy is blurry."
+      ></textarea>
+    </div>
+
+    <div class="custom-modal__footer">
+      <button type="button" class="btn btn-light" (click)="closeRejectModal()" [disabled]="isSaving">
+        Cancel
+      </button>
+
+      <button type="button" class="btn btn-danger" (click)="rejectInstallment()" [disabled]="isSaving">
+        <span *ngIf="!isSaving">Reject Payment</span>
+        <span *ngIf="isSaving">Rejecting...</span>
+      </button>
+    </div>
+  </div>
+</div>
