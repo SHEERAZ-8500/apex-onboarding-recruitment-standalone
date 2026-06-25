@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://116.203.172.126:3300/api/', // dev backend
+  apiBaseUrl: 'https://bq.wiserhelpdesk.com/api/',
   enableDebug: true,
 };

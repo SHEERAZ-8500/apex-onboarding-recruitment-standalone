@@ -1,0 +1,204 @@
+<div class="user-form-wrapper">
+  <div class="user-card">
+    <!-- Header -->
+    <div class="card-header">
+      <h3>{{ isEditMode ? 'Update Unit' : 'Create Unit' }}</h3>
+    </div>
+
+    <div class="header-divider"></div>
+
+    <form class="user-form" (ngSubmit)="submitUnit()">
+      <!-- Row 1 -->
+      <div class="row">
+        <!-- Unit Number -->
+        <div class="col-md-6">
+          <label class="form-label">Unit Number <span class="required">*</span></label>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="e.g. A-301"
+            [(ngModel)]="unitNumber"
+            name="unitNumber"
+            (input)="unitNumber = unitNumber.toUpperCase()"
+          />
+
+          <small class="text-danger" *ngIf="formSubmitted && !unitNumber.trim()">
+            <i class="fa-solid fa-circle-exclamation me-1"></i>
+            Please enter unit number
+          </small>
+        </div>
+
+        <!-- Floor Number -->
+        <div class="col-md-6">
+          <label class="form-label">Floor Number <span class="required">*</span></label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="e.g. 3"
+            [(ngModel)]="floorNumber"
+            name="floorNumber"
+            min="0"
+          />
+
+          <small
+            class="text-danger"
+            *ngIf="formSubmitted && (floorNumber === null || floorNumber === undefined)"
+          >
+            <i class="fa-solid fa-circle-exclamation me-1"></i>
+            Please enter floor number
+          </small>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="row">
+        <!-- Property Type -->
+        <div class="col-md-6">
+          <label class="form-label">Property Type <span class="required">*</span></label>
+
+          <div class="custom-dropdown" (click)="togglePropertyType($event)">
+            <div class="dropdown-selected">
+              <span>{{ propertyType || 'Select Property Type' }}</span>
+              <i
+                class="fa-solid fa-caret-down"
+                [class.rotate]="isPropertyTypeOpen"
+              ></i>
+            </div>
+
+            <div class="dropdown-options" *ngIf="isPropertyTypeOpen">
+              <div
+                class="dropdown-option"
+                *ngFor="let type of propertyTypes"
+                (click)="selectPropertyType(type, $event)"
+              >
+                {{ type }}
+              </div>
+            </div>
+          </div>
+
+          <small class="text-danger" *ngIf="formSubmitted && !propertyType">
+            <i class="fa-solid fa-circle-exclamation me-1"></i>
+            Please select property type
+          </small>
+        </div>
+
+        <!-- Area -->
+        <div class="col-md-6">
+          <label class="form-label">Area (Sq. Ft.) <span class="required">*</span></label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="e.g. 1250.50"
+            [(ngModel)]="areaSqft"
+            name="areaSqft"
+            min="0"
+            step="0.01"
+          />
+
+          <small class="text-danger" *ngIf="formSubmitted && !isValidPositiveNumber(areaSqft)">
+            <i class="fa-solid fa-circle-exclamation me-1"></i>
+            Please enter valid area
+          </small>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="row">
+        <!-- Total Price -->
+        <div class="col-md-6">
+          <label class="form-label">Total Price <span class="required">*</span></label>
+
+          <input
+            type="number"
+            class="form-control"
+            placeholder="e.g. 12500000"
+            [(ngModel)]="totalPrice"
+            name="totalPrice"
+            min="0"
+            step="0.01"
+          />
+
+          <small class="text-danger" *ngIf="formSubmitted && !isValidPositiveNumber(totalPrice)">
+            <i class="fa-solid fa-circle-exclamation me-1"></i>
+            Please enter valid total price
+          </small>
+        </div>
+
+        <!-- Booking Amount -->
+      <!-- Booking Amount -->
+<div class="col-md-6">
+  <label class="form-label">
+    Booking Amount <span class="required">*</span>
+  </label>
+
+  <input
+    type="number"
+    class="form-control"
+    placeholder="e.g. 600000"
+    [(ngModel)]="bookingAmount"
+    name="bookingAmount"
+    min="0"
+    step="0.01"
+  />
+
+  <small
+    class="text-danger"
+    *ngIf="formSubmitted && !isValidPositiveNumber(bookingAmount)"
+  >
+    <i class="fa-solid fa-circle-exclamation me-1"></i>
+    Please enter valid booking amount
+  </small>
+
+  <small
+    class="text-danger d-block"
+    *ngIf="
+      formSubmitted &&
+      bookingAmount !== null &&
+      totalPrice !== null &&
+      bookingAmount > totalPrice
+    "
+  >
+    <i class="fa-solid fa-circle-exclamation me-1"></i>
+    Booking amount cannot be greater than total price
+  </small>
+</div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="row">
+        <div class="col-12">
+          <label class="form-label">Description</label>
+
+          <textarea
+            class="form-control"
+            placeholder="Enter unit description..."
+            [(ngModel)]="description"
+            name="description"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="cancel()" [disabled]="disabled">
+          Cancel
+        </button>
+
+        <button type="submit" class="submit-btn" [disabled]="disabled">
+          <span *ngIf="!disabled">
+            {{ isEditMode ? 'Update Unit' : 'Create Unit' }}
+          </span>
+
+          <span *ngIf="disabled">
+            <i class="fa-solid fa-spinner fa-spin me-1"></i>
+            Please wait...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

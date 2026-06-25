@@ -1,17 +1,33 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EncryptionService } from '../../../core/services/management-services/encryption.service';
+import { Observable } from 'rxjs';
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface VerifyRegistrationRequest {
+  preAuthToken: string;
+  otp: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient, private encryptionService: EncryptionService) { }
+  constructor(
+    private http: HttpClient,
+    private encryptionService: EncryptionService
+  ) {}
 
-  // Auth APIs
   logIn(userCredentials: any) {
     let devicefromStorage = localStorage.getItem('deviceId') || '';
     let deviceId = '';
+
     if (devicefromStorage) {
       deviceId = this.encryptionService.decrypt(devicefromStorage);
     }
@@ -19,6 +35,7 @@ export class AuthService {
     const headers = new HttpHeaders({
       'X-Device-Id': deviceId || ''
     });
+
     return this.http.post('auth/login', userCredentials, { headers });
   }
 
@@ -31,7 +48,9 @@ export class AuthService {
   }
 
   verifyOtp(otp: any) {
-    return this.http.post('auth/otp/verify', otp, { observe: 'response' });
+    return this.http.post('auth/otp/verify', otp, {
+      observe: 'response'
+    });
   }
 
   resendOtp(preAuthToken: any) {
@@ -53,4 +72,28 @@ export class AuthService {
   inviteComplete(data: any) {
     return this.http.post('auth/invite/complete', data);
   }
+
+  // ---------------- Registration APIs ----------------
+
+  register(payload: RegisterRequest) {
+    return this.http.post('auth/register', payload);
+  }
+
+  verifyRegistrationOtp(payload: VerifyRegistrationRequest) {
+    return this.http.post(
+      'auth/register/verify',
+      payload,
+      { observe: 'response' }
+    );
+  }
+
+  resendRegistrationOtp(preAuthToken: string) {
+    return this.http.post(
+      'auth/register/resend',
+      { preAuthToken }
+    );
+  }
+  googleLogin(idToken: string): Observable<any> {
+  return this.http.post('auth/google', { idToken });
+}
 }

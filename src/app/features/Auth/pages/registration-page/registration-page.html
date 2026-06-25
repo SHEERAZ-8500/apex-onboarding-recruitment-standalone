@@ -26,258 +26,233 @@
       </header>
 
       <!-- Breadcrumb steps — heading ke neeche, card se pehle -->
-      <nav class="steps" aria-label="Registration steps">
-        <button
-          type="button"
-          class="steps__item"
-          [class.is-active]="currentStep === 1"
-          [class.is-done]="currentStep > 1"
-          (click)="goToStep(1)"
-        >
-          <span class="steps__index">1</span>
-          <span class="steps__label">Step 1</span>
-        </button>
+    <nav class="steps" aria-label="Registration steps">
 
-        <span class="steps__divider" [class.is-filled]="currentStep > 1"></span>
+  <button
+    type="button"
+    class="steps__item"
+    [class.is-active]="currentStep === 1"
+    [class.is-done]="currentStep > 1"
+    (click)="goToStep(1)"
+  >
+    <span class="steps__index">1</span>
+    <span class="steps__label">Account</span>
+  </button>
 
-        <button
-          type="button"
-          class="steps__item"
-          [class.is-active]="currentStep === 2"
-          [class.is-done]="currentStep > 2"
-          [disabled]="maxStepReached < 2"
-          (click)="goToStep(2)"
-        >
-          <span class="steps__index">2</span>
-          <span class="steps__label">Step 2</span>
-        </button>
+  <span class="steps__divider" [class.is-filled]="currentStep > 1"></span>
 
-        <span class="steps__divider" [class.is-filled]="currentStep > 2"></span>
+  <button
+    type="button"
+    class="steps__item"
+    [class.is-active]="currentStep === 2"
+    [disabled]="maxStepReached < 2"
+    (click)="goToStep(2)"
+  >
+    <span class="steps__index">2</span>
+    <span class="steps__label">Verify Email</span>
+  </button>
 
-        <button
-          type="button"
-          class="steps__item"
-          [class.is-active]="currentStep === 3"
-          [disabled]="maxStepReached < 3"
-          (click)="goToStep(3)"
-        >
-          <span class="steps__index">3</span>
-          <span class="steps__label">Step 3</span>
-        </button>
-      </nav>
+</nav>
 
       <!-- Registration Card — only the form lives here now -->
-      <div class="auth-card">
+   <div class="auth-card">
 
-        <form class="auth-form" (ngSubmit)="onRegister()" novalidate>
+  <form
+    class="auth-form"
+    (ngSubmit)="currentStep === 1 ? createAccount() : verifyRegistrationOtp()"
+    novalidate
+  >
 
-          <!-- STEP 1 — Personal info -->
-          <ng-container *ngIf="currentStep === 1">
+    <!-- STEP 1 — Registration form -->
+    <ng-container *ngIf="currentStep === 1">
 
-            <div class="row g-3 mx-0">
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="firstName">First Name</label>
-                  <input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    class="form-control"
-                    placeholder="John"
-                    [(ngModel)]="model.firstName"
-                    required
+      <div class="row g-3 mx-0">
+        <div class="col-12 col-sm-6">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              class="form-control"
+              placeholder="Amna"
+              autocomplete="given-name"
+              [(ngModel)]="model.firstName"
+              [disabled]="isSubmitting"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6">
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              class="form-control"
+              placeholder="Qayyum"
+              autocomplete="family-name"
+              [(ngModel)]="model.lastName"
+              [disabled]="isSubmitting"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mx-0">
+        <div class="col-12">
+          <div class="field">
+            <label for="email">Email Address</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              class="form-control"
+              placeholder="you@example.com"
+              autocomplete="email"
+              [(ngModel)]="model.email"
+              [disabled]="isSubmitting"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mx-0">
+        <div class="col-12">
+          <div class="field">
+            <label for="password">Password</label>
+
+            <div class="field__control">
+              <input
+                id="password"
+                name="password"
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control"
+                placeholder="Minimum 8 characters"
+                autocomplete="new-password"
+                [(ngModel)]="model.password"
+                [disabled]="isSubmitting"
+                required
+              />
+
+              <button
+                type="button"
+                class="field__toggle"
+                (click)="togglePassword()"
+                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+              >
+                <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"
+                    stroke="currentColor"
+                    stroke-width="1.6"
                   />
-                </div>
-              </div>
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="lastName">Last Name</label>
-                  <input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    class="form-control"
-                    placeholder="Doe"
-                    [(ngModel)]="model.lastName"
-                    required
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="currentColor"
+                    stroke-width="1.6"
                   />
-                </div>
-              </div>
-            </div>
+                </svg>
 
-            <div class="row g-3 mx-0">
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="contactNumber">Contact Number</label>
-                  <input
-                    id="contactNumber"
-                    name="contactNumber"
-                    type="tel"
-                    class="form-control"
-                    placeholder="03XX-XXXXXXX"
-                    [(ngModel)]="model.contactNumber"
-                    required
+                <svg *ngIf="showPassword" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M3 3l18 18M10.6 10.6a3 3 0 0 0 4.24 4.24M6.6 6.7C3.9 8.3 1.5 12 1.5 12S5 19 12 19c1.8 0 3.3-.4 4.6-1.1M9.9 5.1A11 11 0 0 1 12 5c7 0 10.5 7 10.5 7-.4.7-1.2 1.9-2.4 3.1"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
                   />
-                </div>
-              </div>
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="cnicNumber">CNIC Number</label>
-                  <input
-                    id="cnicNumber"
-                    name="cnicNumber"
-                    type="text"
-                    class="form-control"
-                    placeholder="XXXXX-XXXXXXX-X"
-                    [(ngModel)]="model.cnicNumber"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="auth-form__actions auth-form__actions--end">
-              <button type="button" class="btn btn--primary" (click)="goNext()">Continue</button>
-            </div>
-
-          </ng-container>
-
-          <!-- STEP 2 — Location -->
-          <ng-container *ngIf="currentStep === 2">
-
-            <div class="row g-3 mx-0">
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="city">City</label>
-                  <input
-                    id="city"
-                    name="city"
-                    type="text"
-                    class="form-control"
-                    placeholder="Lahore"
-                    [(ngModel)]="model.city"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="area">Area</label>
-                  <input
-                    id="area"
-                    name="area"
-                    type="text"
-                    class="form-control"
-                    placeholder="DHA Phase 5"
-                    [(ngModel)]="model.area"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row g-3 mx-0">
-              <div class="col-12">
-                <div class="field">
-                  <label for="address">Address</label>
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    class="form-control"
-                    placeholder="House / Street / Block"
-                    [(ngModel)]="model.address"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="auth-form__actions">
-              <button type="button" class="btn btn--ghost" (click)="goBack()">Back</button>
-              <button type="button" class="btn btn--primary" (click)="goNext()">Continue</button>
-            </div>
-
-          </ng-container>
-
-          <!-- STEP 3 — Family & education -->
-          <ng-container *ngIf="currentStep === 3">
-
-            <div class="row g-3 mx-0">
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="age">Age</label>
-                  <input
-                    id="age"
-                    name="age"
-                    type="number"
-                    class="form-control"
-                    placeholder="28"
-                    [(ngModel)]="model.age"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="fatherName">Father Name</label>
-                  <input
-                    id="fatherName"
-                    name="fatherName"
-                    type="text"
-                    class="form-control"
-                    placeholder="Father's full name"
-                    [(ngModel)]="model.fatherName"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="row g-3 mx-0">
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="motherName">Mother Name</label>
-                  <input
-                    id="motherName"
-                    name="motherName"
-                    type="text"
-                    class="form-control"
-                    placeholder="Mother's full name"
-                    [(ngModel)]="model.motherName"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-12 col-sm-6">
-                <div class="field">
-                  <label for="education">Education</label>
-                  <input
-                    id="education"
-                    name="education"
-                    type="text"
-                    class="form-control"
-                    placeholder="e.g. Bachelors"
-                    [(ngModel)]="model.education"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="auth-form__actions">
-              <button type="button" class="btn btn--ghost" (click)="goBack()">Back</button>
-              <button type="submit" class="btn btn--primary" [disabled]="isSubmitting">
-                <span *ngIf="!isSubmitting">Register Now</span>
-                <span *ngIf="isSubmitting" class="btn__spinner" aria-label="Registering"></span>
+                </svg>
               </button>
             </div>
-
-          </ng-container>
-
-        </form>
-
+          </div>
+        </div>
       </div>
+
+      <div class="auth-form__actions auth-form__actions--end">
+        <button
+          type="submit"
+          class="btn btn--primary"
+          [disabled]="isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">Create Account</span>
+          <span
+            *ngIf="isSubmitting"
+            class="btn__spinner"
+            aria-label="Creating account"
+          ></span>
+        </button>
+      </div>
+
+    </ng-container>
+
+    <!-- STEP 2 — OTP verification inside registration page -->
+    <ng-container *ngIf="currentStep === 2">
+
+      <div class="registration-otp">
+        <div class="registration-otp__header">
+          <h3>Verify Your Email</h3>
+          <p>
+            We sent a 6-digit verification code to
+            <strong>{{ model.email }}</strong>
+          </p>
+        </div>
+
+        <div class="registration-otp__input">
+          <ng-otp-input
+            (onInputChange)="onOtpChange($event)"
+            [config]="otpConfig"
+          ></ng-otp-input>
+        </div>
+      </div>
+
+      <div class="auth-form__actions">
+        <button
+          type="button"
+          class="btn btn--ghost"
+          (click)="goBack()"
+          [disabled]="isVerifyingOtp"
+        >
+          Back
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn--primary"
+          [disabled]="isVerifyingOtp"
+        >
+          <span *ngIf="!isVerifyingOtp">Verify & Continue</span>
+          <span
+            *ngIf="isVerifyingOtp"
+            class="btn__spinner"
+            aria-label="Verifying OTP"
+          ></span>
+        </button>
+      </div>
+
+      <p class="registration-otp__resend">
+        Didn't receive the code?
+
+        <button
+          type="button"
+          class="registration-otp__resend-btn"
+          (click)="resendRegistrationOtp()"
+          [disabled]="isResendingOtp || isVerifyingOtp"
+        >
+          {{ isResendingOtp ? 'Sending...' : 'Resend OTP' }}
+        </button>
+      </p>
+
+    </ng-container>
+
+  </form>
+
+</div>
       <!-- /Registration Card -->
 
       <!-- Feature strip — outside card -->

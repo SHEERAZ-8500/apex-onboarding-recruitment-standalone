@@ -1,0 +1,300 @@
+<section class="container-fluid p-0">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="page-title">
+      <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <a routerLink="/panel/dashboard" class="bc-link">
+          <i class="fa-solid fa-house"></i>
+          Dashboard
+        </a>
+
+        <span class="bc-chevron">❯</span>
+
+        <span class="bc-current">
+          <i class="fa-solid fa-building"></i>
+          Inventory Units
+        </span>
+      </nav>
+    </div>
+
+    <div class="d-flex align-items-end gap-2">
+      <!-- Search -->
+      <div class="search-wrapper">
+        <div class="search-note">*Search by Unit Number</div>
+        <div class="search-box">
+          <input
+            type="text"
+            placeholder="Search unit e.g. A-101"
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+          />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="search-wrapper">
+        <div class="search-note">*Filter by Status</div>
+        <div class="filter-select-box">
+          <select
+            [(ngModel)]="statusFilter"
+            (change)="onFilterChange()"
+            class="filter-select"
+          >
+            <option value="">All Status</option>
+            <option value="AVAILABLE">Available</option>
+            <option value="HELD">Held</option>
+            <option value="BOOKED">Booked</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Property Type Filter -->
+      <div class="search-wrapper">
+        <div class="search-note">*Property Type</div>
+        <div class="filter-select-box">
+          <select
+            [(ngModel)]="propertyTypeFilter"
+            (change)="onFilterChange()"
+            class="filter-select"
+          >
+            <option value="">All Types</option>
+            <option value="APARTMENT">Apartment</option>
+            <option value="OFFICE">Office</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Active Filter -->
+      <div class="search-wrapper">
+        <div class="search-note">*Active Status</div>
+        <div class="filter-select-box">
+          <select
+            [(ngModel)]="activeFilter"
+            (change)="onFilterChange()"
+            class="filter-select"
+          >
+            <option value="">All</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Reset -->
+      <div class="mb-1">
+        <button
+          class="reset-btn round-btn"
+          (click)="resetFilters()"
+          title="Reset All Filters"
+          [disabled]="!isAnyFilterActive"
+        >
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+      </div>
+
+      <!-- Create -->
+      <div class="mb-1">
+        <button
+          class="create-btn round-btn"
+          routerLink="/panel/inventory-units/create-unit"
+          title="Create Unit"
+        >
+          <i class="fa-solid fa-plus icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <section class="table-main-div">
+    <div class="table-scrollable">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left">
+            <th class="px-3 py-3">#</th>
+            <th class="px-3 py-3">Unit Number</th>
+            <th class="px-3 py-3">Floor</th>
+            <th class="px-3 py-3">Property Type</th>
+            <th class="px-3 py-3">Status</th>
+            <th class="px-3 py-3">Area (Sqft)</th>
+            <th class="px-3 py-3">Update Status</th>
+            <th class="px-3 py-3">Active</th>
+            <th class="px-3 py-3">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let unit of unitList; let i = index">
+            <td class="px-3 py-3 font-medium">
+              {{ (currentPage - 1) * itemsPerPage + i + 1 }}
+            </td>
+
+            <td class="px-3 py-3 font-medium">
+              <span class="unit-number">{{ unit.unitNumber }}</span>
+            </td>
+
+            <td class="px-3 py-3">{{ unit.floorNumber }}</td>
+
+            <td class="px-3 py-3">
+              <span class="property-type">
+                {{ unit.propertyType }}
+              </span>
+            </td>
+
+            <!-- Status Badge -->
+            <td class="px-3 py-3">
+              <span [class]="getUnitStatusBadgeClass(unit.status)">
+                <i [class]="getUnitStatusIcon(unit.status)"></i>
+                {{ unit.status }}
+              </span>
+            </td>
+
+            <td class="px-3 py-3">
+              {{ unit.areaSqft | number }} sqft
+            </td>
+
+            <!-- Update Status -->
+            <td class="px-3 py-3">
+              <button
+                class="status-update-btn"
+                (click)="openStatusModal(unit)"
+                title="Update Unit Status"
+              >
+                <i class="fa-solid fa-pen"></i>
+                Update
+              </button>
+            </td>
+
+            <!-- Active Toggle -->
+            <td class="px-3 py-3">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [checked]="unit.isActive"
+                  (change)="toggleActiveStatus(unit, $event)"
+                />
+                <span class="slider"></span>
+              </label>
+            </td>
+
+            <!-- Actions -->
+            <td class="px-3 py-3">
+              <div class="action-icons">
+                <i
+                  class="fa-solid fa-pen-to-square action-edit"
+                  title="Edit Unit"
+                  [routerLink]="['/panel/inventory-units/create-unit', unit.publicId]"
+                ></i>
+
+                <i
+                  class="fa-solid fa-trash-can action-delete"
+                  title="Delete Unit"
+                  (click)="deleteUnit(unit)"
+                ></i>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="unitList.length === 0">
+            <td colspan="9" class="not-found">No inventory units found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="table-footer" *ngIf="totalItems > 0">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="table-info">
+          <span class="label">Items per page</span>
+
+          <div class="items-select">
+            <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+              <option *ngFor="let opt of [6, 15, 25, 50, 100]" [value]="opt">
+                {{ opt }}
+              </option>
+            </select>
+          </div>
+
+          <span class="rows-count">
+            {{ firstItem }} - {{ lastItem }} of {{ totalItems }} Units
+          </span>
+        </div>
+
+        <div class="pagination-wrapper">
+          <nav>
+            <ul class="pagination">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="changePage(currentPage - 1)">
+                  &laquo;
+                </a>
+              </li>
+
+              <li
+                class="page-item"
+                *ngFor="let page of totalPagesArray"
+                [class.active]="page === currentPage"
+              >
+                <a class="page-link" (click)="changePage(page)">
+                  {{ page }}
+                </a>
+              </li>
+
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="changePage(currentPage + 1)">
+                  &raquo;
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- Status Update Modal -->
+<div
+  class="unit-modal-backdrop"
+  *ngIf="showStatusModal"
+  (click)="closeStatusModal()"
+>
+  <div class="unit-status-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header-custom">
+      <h5>Update Unit Status</h5>
+
+      <button class="modal-close-btn" (click)="closeStatusModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body-custom">
+      <p>
+        Unit:
+        <strong>{{ selectedUnit?.unitNumber }}</strong>
+      </p>
+
+      <label>Select Status</label>
+
+      <select [(ngModel)]="selectedStatus" class="modal-select">
+        <option value="AVAILABLE">Available</option>
+        <option value="BOOKED">Booked</option>
+      </select>
+
+      <small class="modal-note">
+        HELD status system-managed hai, admin manually set nahi kar sakta.
+      </small>
+    </div>
+
+    <div class="modal-footer-custom">
+      <button class="modal-cancel-btn" (click)="closeStatusModal()">
+        Cancel
+      </button>
+
+      <button class="modal-save-btn" (click)="updateUnitStatus()">
+        Update Status
+      </button>
+    </div>
+  </div>
+</div>

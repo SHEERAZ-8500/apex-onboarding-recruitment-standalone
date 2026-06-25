@@ -558,3 +558,93 @@
   .btn, .field input, .steps__index, .steps__divider { transition: none; }
   .btn__spinner { animation: none; }
 }
+
+.registration-otp {
+  text-align: center;
+  padding: 12px 0 4px;
+}
+
+.registration-otp__header h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.registration-otp__header p {
+  margin: 0 auto 24px;
+  max-width: 360px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  opacity: 0.78;
+}
+
+.registration-otp__header strong {
+  display: block;
+  margin-top: 4px;
+  word-break: break-word;
+  opacity: 1;
+}
+
+.registration-otp__input {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.registration-otp__resend {
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.registration-otp__resend-btn {
+  border: 0;
+  padding: 0;
+  margin-left: 5px;
+  background: transparent;
+  color: var(--gold);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.registration-otp__resend-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ng-otp-input global classes */
+:host ::ng-deep .otp-input-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+:host ::ng-deep .otp-input {
+  width: 42px !important;
+  height: 48px !important;
+  border: 1px solid rgba(180, 145, 70, 0.45) !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: inherit !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .otp-input:focus {
+  outline: none !important;
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 3px rgba(180, 145, 70, 0.14) !important;
+}
+
+@media (max-width: 420px) {
+  :host ::ng-deep .otp-input {
+    width: 36px !important;
+    height: 44px !important;
+  }
+
+  :host ::ng-deep .otp-input-wrapper {
+    gap: 5px;
+  }
+}

@@ -13,19 +13,34 @@ html, body {
 @import 'ngx-toastr/toastr';
 
 :root {
-  --primary-color: #171e31;
-  --second-primary-color: #20263a;
-  --gray-color-1: #b5b5c3;
-  --gray-color-2: #8daac6;
-  --purple-1: #4f89ab;
-  --border-color: #5C607B;
-  --white-color-1: #ffffffd9;
-  --light-purple: #648fa8;
-  --red-color: #dc3545;
-  --text-primary: #ffffff;
-  --text-secondary: #b5b5c3;
+  --navy-deep:    #1a1919;
+  --navy-card:    #2e2f30;
+  --navy-line:    rgba(255, 255, 255, 0.14);
+  --gold:         #C9A659;
+  --gold-light:   #EAD49B;
+  --gold-soft:    rgba(201, 166, 89, 0.16);
+  --ivory:        #F4EFE4;
+  --slate:        #C7D2E0;
+  --slate-dim:    #8FA0B5;
+  --danger:       #E07A5F;
+
+  --font-display: 'Playfair Display', 'Georgia', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  display: block;
+  height: 100%;
 }
 
+
+body, 
+.lay-out,
+.main-content,
+.landig-pages,
+router-outlet + * { // All routed components
+  background: var(--navy-deep) !important;
+  // ya
+  // background: #0f0f1a !important;
+}
 
 
 

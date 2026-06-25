@@ -4,11 +4,16 @@
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: var(--primary-color);
+
+  background-image: url('/assets/burj-khalifa.jpg.jpeg');
+  background-size: cover;      
+  background-position: center; 
+  background-repeat: no-repeat;
 }
 
 .otp-card {
-  background-color: var(--second-primary-color);
+  background:
+    linear-gradient(100deg, rgba(8,15,26,0.15) 0%, rgba(8,15,26,0.45) 55%, rgba(8,15,26,0.6) 100%);
   border-radius: 16px;
   padding: 40px;
   max-width: 500px;
@@ -32,7 +37,7 @@
 }
 
 .otp-title {
-  color: var(--white-color-1);
+  color: var(--ivory);
   font-size: 28px;
   font-weight: 600;
   margin: 0 0 12px 0;
@@ -43,7 +48,7 @@
 }
 
 .otp-subtitle {
-  color: var(--white-color-1);
+  color: var(--slate-dim);
   opacity: 0.7;
   font-size: 14px;
   margin: 0;
@@ -67,7 +72,7 @@
   }
 
   .input-label {
-    color: var(--white-color-1);
+    color: var(--ivory);
     font-size: 14px;
     font-weight: 500;
     opacity: 0.9;
@@ -78,24 +83,24 @@
     padding: 14px 16px;
     border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.1);
-    background-color: var(--primary-color);
-    color: var(--white-color-1);
+    background-color: var(--primary-colo);
+    color: var(--ivory);
     font-size: 15px;
     transition: all 0.3s ease;
     outline: none;
 
     &::placeholder {
-      color: var(--white-color-1);
+      color: var(--slate-dim);
       opacity: 0.5;
     }
 
     &:focus {
-      border-color: #7047ee;
-      box-shadow: 0 0 0 3px rgba(112, 71, 238, 0.1);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(221, 207, 77, 0.1);
     }
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: var(--gold-light);
     }
 
     @media (max-width: 576px) {
@@ -119,9 +124,9 @@
       width: 60px !important;
       height: 60px !important;
       border-radius: 12px !important;
-      border: 2px solid rgba(255, 255, 255, 0.1) !important;
+      border: 2px solid rgba(220, 205, 106, 0.1) !important;
       background-color: var(--primary-color) !important;
-      color: var(--white-color-1) !important;
+      color: var(--gold) !important;
       font-size: 24px !important;
       font-weight: 600 !important;
       text-align: center !important;
@@ -143,11 +148,11 @@
       &:focus {
         outline: none !important;
         border-color: var(--purple-1) !important;
-        box-shadow: 0 0 0 3px rgba(112, 71, 238, 0.1) !important;
+        box-shadow: 0 0 0 3px rgba(207, 187, 96, 0.1) !important;
       }
 
       &:hover {
-        border-color: rgba(255, 255, 255, 0.2) !important;
+        border-color:var(--navy-line) !important;
       }
     }
   }
@@ -163,8 +168,9 @@
 .verify-btn {
   width: 100%;
   padding: 14px;
-background: linear-gradient(to right, #6e98b4, #4f89ab, #3a6e8f);
-  color: #ffffff;
+background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: var(--navy-deep);
+    box-shadow: 0 8px 22px -8px rgba(201, 166, 89, 0.55);
   border: none;
   border-radius: 10px;
   font-size: 16px;
@@ -193,7 +199,7 @@ background: linear-gradient(to right, #6e98b4, #4f89ab, #3a6e8f);
 }
 
 .resend-text {
-  color: var(--white-color-1);
+  color: var(--slate-dim);
   opacity: 0.7;
   font-size: 14px;
   margin: 0;

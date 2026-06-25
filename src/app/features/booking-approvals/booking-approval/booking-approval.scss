@@ -1,0 +1,1031 @@
+.btn-groups-main-div {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0;
+  flex-wrap: wrap;
+  width: 100%;
+  background-color: var(--navy-card);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--navy-line);
+  margin-bottom: 15px;
+
+  button {
+    background: transparent;
+    outline: none;
+    border: 1px solid var(--navy-line);
+    height: 60px;
+    width: 170px;
+    color: var(--slate);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    span {
+      display: block;
+    }
+
+    &:hover {
+      background: var(--gold-soft);
+    }
+  }
+
+  button.active {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+  }
+}
+
+@media (max-width: 850px) {
+  .btn-groups-main-div {
+    justify-content: center !important;
+  }
+}
+
+/* ===== Table Container ===== */
+.table-main-div {
+  border: 1px solid var(--navy-line);
+  border-radius: 12px;
+  background-color: var(--navy-card);
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ===== Scrollable table wrapper ===== */
+.table-scrollable {
+  max-height: 450px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--navy-line) var(--navy-card);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--navy-card);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--gold);
+    border-radius: 20px;
+  }
+}
+/* Sticky table header */
+.table-scrollable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  color: var(--gold-light);
+  background: var(--navy-card);
+}
+
+/* ===== Table ===== */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 3px;
+  caption-side: bottom;
+}
+
+thead tr th {
+  color: var(--ivory);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 16px;
+  height: 45px;
+  line-height: 1.4;
+  background: var(--navy-card);
+  border-bottom: 1px solid var(--navy-line);
+  white-space: nowrap;
+}
+
+/* ===== Row Styling ===== */
+tbody tr {
+  background-color: var(--navy-card);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(201, 166, 89, 0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  }
+}
+
+tbody tr td {
+  padding: 14px 16px;
+  color: var(--ivory);
+  font-weight: 400;
+  font-size: 0.9rem;
+  border-bottom: none;
+  white-space: nowrap;
+
+  &:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+}
+
+
+
+/* ===== Generic status badges (kept semantic — hue conveys meaning) ===== */
+.draft-badge {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.open-badge {
+  background: rgba(14, 165, 233, 0.15);
+  color: #7dd3fc;
+  border: 1px solid rgba(14, 165, 233, 0.35);
+}
+
+.approved-badge {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.pending-badge {
+  background-color: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.rejected-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.submitted-badge {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.closed-badge {
+  background-color: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+}
+
+.cancelled-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+/* Booking-specific status badges (re-using the same dark rgba pattern — duplicate light-theme versions removed) */
+.approval-badge {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.accepted-badge {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.expired-badge {
+  background: rgba(100, 116, 139, 0.15);
+  color: var(--slate-dim);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+/* ===== Action Icons ===== */
+.action-edit {
+  font-size: 14px;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--gold-light);
+    transform: scale(1.1);
+  }
+}
+
+/* ===== Search Box ===== */
+.search-box {
+  position: relative;
+  width: 200px;
+
+  input {
+    width: 100%;
+    padding: 6px 34px 6px 10px;
+    border: 1px solid var(--navy-line);
+    border-radius: 8px;
+    background: var(--navy-card);
+    font-size: 14px;
+    outline: none;
+    color: var(--ivory);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 18px;
+    background: var(--slate-dim);
+  }
+
+  i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--slate-dim);
+    font-size: 14px;
+    pointer-events: none;
+  }
+}
+
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-note {
+  font-size: 9px;
+  color: var(--gold-light);
+  margin-bottom: 1px;
+  font-weight: 500;
+}
+
+/* ===== Filter Dropdown ===== */
+.filter-select-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 150px;
+    padding: 6px 32px 6px 10px;
+    border: 1px solid var(--navy-line);
+    border-radius: 8px;
+    background: var(--navy-card);
+    color: var(--ivory);
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+
+    &::-ms-expand {
+      display: none;
+    }
+
+    &:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px var(--gold-soft);
+    }
+
+
+
+  }
+
+  &::after {
+    content: '▼';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ivory);
+    font-size: 10px;
+    pointer-events: none;
+  }
+
+  .select-icon {
+    display: none;
+  }
+}
+
+.reset-btn.round-btn {
+width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--navy-line);
+  background-color: var(--navy-deep);
+  color: var(--slate-dim);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.reset-btn.round-btn i {
+  font-size: 14px;
+}
+
+/* Hover (danger accent for the "reset/clear" action) */
+.reset-btn.round-btn:hover:not(:disabled) {
+  background-color: rgba(224, 122, 95, 0.15);
+  border-color: var(--danger);
+  color: var(--danger);
+  transform: translateY(-2px);
+}
+
+/* Disabled */
+.reset-btn.round-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ===== Table Footer ===== */
+.table-footer {
+  padding: 10px 12px;
+}
+
+.table-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .label {
+    font-size: 14px;
+    color: var(--slate-dim);
+  }
+}
+
+/* Items per page dropdown */
+.items-select {
+  position: relative;
+  background: var(--navy-card);
+  border: none;
+  border-radius: 10px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+
+  select {
+    background: var(--navy-deep);
+    border: none;
+    color: var(--ivory);
+    font-size: 14px;
+    padding: 4px 30px 4px 8px;  // Right padding for chevron space
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  // Chevron icon
+  &::after {
+    content: '▼';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ivory);
+    font-size: 10px;
+    pointer-events: none;
+  }
+}
+
+.items-select select {
+    background: var(--navy-deep);
+    border: none;
+    color: var(--ivory);
+    font-size: 14px;
+    padding: 4px 8px;
+    outline: none;
+    cursor: pointer;
+}
+
+.rows-count {
+    font-size: 14px;
+    color: var(--slate-dim);
+}
+/* ===== Pagination ===== */
+.pagination {
+  .page-item {
+    .page-link {
+      background-color: var(--navy-card);
+      border: 1px solid var(--navy-line);
+      color: var(--slate);
+      margin: 0 2px;
+      border-radius: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--gold-soft);
+        border-color: var(--gold);
+        color: var(--ivory);
+      }
+    }
+
+    &.active .page-link {
+      background-color: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy-deep);
+      font-weight: bold;
+    }
+
+    &.disabled .page-link {
+      cursor: not-allowed;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+/* ===== No records message ===== */
+.not-found {
+  text-align: center;
+  padding: 25px;
+  color: var(--slate-dim);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.create-btn.round-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+
+  font-size: 15px;
+  color: var(--navy-deep);
+  cursor: pointer;
+
+  background: radial-gradient(100% 100% at 100% 0%, var(--gold-light) 0%, var(--gold) 100%);
+  box-shadow: 0px 2px 6px rgba(201, 166, 89, 0.35),
+              inset 0px -2px 0px rgba(0, 0, 0, 0.2);
+
+  transition: all 0.18s ease;
+}
+
+.create-btn.round-btn:hover {
+  transform: translateY(-2px);
+  background: radial-gradient(100% 100% at 100% 0%, var(--gold) 0%, #a8853f 100%);
+  box-shadow: 0px 6px 14px rgba(201, 166, 89, 0.45);
+}
+
+.create-btn.round-btn i {
+  font-size: 18px;
+}
+
+/* Flex utilities */
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+
+  i {
+    font-size: 11px;
+  }
+}
+
+// WFH Code Style
+.wfh-code {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  background: var(--gold-soft);
+  color: var(--gold-light);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.breadcrumb-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-line);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.bc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  color: var(--slate);
+  text-decoration: none;
+  border-right: 1px solid var(--navy-line);
+  transition: background 0.18s ease;
+  font-weight: 400;
+
+  &:hover {
+    background: var(--gold-soft);
+    color: var(--gold-light);
+  }
+
+  i { font-size: 13px; }
+}
+
+.bc-chevron {
+  padding: 6px 10px;
+  color: var(--slate-dim);
+  font-size: 11px;
+  border-right: 1px solid var(--navy-line);
+}
+
+.bc-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-weight: 600;
+
+  i { font-size: 13px; color: var(--navy-deep); }
+}
+// Header text/background (single navy-gold theme)
+:host ::ng-deep thead tr th {
+  color: var(--ivory) !important;
+  background: var(--navy-card) !important;
+}
+
+[data-theme="dark"] :host ::ng-deep thead tr th,
+.dark :host ::ng-deep thead tr th {
+  color: var(--ivory) !important;
+  background: var(--navy-card) !important;
+}
+
+
+.booking-number {
+  font-weight: 700;
+  color: var(--gold-light);
+  white-space: nowrap;
+}
+
+/* ===== FIX: .status-update-btn ("Process" button) was missing too — only
+   used in the HTML, never defined in this component's stylesheet. ===== */
+.status-update-btn {
+  border: 1px solid rgba(201, 166, 89, 0.55);
+  background: rgba(201, 166, 89, 0.12);
+  color: var(--gold-light);
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  i {
+    margin-right: 5px;
+  }
+
+  &:hover {
+    background: rgba(201, 166, 89, 0.28);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: rgba(201, 166, 89, 0.12);
+    border-color: rgba(201, 166, 89, 0.3);
+    color: var(--slate-dim);
+
+    &:hover {
+      background: rgba(201, 166, 89, 0.12);
+      transform: none;
+    }
+  }
+}
+
+.view-btn {
+  border: 1px solid var(--navy-line);
+  background: var(--navy-deep);
+  color: var(--slate);
+  border-radius: 7px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s ease;
+
+  &:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+}
+
+/* ===== FIX: .unit-modal-backdrop was missing in this component's stylesheet,
+   so the modal had no fixed/overlay positioning and rendered inline at the
+   bottom of the page instead of centered on top. ===== */
+.unit-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 7, 12, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.booking-action-modal {
+  width: min(650px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 14px;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-line);
+  color: var(--ivory);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+}
+
+.booking-details-modal {
+  width: min(850px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 14px;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-line);
+  color: var(--ivory);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Modal chrome (also missing — shared by both modals) ===== */
+.modal-header-custom {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--navy-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h5 {
+    margin: 0;
+    color: var(--ivory);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  small {
+    display: block;
+    margin-top: 2px;
+    color: var(--slate-dim);
+  }
+}
+
+.modal-close-btn {
+  border: none;
+  background: transparent;
+  color: var(--slate-dim);
+  cursor: pointer;
+  font-size: 18px;
+
+  &:hover {
+    color: var(--danger);
+  }
+}
+
+.modal-body-custom {
+  padding: 18px;
+
+  p {
+    color: var(--slate);
+    margin-bottom: 16px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--slate);
+    margin-bottom: 6px;
+  }
+
+  h6 {
+    color: var(--ivory);
+    margin: 18px 0 12px;
+  }
+
+  hr {
+    border-color: var(--navy-line);
+    margin: 18px 0;
+    opacity: 1;
+  }
+}
+
+.modal-footer-custom {
+  padding: 14px 18px;
+  border-top: 1px solid var(--navy-line);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-cancel-btn,
+.modal-save-btn {
+  border-radius: 7px;
+  padding: 7px 13px;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-cancel-btn {
+  background: var(--slate-dim);
+  color: var(--navy-deep);
+}
+
+.modal-save-btn {
+  background: var(--gold);
+  color: var(--navy-deep);
+
+  &:hover {
+    background: var(--gold-light);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ===== Form fields used inside the modals (also missing) ===== */
+.form-label {
+  display: block;
+  font-size: 13px;
+  color: var(--slate);
+  margin-bottom: 6px;
+}
+
+.required {
+  color: var(--danger);
+}
+
+.form-control {
+  width: 100%;
+  border: 1px solid var(--navy-line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: var(--navy-deep);
+  color: var(--ivory);
+  outline: none;
+  resize: vertical;
+
+  &:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold-soft);
+  }
+
+  &::placeholder {
+    color: var(--slate-dim);
+  }
+}
+
+/* ===== Active Toggle Slider (also missing — used in "Release Unit") ===== */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--slate-dim);
+  transition: 0.25s ease;
+  border-radius: 20px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--ivory);
+    transition: 0.25s ease;
+    border-radius: 50%;
+  }
+}
+
+.switch input:checked + .slider {
+  background-color: var(--gold);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(20px);
+  background-color: var(--navy-deep);
+}
+
+.switch input:disabled + .slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.booking-action-btn {
+  border: 1px solid var(--navy-line);
+  background: var(--navy-deep);
+  color: var(--slate);
+  border-radius: 10px;
+  padding: 14px 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.booking-action-btn i {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+/* Default / Approve hover & active — gold (primary brand action) */
+.booking-action-btn:hover,
+.booking-action-btn.active {
+  border-color: var(--gold);
+  background: rgba(201, 166, 89, 0.1);
+  color: var(--gold-light);
+}
+
+/* Reject/Disapprove — danger */
+.booking-action-btn.reject.active {
+  border-color: var(--danger);
+  background: rgba(224, 122, 95, 0.1);
+  color: var(--danger);
+}
+
+/* Accept — theme has no dedicated "success" token, so a muted sage-green
+   is used here only, to keep approve/reject/accept visually distinct. */
+.booking-action-btn.accept.active {
+  border-color: #6FA287;
+  background: rgba(111, 162, 135, 0.12);
+  color: #8FC4A6;
+}
+
+.selected-action-form {
+  border-top: 1px solid var(--navy-line);
+  padding-top: 18px;
+
+  h6 {
+    color: var(--ivory);
+    margin-bottom: 14px;
+  }
+}
+
+.release-unit-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  margin-top: 12px;
+  border-radius: 8px;
+  background: var(--navy-deep);
+  border: 1px solid var(--navy-line);
+  color: var(--ivory);
+}
+
+.release-unit-box small {
+  display: block;
+  color: var(--slate-dim);
+  margin-top: 3px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.details-grid > div {
+  padding: 12px;
+  border: 1px solid var(--navy-line);
+  border-radius: 8px;
+  background: var(--navy-deep);
+}
+
+.details-grid span,
+.details-grid small {
+  display: block;
+  color: var(--slate-dim);
+  font-size: 12px;
+}
+
+.details-grid strong {
+  display: block;
+  margin: 4px 0;
+  color: var(--ivory);
+}
+
+.evidence-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px;
+  margin-bottom: 8px;
+  border: 1px solid var(--navy-line);
+  border-radius: 7px;
+  background: var(--navy-deep);
+  color: var(--ivory);
+}
+
+.evidence-link {
+  color: var(--gold-light);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+
+  strong {
+    color: var(--ivory);
+  }
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.timeline-item p {
+  margin: 3px 0;
+  font-size: 13px;
+  color: var(--slate);
+}
+
+.timeline-item small {
+  color: var(--slate-dim);
+}
+
+.empty-text {
+  color: var(--slate-dim);
+  padding: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .action-choice-grid,
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}

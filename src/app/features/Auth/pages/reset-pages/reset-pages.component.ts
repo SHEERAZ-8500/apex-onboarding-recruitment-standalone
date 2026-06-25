@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../service/auth.service';
@@ -11,7 +11,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
 @Component({
   selector: 'app-reset-pages',
   standalone: true,
-  imports: [CommonModule, FormsModule,NgOtpInputModule],
+  imports: [CommonModule, FormsModule, NgOtpInputModule, RouterLink],
   templateUrl: './reset-pages.component.html',
   styleUrl: './reset-pages.component.scss'
 })
@@ -20,18 +20,26 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   isLightTheme: boolean = false;
   currentView: 'email' | 'otp' | 'create-password' | 'verify-otp' = 'email';
+
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
-  token: string | null = ''
+  token: string | null = '';
+  otp: string = '';
+  invitePassword = false;
+
+  // busy flags — duplicate clicks/requests rokte hain
+  isSendingEmail = false;
+  isVerifyingOtp = false;
+  isResendingOtp = false;
+  isSettingPassword = false;
+
   otpConfig = {
     length: 6,
     allowNumbersOnly: true,
     inputClass: 'otp-input',
     containerClass: 'otp-input-wrapper'
   };
-  invitePassword = false
-  otp: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -42,9 +50,6 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-  
-
-    // Check route to determine view
     this.route.url.pipe(takeUntil(this.destroy$)).subscribe(segments => {
       const path = segments[0]?.path;
       if (path === 'otp-reset') {
@@ -54,13 +59,12 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
         if (path === 'invite') {
           this.invitePassword = true;
         }
-        this.route.queryParamMap.subscribe(params => {
+        this.route.queryParamMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
           this.token = params.get('token') || '';
         });
       } else if (path === 'verify-otp') {
         this.currentView = 'verify-otp';
         this.token = this.route.snapshot.paramMap.get('token');
-
       } else {
         this.currentView = 'email';
       }
@@ -74,80 +78,124 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
 
   onOtpChange(otp: string) {
     this.otp = otp;
-    console.log('OTP Changed:', otp);
+  }
+
+  /** decrypt() exception-safe wrapper — invalid/expired token par crash nahi karega */
+  private safeDecrypt(token: string | null): string | null {
+    if (!token) return null;
+    try {
+      return this.encryptionService.decrypt(token);
+    } catch {
+      return null;
+    }
+  }
+
+  private isValidEmail(value: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   }
 
   verifyOtp() {
     if (this.currentView === 'verify-otp') {
-      let preAuthToken = this.encryptionService.decrypt(this.token || '');
-      this.authService.verifyOtp({ preAuthToken: preAuthToken, otp: this.otp }).subscribe({
-        next: (response: any) => {
+      if (this.isVerifyingOtp) return;
 
-          let data = response.body.data
-          this.toastr.success('OTP verified successfully!');
+      if (this.otp.length !== this.otpConfig.length) {
+        this.toastr.error(`Please enter the complete ${this.otpConfig.length}-digit code.`);
+        return;
+      }
+
+      const preAuthToken = this.safeDecrypt(this.token);
+      if (!preAuthToken) {
+        this.toastr.error('This link has expired or is invalid. Please try logging in again.');
+        return;
+      }
+
+      this.isVerifyingOtp = true;
+      this.authService.verifyOtp({ preAuthToken, otp: this.otp }).subscribe({
+        next: (response: any) => {
+          this.isVerifyingOtp = false;
+          const data = response?.body?.data;
+          if (!data) {
+            this.toastr.error('Unexpected response from server. Please try again.');
+            return;
+          }
           this.toastr.success('Login successful!');
-          let userId = this.encryptionService.encrypt(data.userId)
+          const userId = this.encryptionService.encrypt(data.userId);
           localStorage.setItem('userId', userId);
           localStorage.setItem('token', data.accessToken);
-          let deviceId = this.encryptionService.encrypt(response.headers.get('x-device-id') || '');
+          const deviceId = this.encryptionService.encrypt(response.headers?.get('x-device-id') || '');
           localStorage.setItem('deviceId', deviceId);
           localStorage.setItem('refreshToken', data.refreshToken);
           this.router.navigate(['/panel/dashboard']);
         },
-        error: (error) => {
-          this.toastr.error(error.error.message || 'OTP verification failed. Please try again.');
+        error: () => {
+          this.isVerifyingOtp = false;
+          // AuthInterceptor already shows the proper toast for this error.
         }
       });
       return;
     }
-    if (this.otp.length === 5) {
-      console.log('Verifying OTP:', this.otp);
-      // Add your verification logic here
-    } else {
-      console.log('Please enter complete OTP');
+
+    // 'otp' view (forgot-password OTP) — wiring iske intezar mein hai, neeche question dekhein
+    if (this.otp.length !== this.otpConfig.length) {
+      this.toastr.error(`Please enter the complete ${this.otpConfig.length}-digit code.`);
+      return;
     }
   }
 
   resendOtp() {
-    let preAuthToken = this.encryptionService.decrypt(this.token || '');
+    if (this.isResendingOtp) return;
+
+    const preAuthToken = this.safeDecrypt(this.token);
+    if (!preAuthToken) {
+      this.toastr.error('This link has expired or is invalid. Please try logging in again.');
+      return;
+    }
+
+    this.isResendingOtp = true;
     this.authService.resendOtp(preAuthToken).subscribe({
-      next: (response: any) => {
-        this.toastr.success('OTP resent successfully Please check your email.');
+      next: () => {
+        this.isResendingOtp = false;
+        this.toastr.success('OTP resent successfully. Please check your email.');
       },
-      error: (error) => {
-        this.toastr.error(error.error.message || 'Failed to resend OTP. Please try again.');
+      error: () => {
+        this.isResendingOtp = false;
+        // AuthInterceptor already shows the proper toast for this error.
       }
     });
   }
 
   sendResetEmail() {
-    if (!this.email) {
+    if (this.isSendingEmail) return;
+
+    const email = this.email.trim();
+    if (!email) {
       this.toastr.error('Please enter your email address.');
       return;
     }
-    if (this.email) {
-      this.authService.resetPasswordByEmail({ email: this.email }).subscribe({
-        next: (response: any) => {
-          this.toastr.success('Verification code sent to your email.');
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          this.toastr.error(error.error.message || 'Failed to send verification code. Please try again.');
-        }
-      });
-    } else {
-      console.log('Please enter email');
-    }
-  }
-
-  createNewPassword() {
-    if (!this.password) {
-      console.log('Please enter password');
+    if (!this.isValidEmail(email)) {
+      this.toastr.error('Please enter a valid email address.');
       return;
     }
 
-    if (this.password !== this.confirmPassword) {
-      this.toastr.error('Passwords do not match.');
+    this.isSendingEmail = true;
+    this.authService.resetPasswordByEmail({ email }).subscribe({
+      next: () => {
+        this.isSendingEmail = false;
+        this.toastr.success('Verification code sent to your email.');
+        this.router.navigate(['/']); // see question below
+      },
+      error: () => {
+        this.isSendingEmail = false;
+        // AuthInterceptor already shows the proper toast for this error.
+      }
+    });
+  }
+
+  createNewPassword() {
+    if (this.isSettingPassword) return;
+
+    if (!this.password || !this.confirmPassword) {
+      this.toastr.error('Please fill in both password fields.');
       return;
     }
 
@@ -156,24 +204,35 @@ export class ResetPagesComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.password !== this.confirmPassword) {
+      this.toastr.error('Passwords do not match.');
+      return;
+    }
+
+    this.isSettingPassword = true;
+
     if (this.invitePassword) {
       this.authService.inviteComplete({ inviteToken: this.token, newPassword: this.password }).subscribe({
-        next: (response: any) => {
+        next: () => {
+          this.isSettingPassword = false;
           this.toastr.success('Invitation completed successfully. You can now log in with your new password.');
           this.router.navigate(['/']);
         },
-        error: (error) => {
-          this.toastr.error(error.error.message || 'Failed to complete invitation. Please try again.');
+        error: () => {
+          this.isSettingPassword = false;
+          // AuthInterceptor already shows the proper toast for this error.
         }
       });
     } else {
       this.authService.createNewPassword({ resetSessionToken: this.token, newPassword: this.password }).subscribe({
-        next: (response: any) => {
+        next: () => {
+          this.isSettingPassword = false;
           this.toastr.success('Password reset successfully. You can now log in with your new password.');
           this.router.navigate(['/']);
         },
-        error: (error) => {
-          this.toastr.error(error.error.message || 'Failed to reset password. Please try again.');
+        error: () => {
+          this.isSettingPassword = false;
+          // AuthInterceptor already shows the proper toast for this error.
         }
       });
     }

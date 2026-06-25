@@ -13,8 +13,11 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadChildren: () => import('./features/dashboard/dashboard-routes').then(m => m.routes) },
 
+
      
-      //   { path: 'general-master-data', loadChildren: () => import('./modules/general-master-data/general-master-data.module').then(m => m.GeneralMasterDataModule) },
+        { path: 'inventory-units', loadChildren: () => import('./features/Inventory Units/units-routes').then(m => m.routes) },
+                { path: 'booking-approvals', loadChildren: () => import('./features/booking-approvals/booking-app-routes').then(m => m.routes) },
+
 
 
 

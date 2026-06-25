@@ -1,8 +1,8 @@
 .sidebar {
   height: 97.5vh;
   width: 300px;
-  background-color: var(--second-primary-color);
-  color: var(--white-color-1);
+  background-color: var(--navy-card);
+  color: var(--ivory);
   // transition: width 0.35s ease, all 0.35s ease;
   overflow: hidden;
   // border-radius: 5px;
@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   padding: 8px 18px;
-  color: var(--gray-color-1);
+  color: var(--slate);
   text-decoration: none;
   transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
   font-size: 15px;
@@ -66,11 +66,11 @@
     border-radius: 6px; // border radius on hover
 
     span {
-      color: #1274ac !important; // hover text color black
+      color: #C9A659 !important; // hover text color black
     }
 
     i {
-      color: #1274ac !important; // hover icon color black
+      color: #C9A659 !important; // hover icon color black
     }
   }
 

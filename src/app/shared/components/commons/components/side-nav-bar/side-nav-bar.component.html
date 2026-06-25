@@ -1,34 +1,45 @@
 <!-- side-nav-bar.component.html -->
 <nav [class.closed]="!isOpen" class="sidebar pt-3">
   <div class="logo gap-1" *ngIf="isOpen">
-    <!-- <img [src]="isDarkMode ? '../../../../assets/company-logo-black.png' : '../../../../assets/company-logo-white.png'" -->
-      alt="not-found" style="width: 200px; height: 40px">
-
+    <!-- <img
+      [src]="
+        isDarkMode
+          ? '../../../../assets/company-logo-black.png'
+          : '../../../../assets/company-logo-white.png'
+      "
+      alt="not-found"
+      style="width: 200px; height: 40px"
+    /> -->
   </div>
-  <div *ngIf="!isOpen">
-    <img src="../../../../assets/apex-logo.svg" alt="not-found" style="width: 60px; height: 40px" />
-
-  </div>
+  <!-- <div *ngIf="!isOpen">
+    <img
+      src="../../../../assets/apex-logo-collapse.png"
+      alt="not-found"
+      style="width: 52px; height: 45px; margin-left: 12px"
+    /> -->
+  <!-- </div> -->
   <div class="d-flex align-items-center justify-content-center my-3" ngbDropdown>
     <div class="user-card" id="dropdownBasic" ngbDropdownToggle>
-      <img src="../../../../assets/nb (2).png" alt="User Avatar" />
+      <!-- <img src="../../../../../../assets/fv.png" alt="User Avatar" /> -->
       <div class="user-info">
         <h4>Welcome</h4>
         <p>Super Admin</p>
       </div>
-      <div class="btn-group ">
-        <button class="dropdown-btn ">
+      <div class="btn-group">
+        <button class="dropdown-btn">
           <!-- <i class="fa-solid fa-expand"></i> -->
         </button>
-        <ul id="dropdown-basic" ngbDropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-          <li role="menuitem"><a class="dropdown-item" (click)="logoutUser()">Log-Out</a></li>
-
-        </ul>
-
+        <ul
+          id="dropdown-basic"
+          ngbDropdownMenu
+          class="dropdown-menu"
+          role="menu"
+          aria-labelledby="button-basic"
+        ></ul>
       </div>
     </div>
   </div>
-
+  <!-- <div class="tabslist" *ngIf="isMenuReady"></div> -->
   <div class="tabslist">
     <!-- Top-level items -->
     <ng-container *ngFor="let item of topLevelItems">
@@ -49,12 +60,20 @@
           </span>
         </a>
 
-        <div [(ngbCollapse)]="group.collapsed" class="collapseStyling" [class.open]="!group.collapsed">
+        <div
+          [(ngbCollapse)]="group.collapsed"
+          class="collapseStyling"
+          [class.open]="!group.collapsed"
+        >
           <div class="collapseDiv">
             <ng-container *ngFor="let child of group.children">
               <!-- If child has children (nested menu) -->
               <div class="nav-item-with-toggle level-2" *ngIf="child.children && child.isVisible">
-                <a class="level-link" (click)="toggleMenuItem(child)" [attr.aria-expanded]="!child.collapsed">
+                <a
+                  class="level-link"
+                  (click)="toggleMenuItem(child)"
+                  [attr.aria-expanded]="!child.collapsed"
+                >
                   <i [class]="child.icon"></i>
                   <span>{{ child.label }}</span>
                   <span class="chev-icon small">
@@ -63,10 +82,19 @@
                   </span>
                 </a>
 
-                <div [(ngbCollapse)]="child.collapsed!" class="collapseStyling inner" [class.open]="!child.collapsed">
+                <div
+                  [(ngbCollapse)]="child.collapsed!"
+                  class="collapseStyling inner"
+                  [class.open]="!child.collapsed"
+                >
                   <div class="collapseDiv">
                     <ng-container *ngFor="let subChild of child.children">
-                      <a *ngIf="subChild.isVisible" [routerLink]="subChild.route" routerLinkActive="active">
+                      <a
+                        *ngIf="subChild.isVisible"
+                        [routerLink]="subChild.route"
+                        routerLinkActive="active"
+                      >
+                        <i *ngIf="subChild.icon" [class]="subChild.icon"></i>
                         <span>{{ subChild.label }}</span>
                       </a>
                     </ng-container>
@@ -75,7 +103,12 @@
               </div>
 
               <!-- If child is a simple link -->
-              <a *ngIf="!child.children && child.isVisible && child.route" [routerLink]="child.route" routerLinkActive="active">
+              <a
+                *ngIf="!child.children && child.isVisible && child.route"
+                [routerLink]="child.route"
+                routerLinkActive="active"
+              >
+                <i *ngIf="child.icon" [class]="child.icon"></i>
                 <span>{{ child.label }}</span>
               </a>
 
@@ -89,4 +122,7 @@
       </div>
     </ng-container>
   </div>
+  <!-- <div class="tabslist d-flex justify-content-center align-items-center" *ngIf="!isMenuReady">
+    <div class="spinner-border spinner-border-sm text-secondary" role="status"></div>
+  </div> -->
 </nav>
