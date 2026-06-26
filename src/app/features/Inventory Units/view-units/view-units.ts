@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -39,6 +39,10 @@ propertyTypeFilter: PropertyType | '' = '';
   showStatusModal = false;
   selectedUnit: any = null;
  selectedStatus: AdminUnitStatus = 'AVAILABLE'
+  showViewModal = false;
+  viewUnit: any = null;
+  viewPhotos: { url: string; publicId?: string }[] = [];
+  currentPhotoIndex = 0;
 
   private searchTimeout: any;
 
@@ -339,4 +343,79 @@ loadUnits(): void {
         return 'fa-solid fa-circle';
     }
   }
+
+    openViewModal(unit: any): void {
+    this.viewUnit = unit;
+    this.currentPhotoIndex = 0;
+
+    // Unit ki photos load karein
+    this.loader.show();
+
+    this.inventoryService.getUnitDetail(unit.publicId).subscribe({
+      next: (response: any) => {
+        this.loader.hide();
+        const data = response?.data || response;
+
+        // Photos collect karein
+        const photos: { url: string; publicId?: string }[] = [];
+
+        if (data?.photoUrls && data.photoUrls.length > 0) {
+          data.photoUrls.forEach((url: string) => {
+            photos.push({ url, publicId: url });
+          });
+        }
+
+        // Floor plans bhi include karein (agar chahte hain)
+        if (data?.floorPlanUrls && data.floorPlanUrls.length > 0) {
+          data.floorPlanUrls.forEach((url: string) => {
+            photos.push({ url, publicId: url });
+          });
+        }
+
+        this.viewPhotos = photos;
+        this.showViewModal = true;
+      },
+      error: (error: any) => {
+        this.loader.hide();
+        this.toastr.error(error?.error?.message || 'Unable to load unit photos', 'Error');
+        this.showViewModal = true; // Modal to open karein, but with no photos
+        this.viewPhotos = [];
+      },
+    });
+  }
+
+    closeViewModal(): void {
+    this.showViewModal = false;
+    this.viewUnit = null;
+    this.viewPhotos = [];
+    this.currentPhotoIndex = 0;
+  }
+
+  nextPhoto(): void {
+    if (this.currentPhotoIndex < this.viewPhotos.length - 1) {
+      this.currentPhotoIndex++;
+    }
+  }
+
+  prevPhoto(): void {
+    if (this.currentPhotoIndex > 0) {
+      this.currentPhotoIndex--;
+    }
+  }
+
+    @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (!this.showViewModal) return;
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.nextPhoto();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prevPhoto();
+    } else if (event.key === 'Escape') {
+      this.closeViewModal();
+    }
+  }
 }
+

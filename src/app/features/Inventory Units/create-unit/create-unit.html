@@ -182,6 +182,78 @@
         </div>
       </div>
 
+      <!-- create-unit.html - Form mein photo upload section add karein -->
+
+<!-- Row 4 - Description ke baad yeh naya section add karein -->
+<!-- Row 5 - Media Upload -->
+<div class="row">
+  <div class="col-12">
+    <label class="form-label">Photos / Floor Plans</label>
+    
+    <!-- Drop Zone -->
+    <div 
+      class="upload-zone" 
+      (dragover)="onDragOver($event)" 
+      (dragleave)="onDragLeave($event)" 
+      (drop)="onDrop($event)"
+      [class.drag-over]="isDragOver"
+    >
+      <div class="upload-content">
+        <i class="fa-solid fa-cloud-upload-alt upload-icon"></i>
+        <p class="upload-text">Drag & drop images here or click to browse</p>
+        <p class="upload-hint">Supports JPG, PNG, WEBP (Max 5MB each)</p>
+        <input 
+          type="file" 
+          #fileInput 
+          class="file-input" 
+          multiple 
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+        <button type="button" class="browse-btn" (click)="fileInput.click()">
+          Browse Files
+        </button>
+      </div>
+    </div>
+
+    <!-- Uploaded Files Preview -->
+    <div class="uploaded-files" *ngIf="selectedFiles.length > 0 || existingPhotos.length > 0">
+      <h6>Uploaded Photos ({{ selectedFiles.length + existingPhotos.length }})</h6>
+      <div class="file-list">
+        <!-- Existing Photos (Edit Mode) -->
+        <div class="file-item" *ngFor="let photo of existingPhotos; let i = index">
+          <div class="file-preview">
+            <img [src]="photo.url" [alt]="photo.publicId" />
+          </div>
+          <div class="file-info">
+            <span class="file-name">{{ photo.publicId?.substring(0, 12) || 'Photo' }}</span>
+            <span class="file-status">Uploaded</span>
+          </div>
+          <button type="button" class="remove-file" (click)="removeExistingPhoto(i)" title="Delete photo">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+
+        <!-- Newly Selected Files -->
+        <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+          <div class="file-preview">
+            <img [src]="file.previewUrl" [alt]="file.name" />
+          </div>
+          <div class="file-info">
+            <span class="file-name">{{ file.name }}</span>
+            <span class="file-size">{{ file.size | number }} bytes</span>
+          </div>
+          <button type="button" class="remove-file" (click)="removeSelectedFile(i)" title="Remove">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Buttons - Same rahenge -->
+
       <!-- Buttons -->
       <div class="form-actions">
         <button type="button" class="cancel-btn" (click)="cancel()" [disabled]="disabled">

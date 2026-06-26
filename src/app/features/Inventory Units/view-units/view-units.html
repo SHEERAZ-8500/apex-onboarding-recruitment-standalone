@@ -22,12 +22,7 @@
       <div class="search-wrapper">
         <div class="search-note">*Search by Unit Number</div>
         <div class="search-box">
-          <input
-            type="text"
-            placeholder="Search unit e.g. A-101"
-            [(ngModel)]="searchTerm"
-            (input)="onSearch()"
-          />
+          <input type="text" placeholder="Search unit e.g. A-101" [(ngModel)]="searchTerm" (input)="onSearch()" />
           <i class="fa fa-search"></i>
         </div>
       </div>
@@ -36,11 +31,7 @@
       <div class="search-wrapper">
         <div class="search-note">*Filter by Status</div>
         <div class="filter-select-box">
-          <select
-            [(ngModel)]="statusFilter"
-            (change)="onFilterChange()"
-            class="filter-select"
-          >
+          <select [(ngModel)]="statusFilter" (change)="onFilterChange()" class="filter-select">
             <option value="">All Status</option>
             <option value="AVAILABLE">Available</option>
             <option value="HELD">Held</option>
@@ -53,11 +44,7 @@
       <div class="search-wrapper">
         <div class="search-note">*Property Type</div>
         <div class="filter-select-box">
-          <select
-            [(ngModel)]="propertyTypeFilter"
-            (change)="onFilterChange()"
-            class="filter-select"
-          >
+          <select [(ngModel)]="propertyTypeFilter" (change)="onFilterChange()" class="filter-select">
             <option value="">All Types</option>
             <option value="APARTMENT">Apartment</option>
             <option value="OFFICE">Office</option>
@@ -69,11 +56,7 @@
       <div class="search-wrapper">
         <div class="search-note">*Active Status</div>
         <div class="filter-select-box">
-          <select
-            [(ngModel)]="activeFilter"
-            (change)="onFilterChange()"
-            class="filter-select"
-          >
+          <select [(ngModel)]="activeFilter" (change)="onFilterChange()" class="filter-select">
             <option value="">All</option>
             <option value="true">Active</option>
             <option value="false">Inactive</option>
@@ -83,23 +66,15 @@
 
       <!-- Reset -->
       <div class="mb-1">
-        <button
-          class="reset-btn round-btn"
-          (click)="resetFilters()"
-          title="Reset All Filters"
-          [disabled]="!isAnyFilterActive"
-        >
+        <button class="reset-btn round-btn" (click)="resetFilters()" title="Reset All Filters"
+          [disabled]="!isAnyFilterActive">
           <i class="fa-solid fa-rotate-left"></i>
         </button>
       </div>
 
       <!-- Create -->
       <div class="mb-1">
-        <button
-          class="create-btn round-btn"
-          routerLink="/panel/inventory-units/create-unit"
-          title="Create Unit"
-        >
+        <button class="create-btn round-btn" routerLink="/panel/inventory-units/create-unit" title="Create Unit">
           <i class="fa-solid fa-plus icon"></i>
         </button>
       </div>
@@ -120,6 +95,7 @@
             <th class="px-3 py-3">Area (Sqft)</th>
             <th class="px-3 py-3">Update Status</th>
             <th class="px-3 py-3">Active</th>
+            <th class="px-3 py-3">View</th> <!-- NAYA COLUMN -->
             <th class="px-3 py-3">Actions</th>
           </tr>
         </thead>
@@ -156,11 +132,7 @@
 
             <!-- Update Status -->
             <td class="px-3 py-3">
-              <button
-                class="status-update-btn"
-                (click)="openStatusModal(unit)"
-                title="Update Unit Status"
-              >
+              <button class="status-update-btn" (click)="openStatusModal(unit)" title="Update Unit Status">
                 <i class="fa-solid fa-pen"></i>
                 Update
               </button>
@@ -169,29 +141,25 @@
             <!-- Active Toggle -->
             <td class="px-3 py-3">
               <label class="switch">
-                <input
-                  type="checkbox"
-                  [checked]="unit.isActive"
-                  (change)="toggleActiveStatus(unit, $event)"
-                />
+                <input type="checkbox" [checked]="unit.isActive" (change)="toggleActiveStatus(unit, $event)" />
                 <span class="slider"></span>
               </label>
             </td>
 
+              <td class="px-3 py-3">
+      <button class="view-btn" (click)="openViewModal(unit)" title="View Photos">
+        <i class="fa-solid fa-image"></i>
+        View
+      </button>
+    </td>
+
             <!-- Actions -->
             <td class="px-3 py-3">
               <div class="action-icons">
-                <i
-                  class="fa-solid fa-pen-to-square action-edit"
-                  title="Edit Unit"
-                  [routerLink]="['/panel/inventory-units/create-unit', unit.publicId]"
-                ></i>
+                <i class="fa-solid fa-pen-to-square action-edit" title="Edit Unit"
+                  [routerLink]="['/panel/inventory-units/create-unit', unit.publicId]"></i>
 
-                <i
-                  class="fa-solid fa-trash-can action-delete"
-                  title="Delete Unit"
-                  (click)="deleteUnit(unit)"
-                ></i>
+                <i class="fa-solid fa-trash-can action-delete" title="Delete Unit" (click)="deleteUnit(unit)"></i>
               </div>
             </td>
           </tr>
@@ -231,11 +199,7 @@
                 </a>
               </li>
 
-              <li
-                class="page-item"
-                *ngFor="let page of totalPagesArray"
-                [class.active]="page === currentPage"
-              >
+              <li class="page-item" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
                 <a class="page-link" (click)="changePage(page)">
                   {{ page }}
                 </a>
@@ -255,11 +219,7 @@
 </section>
 
 <!-- Status Update Modal -->
-<div
-  class="unit-modal-backdrop"
-  *ngIf="showStatusModal"
-  (click)="closeStatusModal()"
->
+<div class="unit-modal-backdrop" *ngIf="showStatusModal" (click)="closeStatusModal()">
   <div class="unit-status-modal" (click)="$event.stopPropagation()">
     <div class="modal-header-custom">
       <h5>Update Unit Status</h5>
@@ -295,6 +255,69 @@
       <button class="modal-save-btn" (click)="updateUnitStatus()">
         Update Status
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- view-units.html - Status Modal ke baad yeh naya modal add karein -->
+
+<!-- ===== View Photos Modal ===== -->
+<div class="unit-modal-backdrop" *ngIf="showViewModal" (click)="closeViewModal()">
+  <div class="view-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header-custom">
+      <h5>
+        <i class="fa-solid fa-images me-2"></i>
+        {{ viewUnit?.unitNumber }} - Photos
+        <span class="photo-count">{{ viewPhotos.length }} photos</span>
+      </h5>
+      <button class="modal-close-btn" (click)="closeViewModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body - Photo Viewer -->
+    <div class="view-modal-body">
+      <!-- Main Photo -->
+      <div class="photo-viewer" *ngIf="viewPhotos.length > 0">
+        <img [src]="viewPhotos[currentPhotoIndex]?.url" [alt]="'Photo ' + (currentPhotoIndex + 1)" />
+      </div>
+      <div class="no-photos" *ngIf="viewPhotos.length === 0">
+        <i class="fa-solid fa-image fa-3x"></i>
+        <p>No photos available for this unit</p>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <button 
+        class="nav-btn nav-prev" 
+        *ngIf="viewPhotos.length > 1"
+        (click)="prevPhoto()"
+        [disabled]="currentPhotoIndex === 0"
+      >
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button 
+        class="nav-btn nav-next" 
+        *ngIf="viewPhotos.length > 1"
+        (click)="nextPhoto()"
+        [disabled]="currentPhotoIndex === viewPhotos.length - 1"
+      >
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Modal Footer - Thumbnails -->
+    <div class="view-modal-footer" *ngIf="viewPhotos.length > 1">
+      <div class="thumbnails">
+        <div 
+          class="thumbnail" 
+          *ngFor="let photo of viewPhotos; let i = index"
+          (click)="currentPhotoIndex = i"
+          [class.active]="i === currentPhotoIndex"
+        >
+          <img [src]="photo.url" [alt]="'Thumbnail ' + (i + 1)" />
+        </div>
+      </div>
     </div>
   </div>
 </div>
