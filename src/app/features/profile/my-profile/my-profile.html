@@ -1,0 +1,112 @@
+<section class="profile-page">
+
+  <!-- Loading skeleton -->
+  <div class="skeleton" *ngIf="loading">
+    <div class="skeleton__avatar"></div>
+    <div class="skeleton__lines">
+      <div class="skeleton__line w-60"></div>
+      <div class="skeleton__line w-40"></div>
+      <div class="skeleton__line w-80"></div>
+    </div>
+  </div>
+
+  <!-- Load error -->
+  <div class="state-banner state-banner--error" *ngIf="!loading && loadError">
+    <p>{{ loadError }}</p>
+    <button class="btn btn--primary" (click)="fetchProfile()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!loading && !loadError && profile">
+
+    <!-- Header card: avatar + identity -->
+    <header class="profile-card">
+      <div class="avatar-block">
+        <div class="avatar">
+          <img *ngIf="profile.avatarUrl" [src]="profile.avatarUrl" alt="Profile avatar" />
+          <span *ngIf="!profile.avatarUrl" class="avatar__initials">{{ initials }}</span>
+
+          <div class="avatar__busy" *ngIf="avatarUploading || avatarDeleting">
+            <span class="spinner"></span>
+          </div>
+        </div>
+
+        <label class="avatar__upload-btn" for="avatarInput" title="Change avatar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M4 13.5V19a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5.5M12 15V4m0 0L8 8m4-4l4 4"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </label>
+        <input
+          id="avatarInput"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          (change)="onAvatarSelected($event)"
+          [disabled]="avatarUploading || avatarDeleting"
+          hidden
+        />
+
+        <button
+          class="avatar__remove-btn"
+          type="button"
+          *ngIf="profile.avatarUrl"
+          (click)="deleteAvatar()"
+          [disabled]="avatarUploading || avatarDeleting"
+          title="Remove avatar"
+        >
+          Remove
+        </button>
+      </div>
+
+      <div class="identity">
+        <h2>{{ profile.firstName }} {{ profile.lastName }}</h2>
+        <p class="identity__email">
+          {{ profile.email }}
+          <span class="badge" [class.badge--verified]="profile.emailVerified">
+            {{ profile.emailVerified ? 'Verified' : 'Not verified' }}
+          </span>
+        </p>
+        <span class="role-chip">{{ profile.roleCode }}</span>
+      </div>
+    </header>
+
+    <p class="avatar-error" *ngIf="avatarError">{{ avatarError }}</p>
+
+    <!-- Completion nudge -->
+    <div class="state-banner state-banner--info" *ngIf="!isProfileComplete && !isEditing">
+      <p> Complete your profile by adding your phone number, address, and CNIC.</p>
+      <button class="btn btn--primary" (click)="startEditing()">Complete profile</button>
+    </div>
+
+    <!-- Details card -->
+    <section class="details-card" *ngIf="!isEditing">
+      <div class="details-card__head">
+        <h3>Contact details</h3>
+        <button class="btn btn--ghost" (click)="startEditing()">Edit</button>
+      </div>
+
+      <dl class="details-grid">
+        <div class="details-grid__item">
+          <dt>Phone number</dt>
+          <dd>{{ profile.phoneNumber || '—' }}</dd>
+        </div>
+        <div class="details-grid__item">
+          <dt>CNIC</dt>
+          <dd>{{ profile.cnic || '—' }}</dd>
+        </div>
+        <div class="details-grid__item details-grid__item--wide">
+          <dt>Address</dt>
+          <dd>{{ profile.address || '—' }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Edit form -->
+    <app-profile-edit
+      *ngIf="isEditing"
+      [profile]="profile"
+      (saved)="onSaved($event)"
+      (cancelled)="onCancelEdit()"
+    ></app-profile-edit>
+
+  </ng-container>
+</section>

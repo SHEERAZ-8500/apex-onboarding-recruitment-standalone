@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { LogInComponent } from './pages/log-in/log-in.component';
 import { ResetPagesComponent } from './pages/reset-pages/reset-pages.component';
-import { RegistrationPage } from './pages/registration-page/registration-page';
 
 export const routes: Routes = [
   {
@@ -29,9 +28,6 @@ export const routes: Routes = [
     path: 'invite/complete',
     component: ResetPagesComponent
   },
-   {
-    path: 'registration-page',
-    component: RegistrationPage
-  }
+
 ];
 

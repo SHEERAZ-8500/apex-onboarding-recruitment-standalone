@@ -17,6 +17,10 @@ export const routes: Routes = [
      
         { path: 'inventory-units', loadChildren: () => import('./features/Inventory Units/units-routes').then(m => m.routes) },
                 { path: 'booking-approvals', loadChildren: () => import('./features/booking-approvals/booking-app-routes').then(m => m.routes) },
+                                { path: 'profile', loadChildren: () => import('./features/profile/profile-routes').then(m => m.routes) },
+
+                                { path: 'notifications', loadChildren: () => import('./features/notifications/notification.routes').then(m => m.routes) },
+
 
 
 

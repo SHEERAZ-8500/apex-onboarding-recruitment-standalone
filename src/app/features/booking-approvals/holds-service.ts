@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-
-export type HoldState = 'ACTIVE' | 'EXPIRED' | 'RELEASED' | 'CONSUMED';
+import { environment } from '../../.././environments/environment';
+// ^ NOTE: yeh path EXACT wahi hai jo aapke i-units-service.ts me use hua hai.
+// Agar TypeScript error de "cannot find module", to is file ki location
+// dekh kar ../ ki ginti adjust kar lein (jitna InventoryService me hai
+// utna hi yahan se environments folder tak distance hona chahiye).
 
 export interface HoldResponse {
   publicId: string;
   unitPublicId: string;
   unitNumber: string;
-  expiresAt: string; // ISO date-time
+  expiresAt: string;
   secondsRemaining: number;
-  state: HoldState;
+  state: 'ACTIVE' | string;
 }
 
 export interface ApiResponse<T> {
@@ -20,40 +22,33 @@ export interface ApiResponse<T> {
   data: T;
 }
 
-/**
- * 5.1 - 5.3 — Booking Holds
- *
- * NOTE on base path: this follows the same convention as
- * BookingApprovalService (apiUrl = environment.apiBaseUrl + segment).
- * Adjust the trailing segment below ONLY if your gateway nests the
- * client-facing endpoints under something other than `holds`.
- */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class HoldsService {
-  private apiUrl = `${environment.apiBaseUrl}holds`;
+  url: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // InventoryService ka EXACT same pattern - taake same base url +
+    // same auth interceptor (jo environment.apiBaseUrl wale requests
+    // ko match karta hai) apply ho jaye.
+    this.url = environment.apiBaseUrl;
+  }
 
-  /** 5.1 — Place a 30-minute hold on a unit. User can hold at most one unit at a time. */
+  // 5.1 - Place 30 minute hold
   placeHold(unitPublicId: string): Observable<ApiResponse<HoldResponse>> {
-    return this.http.post<ApiResponse<HoldResponse>>(this.apiUrl, {
+    return this.http.post<ApiResponse<HoldResponse>>(this.url + 'holds', {
       unitPublicId,
     });
   }
 
-  /** 5.2 — Release an active hold early, before it expires. */
-  releaseHold(holdPublicId: string): Observable<ApiResponse<null>> {
-    return this.http.delete<ApiResponse<null>>(
-      `${this.apiUrl}/${holdPublicId}`,
-    );
+  // 5.2 - Release hold early
+  releaseHold(publicId: string): Observable<ApiResponse<any>> {
+    return this.http.delete<ApiResponse<any>>(this.url + `holds/${publicId}`);
   }
 
-  /** 5.3 — Get the logged-in user's current active hold, or null if none. */
+  // 5.3 - Get current logged-in user's active hold (null agar koi nahi)
   getMyHold(): Observable<ApiResponse<HoldResponse | null>> {
     return this.http.get<ApiResponse<HoldResponse | null>>(
-      `${this.apiUrl}/me`,
+      this.url + 'holds/me',
     );
   }
 }

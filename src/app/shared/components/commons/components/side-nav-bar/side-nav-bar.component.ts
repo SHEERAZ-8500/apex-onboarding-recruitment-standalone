@@ -27,9 +27,7 @@ export class SideNavBarComponent implements OnInit {
     { label: 'Bookings', icon: 'fas fa-book', route: 'booking-approvals/booking-approvals', isVisible: true },
     { label: 'Discounts', icon: 'fas fa-percent', route: 'booking-approvals/admin-discounts', isVisible: true },
         { label: 'Installments', icon: 'fas fa-percent', route: 'booking-approvals/admin-installments', isVisible: true },
-                { label: 'My Bookings', icon: 'fas fa-percent', route: 'booking-approvals/my-bookings', isVisible: true },
-        { label: 'Unit Holds', icon: 'fas fa-percent', route: 'booking-approvals/unit-hold-booking', isVisible: true },
-                        { label: 'Discount Panel', icon: 'fas fa-percent', route: 'booking-approvals/discount-panel', isVisible: true },
+            
 
 
 

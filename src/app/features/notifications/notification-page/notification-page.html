@@ -1,0 +1,72 @@
+<section class="notifications-page">
+
+  <header class="page-head">
+    <div class="page-head__title">
+      <button class="back-btn" (click)="goBack()" title="Back">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <h2>Notifications</h2>
+      <span class="total-chip" *ngIf="!loading">{{ totalItems }}</span>
+    </div>
+
+    <div class="page-head__actions">
+      <button class="action-btn action-btn--ghost" (click)="markAllAsRead()" [disabled]="markingAll || !notifications.length">
+        <i class="fa-solid fa-check-double"></i> Read all
+      </button>
+      <button class="action-btn action-btn--danger" (click)="clearAll()" [disabled]="markingAll || !notifications.length">
+        <i class="fa-solid fa-trash"></i> Clear all
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div class="list-state" *ngIf="loading">
+    <div class="skeleton-row" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <!-- Error -->
+  <div class="list-state list-state--error" *ngIf="!loading && loadError">
+    <p>{{ loadError }}</p>
+    <button class="action-btn action-btn--ghost" (click)="fetchPage(currentPage)">Retry</button>
+  </div>
+
+  <!-- Empty -->
+  <div class="list-state list-state--empty" *ngIf="!loading && !loadError && !notifications.length">
+    <i class="fa-regular fa-bell-slash"></i>
+    <p>Abhi koi notification nahi hai.</p>
+  </div>
+
+  <!-- List -->
+  <div class="notif-list" *ngIf="!loading && !loadError && notifications.length">
+    <div
+      class="notif-row"
+      *ngFor="let item of notifications"
+      [class.unread]="!item.isRead"
+      (click)="onItemClick(item)"
+    >
+      <div class="notif-row__icon">
+        <i [class]="getIconClass(item.type)"></i>
+      </div>
+
+      <div class="notif-row__body">
+        <strong>{{ item.title }}</strong>
+        <p>{{ item.body }}</p>
+        <small>{{ getRelativeTime(item.createdDate) }}</small>
+      </div>
+
+      <span class="dot" *ngIf="!item.isRead" title="Unread"></span>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <footer class="pagination" *ngIf="!loading && !loadError && totalPages > 1">
+    <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <span class="page-info">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage + 1 >= totalPages">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </footer>
+
+</section>
