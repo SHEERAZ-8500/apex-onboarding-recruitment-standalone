@@ -1,0 +1,183 @@
+<div class="dash">
+
+  <!-- Header / filter bar -->
+  <header class="dash__header">
+    <div class="dash__title">
+      <span class="dash__eyebrow">Super-admin</span>
+      <h1>Business reports</h1>
+      <p *ngIf="data" class="dash__generated">
+        Generated {{ formatTimestamp(data.generatedAt) }} &middot; range {{ data.range.from }} to {{ data.range.to }}
+      </p>
+    </div>
+
+    <div class="dash__filters">
+      <div class="field">
+        <label for="from">From</label>
+        <input id="from" type="date" [(ngModel)]="fromDate" />
+      </div>
+      <div class="field">
+        <label for="to">To</label>
+        <input id="to" type="date" [(ngModel)]="toDate" />
+      </div>
+      <button class="btn btn--gold" (click)="applyFilter()" [disabled]="loading">
+        Apply
+      </button>
+      <button class="btn btn--ghost" (click)="resetFilter()" [disabled]="loading">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="errorMessage" class="banner banner--error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loading && !data" class="skeleton-grid">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4]"></div>
+  </div>
+
+  <ng-container *ngIf="data as d">
+
+    <!-- KPI row -->
+  <!-- KPI row -->
+<section class="kpi-grid">
+  <div class="kpi-card kpi-card--accent">
+    <span class="kpi-card__label">Total bookings</span>
+    <span class="kpi-card__value">{{ d.bookings.total }}</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-card__label">Collected to date</span>
+    <span class="kpi-card__value">{{ formatCurrency(d.revenue.collectedToDate) }}</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-card__label">Outstanding</span>
+    <span class="kpi-card__value">{{ formatCurrency(d.revenue.outstanding) }}</span>
+  </div>
+  <div class="kpi-card" [class.kpi-card--warn]="d.revenue.overdueAmount > 0">
+    <span class="kpi-card__label">Overdue</span>
+    <span class="kpi-card__value">{{ formatCurrency(d.revenue.overdueAmount) }}</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-card__label">Units in inventory</span>
+    <span class="kpi-card__value">{{ d.units.total }}</span>
+  </div>
+  <div class="kpi-card">
+    <span class="kpi-card__label">Active team members</span>
+    <span class="kpi-card__value">{{ d.team.activeUsers }}</span>
+  </div>
+</section>
+
+    <!-- Collection progress -->
+    <section class="progress-card">
+      <div class="progress-card__top">
+        <span>Collection progress</span>
+        <span class="progress-card__pct">{{ collectionProgress }}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="collectionProgress"></div>
+      </div>
+      <div class="progress-card__legend">
+        <span><i class="dot dot--gold"></i>Collected {{ formatCurrency(d.revenue.collectedToDate) }}</span>
+        <span><i class="dot dot--ghost"></i>Outstanding {{ formatCurrency(d.revenue.outstanding) }}</span>
+      </div>
+    </section>
+
+    <!-- Charts grid -->
+    <section class="charts-grid">
+
+      <div class="chart-card">
+        <h3>Bookings by status</h3>
+        <div class="chart-wrap">
+          <canvas #bookingsStatusChart role="img" aria-label="Doughnut chart of bookings by status"></canvas>
+        </div>
+        <ul class="legend">
+          <li *ngFor="let entry of bookingStatusEntries">
+            <span>{{ formatActionLabel(entry[0]) }}</span>
+            <strong>{{ entry[1] }}</strong>
+          </li>
+        </ul>
+      </div>
+
+      <div class="chart-card">
+        <h3>Units by status</h3>
+        <div class="chart-wrap">
+          <canvas #unitsStatusChart role="img" aria-label="Doughnut chart of units by status"></canvas>
+        </div>
+        <ul class="legend">
+          <li *ngFor="let entry of unitStatusEntries">
+            <span>{{ formatActionLabel(entry[0]) }}</span>
+            <strong>{{ entry[1] }}</strong>
+          </li>
+        </ul>
+      </div>
+
+      <div class="chart-card">
+        <h3>Units by property type</h3>
+        <div class="chart-wrap">
+          <canvas #propertyTypeChart role="img" aria-label="Doughnut chart of units by property type"></canvas>
+        </div>
+        <ul class="legend">
+          <li *ngFor="let entry of d.units.byPropertyType | keyvalue">
+            <span>{{ formatActionLabel(entry.key) }}</span>
+            <strong>{{ entry.value }}</strong>
+          </li>
+        </ul>
+      </div>
+
+      <div class="chart-card chart-card--wide">
+        <h3>Revenue overview</h3>
+        <div class="chart-wrap chart-wrap--tall">
+          <canvas #revenueChart role="img" aria-label="Bar chart comparing accepted contract value, pipeline, collected, outstanding and overdue amounts"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Recent actions -->
+    <section class="activity-card">
+      <h3>Recent team actions</h3>
+      <table class="activity-table" *ngIf="d.team.recentActions.length; else noActivity">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Item</th>
+            <th>By</th>
+            <th>When</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let action of d.team.recentActions">
+            <td>{{ formatActionLabel(action.action) }}</td>
+            <td>{{ formatActionLabel(action.itemType) }}</td>
+            <td>{{ action.actorUsername }}</td>
+            <td>{{ formatTimestamp(action.occurredAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noActivity>
+        <p class="empty-state">No actions recorded in this range.</p>
+      </ng-template>
+    </section>
+
+    <!-- CSV exports -->
+    <section class="export-card">
+      <div class="export-card__head">
+        <h3>Export reports</h3>
+        <p>Downloads a CSV for the selected date range.</p>
+      </div>
+      <div class="export-actions">
+        <button
+          *ngFor="let btn of exportButtons"
+          class="btn btn--export"
+          (click)="exportCsv(btn.type)"
+          [disabled]="btn.loading">
+          <span *ngIf="!btn.loading">{{ btn.label }}</span>
+          <span *ngIf="btn.loading">Preparing&hellip;</span>
+        </button>
+      </div>
+    </section>
+
+  </ng-container>
+
+</div>
