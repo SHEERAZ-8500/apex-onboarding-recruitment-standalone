@@ -9,6 +9,7 @@ export interface Paginator {
   currentPage: number;
   totalItems: number;
   totalPages: number;
+  itemsPerPage:number;
 }
 
 /** A single payment proof file attached to an installment. */

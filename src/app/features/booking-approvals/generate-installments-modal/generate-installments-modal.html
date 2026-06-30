@@ -1,0 +1,105 @@
+<div class="unit-modal-backdrop" (click)="close()">
+  <div class="booking-action-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header-custom">
+      <div>
+        <h5>Generate Installment Schedule</h5>
+        <small>
+          Booking <strong>{{ booking?.bookingNumber }}</strong> — {{ booking?.customer?.name }}
+        </small>
+      </div>
+      <button class="modal-close-btn" (click)="close()" [disabled]="isSaving">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body-custom">
+      <div class="alert alert-info mb-3">
+        <i class="fa-solid fa-circle-info"></i>
+        Schedule cannot be regenerated once payment evidence has been submitted against it.
+      </div>
+
+      <!-- Booking snapshot — read-only, comes straight from the row,
+           no extra fetch needed -->
+      <div class="booking-snapshot mb-3">
+        <div>
+          <span>Unit</span>
+          <strong>{{ booking?.unitNumber }} (Floor {{ booking?.floorNumber }})</strong>
+        </div>
+        <div>
+          <span>Total Price</span>
+          <strong>{{ booking?.totalPrice | number:'1.2-2' }}</strong>
+        </div>
+        <div>
+          <span>Down Payment Paid</span>
+          <strong>{{ booking?.bookingAmount | number:'1.2-2' }}</strong>
+        </div>
+        <div>
+          <span>Outstanding to Schedule</span>
+          <strong class="highlight">{{ outstandingAmount | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Number of Installments <span class="required">*</span></label>
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            [(ngModel)]="form.numberOfInstallments"
+            [disabled]="isSaving"
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">
+            Frequency (Months) <span class="optional">(optional, defaults to 1)</span>
+          </label>
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            placeholder="1"
+            [(ngModel)]="form.frequencyMonths"
+            [disabled]="isSaving"
+          />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">First Due Date <span class="required">*</span></label>
+        <input
+          type="date"
+          class="form-control"
+          [min]="minDueDate"
+          [(ngModel)]="form.firstDueDate"
+          [disabled]="isSaving"
+        />
+        <small class="field-hint">Must be today or later.</small>
+      </div>
+
+      <!-- Live split preview -->
+      <div class="mb-0" *ngIf="previewInstallments.length">
+        <label class="form-label">Preview</label>
+        <div class="preview-list">
+          <div class="preview-row" *ngFor="let amt of previewInstallments; let i = index">
+            <span>Installment #{{ i + 1 }}</span>
+            <strong>{{ amt | number:'1.2-2' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer-custom">
+      <button class="modal-cancel-btn" (click)="close()" [disabled]="isSaving">
+        Cancel
+      </button>
+      <button class="modal-save-btn" (click)="generate()" [disabled]="isSaving">
+        <span *ngIf="!isSaving">Generate Schedule</span>
+        <span *ngIf="isSaving">
+          <i class="fa-solid fa-spinner fa-spin me-1"></i>
+          Generating...
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

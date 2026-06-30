@@ -59,7 +59,7 @@
         </button>
       </div>
 
-      <!-- Generate Schedule Button — permission gated (Missing #6) -->
+      <!-- Generate Schedule Button — permission gated (Missing #6)
       <div class="mb-1" *ngIf="canVerifyInstallments">
         <button
           class="create-btn round-btn"
@@ -68,7 +68,7 @@
         >
           <i class="fa-solid fa-calendar-plus"></i>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -101,10 +101,10 @@
             <th class="px-3 py-3">Booking ID</th>
             <th class="px-3 py-3">Installment Amount</th>
             <th class="px-3 py-3">Due Date</th>
-            <th class="px-3 py-3">Submitted At</th>
+            <!-- <th class="px-3 py-3">Submitted At</th>
             <th class="px-3 py-3">Paid At</th>
             <th class="px-3 py-3">Total Paid</th>
-            <th class="px-3 py-3">Outstanding</th>
+            <th class="px-3 py-3">Outstanding</th> -->
             <th class="px-3 py-3">Payment Proof</th>
             <th class="px-3 py-3">Status</th>
             <th class="px-3 py-3">Actions</th>
@@ -144,7 +144,7 @@
               {{ installment.dueDate | date:'dd MMM yyyy' }}
             </td>
 
-            <td class="px-3 py-3">
+            <!-- <td class="px-3 py-3">
               {{ installment.submittedAt ? (installment.submittedAt | date:'dd MMM yyyy, hh:mm a') : '-' }}
             </td>
 
@@ -152,14 +152,13 @@
               {{ installment.paidAt ? (installment.paidAt | date:'dd MMM yyyy, hh:mm a') : '-' }}
             </td>
 
-            <!-- Missing #10 fix -->
             <td class="px-3 py-3">
               {{ installment.totalPaid !== undefined && installment.totalPaid !== null ? (installment.totalPaid | number:'1.2-2') : '-' }}
             </td>
 
             <td class="px-3 py-3">
               {{ installment.outstanding !== undefined && installment.outstanding !== null ? (installment.outstanding | number:'1.2-2') : '-' }}
-            </td>
+            </td> -->
 
             <td class="px-3 py-3">
               <button

@@ -22,12 +22,44 @@ export class SideNavBarComponent implements OnInit {
   isMenuReady = false;
   // Dynamic menu structure
   topLevelItems: MenuItem[] = [
-    { label: 'Dashboard', icon: 'fas fa-home', route: '/panel/dashboard', isVisible: true },
-    { label: 'Inventory', icon: 'fas fa-building', route: 'inventory-units/view-units', isVisible: true },
-    { label: 'Bookings', icon: 'fas fa-book', route: 'booking-approvals/booking-approvals', isVisible: true },
-    { label: 'Discounts', icon: 'fas fa-percent', route: 'booking-approvals/admin-discounts', isVisible: true },
-        { label: 'Installments', icon: 'fas fa-percent', route: 'booking-approvals/admin-installments', isVisible: true },
-            
+    {
+      label: 'Dashboard',
+      icon: 'fas fa-house',
+      route: '/panel/dashboard',
+      isVisible: true
+    },
+    {
+      label: 'Inventory',
+      icon: 'fas fa-building',
+      route: 'inventory-units/view-units',
+      isVisible: true
+    },
+    {
+      label: 'Bookings',
+      icon: 'fas fa-book',
+      route: 'booking-approvals/booking-approvals',
+      isVisible: true
+    },
+    {
+      label: 'Discounts',
+      icon: 'fas fa-tags',
+      route: 'booking-approvals/admin-discounts',
+      isVisible: true
+    },
+    {
+      label: 'Installments',
+      icon: 'fas fa-file-invoice-dollar',
+      route: 'booking-approvals/admin-installments',
+      isVisible: true
+    },
+    {
+      label: 'Create Installments',
+      icon: 'fas fa-calendar-plus',
+      route: 'booking-approvals/create-installments',
+      isVisible: true
+    }
+
+
 
 
 

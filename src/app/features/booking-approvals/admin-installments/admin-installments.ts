@@ -34,7 +34,8 @@ export class AdminInstallments implements OnInit {
   paginator: Paginator = {
     currentPage: 0,
     totalItems: 0,
-    totalPages: 0
+    totalPages: 0,
+    itemsPerPage: 6,
   };
 
   isLoading = false;

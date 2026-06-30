@@ -1,30 +1,40 @@
-<header class="header py-3">
-  <div class="d-flex gap-2">
-    <button (click)="toggleSidebar()" class="menu-btn">
+<header class="header">
+  <!-- Left side - Menu button -->
+  <div class="button-group left-group">
+    <button class="menu-btn" (click)="toggleSidebar()">
       <span></span>
       <span></span>
       <span></span>
     </button>
-
-    <div class="search-box">
-      <input type="text" placeholder="Search" />
-      <i class="fa-solid fa-magnifying-glass"></i>
-    </div>
   </div>
-  <div class="button-group">
 
-    <!-- <button class="display-none-style" (click)="openChat()">
+  <!-- Center - Search box -->
+  <!-- <div class="search-box">
+    <input type="text" placeholder="Search..."  />
+    <i class="fa-solid fa-search"></i>
+  </div> -->
+
+  <!-- Right side - Action buttons -->
+  <div class="button-group right-group">
+    <!-- Chat button (commented out in your code) -->
+    <!-- <button class="action-btn" title="Chat">
       <i class="fa-solid fa-comment-dots"></i>
     </button> -->
-    <!-- <button><i class="fa-solid fa-earth-americas"></i></button> -->
 
+    <!-- Language button -->
+    <!-- <button class="action-btn" title="Language">
+      <i class="fa-solid fa-earth-americas"></i>
+    </button> -->
+
+    <!-- Notifications -->
     <div class="notif-wrap">
-      <button class="bell-btn" (click)="toggleNotifications()">
+      <button class="bell-btn" (click)="toggleNotifications()" title="Notifications">
         <i class="fa-solid fa-bell"></i>
         <span class="wave"></span>
         <span class="bell-badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
       </button>
 
+      <!-- Notification dropdown -->
       <div
         class="notify-card"
         #notifyCard
@@ -68,13 +78,16 @@
       </div>
     </div>
 
-    <div class="btn-group display-none-style" ngbDropdown>
-      <button class="dropdown-btn" id="dropdownBasic" ngbDropdownToggle>
-        <i class="fa-solid fa-gear"></i>
-      </button>
-      <ul id="dropdown-basic" ngbDropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
-        <li role="menuitem"><a class="dropdown-item" (click)="logoutUser()">Log-Out</a></li>
-      </ul>
+    <!-- Settings dropdown -->
+    <div class="btn-group" >
+ <button
+  class="logout-btn"
+  (click)="logoutUser()"
+  title="Logout"
+  aria-label="Logout"
+>
+  <i class="fa-solid fa-right-from-bracket"></i>
+</button>
     </div>
   </div>
 </header>
