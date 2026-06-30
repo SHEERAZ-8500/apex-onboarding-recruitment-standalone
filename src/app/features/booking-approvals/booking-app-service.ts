@@ -10,6 +10,7 @@ export type BookingStatus =
   | 'ACCEPTANCE'
   | 'EXPIRED';
 
+/** Row shape returned by GET /api/admin/bookings (list/queue) */
 export interface BookingListItem {
   bookingNumber: string;
   publicId: string;
@@ -25,21 +26,6 @@ export interface BookingListItem {
   agentAssisted: boolean;
   createdDate: string;
   rejectedAt?: string;
-
-  customer?: {
-    publicId: string;
-    name: string;
-    email: string;
-  };
-
-  submittedBy?: {
-    publicId: string;
-    name: string;
-    email: string;
-  };
-
-  evidence?: any[];
-  timeline?: any[];
 }
 
 export interface BookingListResponse {
@@ -53,8 +39,61 @@ export interface BookingListResponse {
   };
 }
 
+/** Person info embedded in booking detail (customer / submittedBy) */
+export interface BookingPerson {
+  publicId: string;
+  name: string;
+  email: string;
+}
 
+export interface BookingEvidence {
+  publicId: string;
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+  downloadUrl: string;
+  submissionRound: number;
+}
 
+export interface BookingTimelineItem {
+  action: string;
+  reason: string | null;
+  internalNote: string | null;
+  actorName: string;
+  occurredAt: string;
+}
+
+/** Shape returned by GET /api/admin/bookings/{publicId} */
+export interface BookingDetail {
+  bookingNumber: string;
+  publicId: string;
+  status: BookingStatus;
+  unitNumber: string;
+  customer: BookingPerson;
+  submittedBy: BookingPerson;
+  agentAssisted: boolean;
+  currentSubmissionRound: number;
+  evidence: BookingEvidence[];
+  timeline: BookingTimelineItem[];
+}
+
+export interface BookingDetailResponse {
+  success: boolean;
+  data: BookingDetail;
+}
+
+export interface IntimationLetterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    publicId: string;
+    fileName: string;
+    contentType: string;
+    sizeBytes: number;
+    downloadUrl: string;
+  };
+  actionCode: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +103,14 @@ export class BookingApprovalService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * NOTE: Per API docs (section 4.1) only `status`, `page`, `size` are
+   * documented query params. `search` is NOT documented on the backend —
+   * confirm the exact param name (search / keyword / bookingNumber) with
+   * backend before relying on it for filtering. If unsupported, this will
+   * silently be ignored by the server and the list will just show
+   * everything for the current status/page.
+   */
   getAllBookings(
     page: number,
     size: number,
@@ -78,10 +125,6 @@ export class BookingApprovalService {
       params = params.set('status', status);
     }
 
-    /*
-      Agar backend search parameter support karta hai to uncomment kar dena.
-      Parameter ka exact naam backend se confirm kar lena: search / keyword / bookingNumber
-    */
     if (search) {
       params = params.set('search', search);
     }
@@ -89,15 +132,16 @@ export class BookingApprovalService {
     return this.http.get<BookingListResponse>(this.apiUrl, { params });
   }
 
-  getBookingById(publicId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${publicId}`);
+  getBookingById(publicId: string): Observable<BookingDetailResponse> {
+    return this.http.get<BookingDetailResponse>(`${this.apiUrl}/${publicId}`);
   }
 
+  /** PAYMENTS_VERIFY permission required */
   disapprovePayment(
     publicId: string,
     payload: {
       reason: string;
-      internalNote: string;
+      internalNote?: string;
       releaseUnit: boolean;
     },
   ): Observable<any> {
@@ -107,27 +151,41 @@ export class BookingApprovalService {
     );
   }
 
+  /** PAYMENTS_VERIFY permission required. internalNote is optional per docs. */
   approvePayment(
     publicId: string,
     payload: {
-      internalNote: string;
-    },
+      internalNote?: string;
+    } = {},
   ): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/${publicId}/approve-payment`,
-      payload,
-    );
+    return this.http.post(`${this.apiUrl}/${publicId}/approve-payment`, payload);
   }
 
+  /** BOOKINGS_APPROVE permission required. internalNote is optional per docs. */
   acceptBooking(
     publicId: string,
     payload: {
-      internalNote: string;
-    },
+      internalNote?: string;
+    } = {},
   ): Observable<any> {
-    return this.http.post(
-      `${this.apiUrl}/${publicId}/accept`,
-      payload,
+    return this.http.post(`${this.apiUrl}/${publicId}/accept`, payload);
+  }
+
+  /**
+   * DOCUMENTS_MANAGE permission required.
+   * Uploads the intimation letter (PDF/image scan) after a booking has been
+   * accepted. multipart/form-data with a single `file` field.
+   */
+  uploadIntimationLetter(
+    publicId: string,
+    file: File,
+  ): Observable<IntimationLetterResponse> {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    return this.http.post<IntimationLetterResponse>(
+      `${this.apiUrl}/${publicId}/intimation-letter`,
+      formData,
     );
   }
 }

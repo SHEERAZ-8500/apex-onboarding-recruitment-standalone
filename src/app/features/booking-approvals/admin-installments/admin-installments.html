@@ -59,12 +59,12 @@
         </button>
       </div>
 
-      <!-- Generate Schedule Button -->
-      <div class="mb-1">
+      <!-- Generate Schedule Button — permission gated (Missing #6) -->
+      <div class="mb-1" *ngIf="canVerifyInstallments">
         <button
           class="create-btn round-btn"
           (click)="openGenerateModal()"
-          title="Generate Schedule"
+          title="Generate Schedule (manual entry — prefer Accept Booking flow)"
         >
           <i class="fa-solid fa-calendar-plus"></i>
         </button>
@@ -72,7 +72,7 @@
     </div>
   </div>
 
-  <!-- Status Tabs (kept as you requested) -->
+  <!-- Status Tabs -->
   <div class="status-tabs-wrapper">
     <div class="status-tabs">
       <button
@@ -84,7 +84,7 @@
       >
         <i [class]="getStatusIcon(status)"></i>
         {{ status }}
-        <span class="status-count" *ngIf="getStatusCount(status) > 0">
+        <span class="status-count">
           {{ getStatusCount(status) }}
         </span>
       </button>
@@ -103,34 +103,36 @@
             <th class="px-3 py-3">Due Date</th>
             <th class="px-3 py-3">Submitted At</th>
             <th class="px-3 py-3">Paid At</th>
+            <th class="px-3 py-3">Total Paid</th>
+            <th class="px-3 py-3">Outstanding</th>
             <th class="px-3 py-3">Payment Proof</th>
             <th class="px-3 py-3">Status</th>
             <th class="px-3 py-3">Actions</th>
           </tr>
         </thead>
 
-      <tbody>
-  <tr *ngIf="isLoading">
-    <td colspan="9" class="not-found">
-      <i class="fa-solid fa-spinner fa-spin me-2"></i>
-      Loading installments...
-    </td>
-  </tr>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="11" class="not-found">
+              <i class="fa-solid fa-spinner fa-spin me-2"></i>
+              Loading installments...
+            </td>
+          </tr>
 
-  <tr *ngIf="!isLoading && filteredInstallments.length === 0">
-    <td colspan="9" class="not-found">
-      No {{ selectedStatus.toLowerCase() }} installments found.
-    </td>
-  </tr>
+          <tr *ngIf="!isLoading && filteredInstallments.length === 0">
+            <td colspan="11" class="not-found">
+              No {{ selectedStatus.toLowerCase() }} installments found.
+            </td>
+          </tr>
 
-          <tr *ngFor="let installment of installments; let i = index">
+          <tr *ngFor="let installment of filteredInstallments; let i = index">
             <td class="px-3 py-3 font-medium">
               {{ getInstallmentNumber(installment, i) }}
             </td>
 
             <td class="px-3 py-3">
-              <span class="booking-number" [title]="installment.bookingPublicId">
-                {{ installment.bookingPublicId }}
+              <span class="booking-number" [title]="installment.publicId">
+                {{ installment.bookingPublicId || installment.publicId }}
               </span>
             </td>
 
@@ -150,18 +152,26 @@
               {{ installment.paidAt ? (installment.paidAt | date:'dd MMM yyyy, hh:mm a') : '-' }}
             </td>
 
+            <!-- Missing #10 fix -->
             <td class="px-3 py-3">
-              <a
-                *ngIf="getProofUrl(installment) as proofUrl"
-                [href]="proofUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="proof-link"
+              {{ installment.totalPaid !== undefined && installment.totalPaid !== null ? (installment.totalPaid | number:'1.2-2') : '-' }}
+            </td>
+
+            <td class="px-3 py-3">
+              {{ installment.outstanding !== undefined && installment.outstanding !== null ? (installment.outstanding | number:'1.2-2') : '-' }}
+            </td>
+
+            <td class="px-3 py-3">
+              <button
+                *ngIf="hasProof(installment)"
+                type="button"
+                class="proof-link proof-view-btn"
+                (click)="openProofModal(installment)"
               >
-                <i class="fa-solid fa-file-image"></i>
-                View Proof
-              </a>
-              <span *ngIf="!getProofUrl(installment)" class="text-muted">-</span>
+                <i class="fa-solid fa-eye"></i>
+                View ({{ installment.evidence.length }})
+              </button>
+              <span *ngIf="!hasProof(installment)" class="text-muted">-</span>
             </td>
 
             <td class="px-3 py-3">
@@ -265,6 +275,7 @@
       <div class="alert alert-info mb-3">
         <i class="fa-solid fa-circle-info"></i>
         Existing schedules cannot be regenerated after payment evidence has been submitted.
+        Can only be generated once a booking is in <strong>ACCEPTANCE</strong> state.
       </div>
 
       <div class="mb-3">
@@ -273,9 +284,13 @@
           type="text"
           class="form-control"
           [(ngModel)]="selectedBookingPublicId"
-          [disabled]="isSaving"
+          [disabled]="isSaving || lockedBookingId"
           placeholder="Enter accepted booking public ID"
         />
+        <small class="field-hint" *ngIf="lockedBookingId">
+          <i class="fa-solid fa-lock"></i>
+          Pre-filled from the accepted booking — locked to avoid generating schedules for the wrong booking.
+        </small>
       </div>
 
       <div class="row">
@@ -290,11 +305,12 @@
           />
         </div>
         <div class="col-md-6 mb-3">
-          <label class="form-label">Frequency (Months) <span class="required">*</span></label>
+          <label class="form-label">Frequency (Months) <span class="optional">(optional, defaults to 1)</span></label>
           <input
             type="number"
             min="1"
             class="form-control"
+            placeholder="1"
             [(ngModel)]="generateForm.frequencyMonths"
             [disabled]="isSaving"
           />
@@ -306,9 +322,11 @@
         <input
           type="date"
           class="form-control"
+          [min]="minDueDate"
           [(ngModel)]="generateForm.firstDueDate"
           [disabled]="isSaving"
         />
+        <small class="field-hint">Must be today or later.</small>
       </div>
     </div>
 
@@ -360,8 +378,8 @@
           <strong>{{ selectedInstallment.dueDate | date:'dd MMM yyyy' }}</strong>
         </div>
         <div>
-          <span>Booking ID</span>
-          <strong>{{ selectedInstallment.bookingPublicId }}</strong>
+          <span>Installment ID</span>
+          <strong>{{ selectedInstallment.publicId }}</strong>
         </div>
       </div>
     </div>
@@ -434,6 +452,79 @@
           Rejecting...
         </span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- View Proof Modal (evidence is an array — list every file) -->
+<div
+  class="unit-modal-backdrop"
+  *ngIf="showProofModal"
+  (click)="closeProofModal()"
+>
+  <div class="booking-action-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header-custom">
+      <div>
+        <h5>Payment Proof</h5>
+        <small>Installment #{{ proofInstallment?.sequenceNo }} — {{ proofInstallment?.amount | number:'1.2-2' }}</small>
+      </div>
+      <button class="modal-close-btn" (click)="closeProofModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body-custom">
+      <div *ngIf="!proofInstallment?.evidence?.length" class="text-muted">
+        No evidence files found.
+      </div>
+
+      <div class="evidence-list">
+        <div class="evidence-row" *ngFor="let ev of proofInstallment?.evidence">
+          <div class="evidence-thumb-sm" (click)="openPreview(ev)">
+            <img *ngIf="looksLikeImage(ev)" [src]="ev.downloadUrl" [alt]="ev.fileName" />
+            <i *ngIf="!looksLikeImage(ev)" class="fa-solid fa-file"></i>
+          </div>
+
+          <div class="evidence-row-info">
+            <strong [title]="ev.fileName">{{ ev.fileName }}</strong>
+            <small>{{ ev.contentType }} • {{ formatFileSize(ev.sizeBytes) }}</small>
+          </div>
+
+          <div class="evidence-row-actions">
+            <button type="button" class="evidence-action-btn" (click)="openPreview(ev)">
+              <i class="fa-solid fa-eye"></i> Preview
+            </button>
+            <a [href]="ev.downloadUrl" target="_blank" rel="noopener noreferrer" class="evidence-action-btn">
+              <i class="fa-solid fa-download"></i> Open
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer-custom">
+      <button class="modal-cancel-btn" (click)="closeProofModal()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Evidence Preview Overlay -->
+<div class="unit-modal-backdrop preview-backdrop" *ngIf="previewUrl" (click)="closePreview()">
+  <div class="preview-modal" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn preview-close" (click)="closePreview()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <img *ngIf="previewIsImage" [src]="previewUrl" alt="Evidence preview" />
+
+    <div *ngIf="!previewIsImage" class="preview-fallback">
+      <i class="fa-solid fa-file"></i>
+      <p>Preview not available for this file type.</p>
+      <a [href]="previewUrl" target="_blank" class="evidence-action-btn">
+        <i class="fa-solid fa-up-right-from-square"></i> Open in new tab
+      </a>
     </div>
   </div>
 </div>

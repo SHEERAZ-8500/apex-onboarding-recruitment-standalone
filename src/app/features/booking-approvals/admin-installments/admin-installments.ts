@@ -1,7 +1,9 @@
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 import { LoaderService } from '../../../../app/core/services/management-services/loader.service';
 import {
   AdminInstallmentsService,
@@ -38,7 +40,8 @@ export class AdminInstallments implements OnInit {
   isLoading = false;
   isSaving = false;
 
-  // Status counts for tabs
+  // Status counts for tabs — pulled from the 4 status endpoints in parallel
+  // (backend doesn't expose a single "counts" endpoint per docs section 6.2)
   statusCounts: Record<InstallmentStatus, number> = {
     SUBMITTED: 0,
     PENDING: 0,
@@ -49,12 +52,18 @@ export class AdminInstallments implements OnInit {
   // Generate schedule modal
   showGenerateModal = false;
   selectedBookingPublicId = '';
+  /** True when the modal was opened from an accepted-booking entry point
+   *  (e.g. ?bookingId=... query param after Accept Booking) — locks the
+   *  field so admins can't generate schedules for arbitrary booking IDs. */
+  lockedBookingId = false;
 
   generateForm: GenerateInstallmentSchedulePayload = {
     numberOfInstallments: 3,
     frequencyMonths: 1,
     firstDueDate: ''
   };
+
+  minDueDate = this.todayIso();
 
   // Verify modal
   showVerifyModal = false;
@@ -64,14 +73,39 @@ export class AdminInstallments implements OnInit {
   showRejectModal = false;
   rejectReason = '';
 
+  // View Proof modal — backend returns `evidence` as an ARRAY (multiple
+  // files possible), so a simple <a target="_blank"> link isn't enough.
+  showProofModal = false;
+  proofInstallment: InstallmentResponse | null = null;
+  previewUrl: string | null = null;
+  previewIsImage = false;
+
   constructor(
     private installmentsService: AdminInstallmentsService,
     private toastr: ToastrService,
-    private loader: LoaderService
+    private loader: LoaderService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadInstallments();
+    this.loadStatusCounts();
+
+    // Entry point from an accepted booking (Booking Approval -> Accept ->
+    // "Generate Schedule" should navigate here with ?bookingId=<publicId>)
+    const incomingBookingId = this.route.snapshot.queryParamMap.get('bookingId');
+    if (incomingBookingId) {
+      this.openGenerateModal(incomingBookingId, true);
+    }
+  }
+
+  private todayIso(): string {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 
   get isAnyFilterActive(): boolean {
@@ -115,7 +149,6 @@ export class AdminInstallments implements OnInit {
     this.isLoading = true;
     this.loader.show();
 
-    // FIX: Pass only 3 arguments (status, page, size) - remove searchTerm
     this.installmentsService
       .getInstallments(this.selectedStatus, this.page, this.size)
       .subscribe({
@@ -137,14 +170,45 @@ export class AdminInstallments implements OnInit {
       });
   }
 
-  // If you want to implement search, you need to handle it on the backend
-  // or filter the results client-side. Here's a client-side filter approach:
+  /**
+   * Missing #5 fix — tabs were always showing 0 because statusCounts was
+   * never populated. Backend has no single "counts" endpoint per the docs,
+   * so we hit all 4 status queues in parallel (size=1, we only need
+   * paginator.totalItems) and populate the badges from that.
+   */
+  loadStatusCounts(): void {
+    forkJoin({
+      SUBMITTED: this.installmentsService.getInstallments('SUBMITTED', 0, 1),
+      PENDING: this.installmentsService.getInstallments('PENDING', 0, 1),
+      OVERDUE: this.installmentsService.getInstallments('OVERDUE', 0, 1),
+      PAID: this.installmentsService.getInstallments('PAID', 0, 1)
+    }).subscribe({
+      next: (results) => {
+        this.statusCounts = {
+          SUBMITTED: results.SUBMITTED?.paginator?.totalItems ?? 0,
+          PENDING: results.PENDING?.paginator?.totalItems ?? 0,
+          OVERDUE: results.OVERDUE?.paginator?.totalItems ?? 0,
+          PAID: results.PAID?.paginator?.totalItems ?? 0
+        };
+      },
+      error: () => {
+        // Silently keep zeros — counts are a nice-to-have, not blocking.
+      }
+    });
+  }
+
+  /**
+   * Client-side filter, kept as a fallback. NOTE: the docs (section 6.2)
+   * only document `status`, `page`, `size` as query params — there is no
+   * documented `search` param, so this stays client-side-only unless your
+   * backend confirms a search param exists.
+   */
   get filteredInstallments(): InstallmentResponse[] {
     if (!this.searchTerm.trim()) {
       return this.installments;
     }
     const term = this.searchTerm.toLowerCase().trim();
-    return this.installments.filter(item => 
+    return this.installments.filter(item =>
       item.bookingPublicId?.toLowerCase().includes(term) ||
       item.publicId?.toLowerCase().includes(term)
     );
@@ -154,9 +218,7 @@ export class AdminInstallments implements OnInit {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.page = 0;
-      // If your API supports search, call loadInstallments()
-      // Otherwise, just use client-side filtering
-      // this.loadInstallments();
+      // Client-side filtering only — see note on filteredInstallments above.
     }, 500);
   }
 
@@ -194,6 +256,17 @@ export class AdminInstallments implements OnInit {
 
   refresh(): void {
     this.loadInstallments();
+    this.loadStatusCounts();
+  }
+
+  // ================= Permission hook (wire your real service here) =================
+  /**
+   * Missing #6 fix. Replace the `true` fallback with your actual permission
+   * service check for INSTALLMENTS_VERIFY, e.g.
+   * `this.permissionService.has('INSTALLMENTS_VERIFY')`.
+   */
+  get canVerifyInstallments(): boolean {
+    return true;
   }
 
   // Status badge styles
@@ -231,8 +304,16 @@ export class AdminInstallments implements OnInit {
     return this.statusCounts[status] || 0;
   }
 
-  openGenerateModal(bookingPublicId = ''): void {
+  /**
+   * Missing #1 fix — opening with a bookingPublicId (from the Accepted
+   * Booking entry point) locks the field so admins can't free-type an
+   * arbitrary booking ID. Manual entry is still allowed as a fallback for
+   * admins working off a booking number they already have, but the
+   * preferred flow is navigating here from Booking Approval after Accept.
+   */
+  openGenerateModal(bookingPublicId = '', locked = false): void {
     this.selectedBookingPublicId = bookingPublicId;
+    this.lockedBookingId = locked;
     this.generateForm = {
       numberOfInstallments: 3,
       frequencyMonths: 1,
@@ -245,6 +326,12 @@ export class AdminInstallments implements OnInit {
     if (this.isSaving) return;
     this.showGenerateModal = false;
     this.selectedBookingPublicId = '';
+    this.lockedBookingId = false;
+
+    // Clear the query param so a page refresh doesn't reopen the modal.
+    if (this.route.snapshot.queryParamMap.get('bookingId')) {
+      this.router.navigate([], { queryParams: {} });
+    }
   }
 
   generateSchedule(): void {
@@ -257,12 +344,23 @@ export class AdminInstallments implements OnInit {
       this.toastr.error('Number of installments must be at least 1.');
       return;
     }
-    if (!this.generateForm.frequencyMonths || this.generateForm.frequencyMonths < 1) {
-      this.toastr.error('Frequency months must be at least 1.');
-      return;
-    }
+
+    // Missing #3 fix — frequencyMonths is optional per docs (defaults to 1
+    // / monthly). Don't hard-require it, just fall back silently.
+    const frequencyMonths = this.generateForm.frequencyMonths && this.generateForm.frequencyMonths > 0
+      ? this.generateForm.frequencyMonths
+      : 1;
+
     if (!this.generateForm.firstDueDate) {
       this.toastr.error('Please select the first due date.');
+      return;
+    }
+
+    // Missing #2 fix — firstDueDate must be today or later.
+    const selectedDate = new Date(this.generateForm.firstDueDate + 'T00:00:00');
+    const today = new Date(this.todayIso() + 'T00:00:00');
+    if (selectedDate < today) {
+      this.toastr.error('First due date cannot be in the past.');
       return;
     }
 
@@ -271,7 +369,7 @@ export class AdminInstallments implements OnInit {
 
     const payload: GenerateInstallmentSchedulePayload = {
       numberOfInstallments: Number(this.generateForm.numberOfInstallments),
-      frequencyMonths: Number(this.generateForm.frequencyMonths),
+      frequencyMonths: Number(frequencyMonths),
       firstDueDate: this.generateForm.firstDueDate
     };
 
@@ -282,10 +380,12 @@ export class AdminInstallments implements OnInit {
           this.isSaving = false;
           this.loader.hide();
           this.showGenerateModal = false;
+          this.lockedBookingId = false;
           this.toastr.success(response?.message || 'Installment schedule generated successfully.');
           this.selectedStatus = 'PENDING';
           this.page = 0;
           this.loadInstallments();
+          this.loadStatusCounts();
         },
         error: (error) => {
           this.isSaving = false;
@@ -326,6 +426,7 @@ export class AdminInstallments implements OnInit {
           this.selectedInstallment = null;
           this.toastr.success(response?.message || 'Installment payment verified successfully.');
           this.loadInstallments();
+          this.loadStatusCounts();
         },
         error: (error) => {
           this.isSaving = false;
@@ -371,6 +472,7 @@ export class AdminInstallments implements OnInit {
           this.rejectReason = '';
           this.toastr.success(response?.message || 'Installment payment rejected successfully.');
           this.loadInstallments();
+          this.loadStatusCounts();
         },
         error: (error) => {
           this.isSaving = false;
@@ -381,14 +483,55 @@ export class AdminInstallments implements OnInit {
   }
 
   getInstallmentNumber(installment: InstallmentResponse, index: number): number {
-    return installment.installmentNumber ?? installment.sequenceNumber ?? this.page * this.size + index + 1;
+    return installment.sequenceNo ?? this.page * this.size + index + 1;
   }
 
-  getProofUrl(installment: InstallmentResponse): string | null {
-    return installment.paymentProofUrl || installment.proofUrl || null;
+  hasProof(installment: InstallmentResponse): boolean {
+    return !!installment.evidence?.length;
+  }
+
+  /** Opens a modal listing every evidence file for this installment. */
+  openProofModal(installment: InstallmentResponse): void {
+    this.proofInstallment = installment;
+    this.previewUrl = null;
+    this.showProofModal = true;
+  }
+
+  closeProofModal(): void {
+    this.showProofModal = false;
+    this.proofInstallment = null;
+    this.previewUrl = null;
+  }
+
+  isImageEvidence(contentType: string): boolean {
+    // NOTE: sample payload sends `contentType: "text/plain"` for a .png
+    // file (backend metadata bug) — fall back to checking the file
+    // extension so the preview still renders correctly.
+    return !!contentType && contentType.startsWith('image/');
+  }
+
+  looksLikeImage(evidence: { fileName: string; contentType: string }): boolean {
+    if (this.isImageEvidence(evidence.contentType)) return true;
+    return /\.(png|jpe?g|gif|webp|bmp)$/i.test(evidence.fileName || '');
+  }
+
+  formatFileSize(bytes: number): string {
+    if (!bytes && bytes !== 0) return '-';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  }
+
+  openPreview(evidence: { downloadUrl: string; fileName: string; contentType: string }): void {
+    this.previewUrl = evidence.downloadUrl;
+    this.previewIsImage = this.looksLikeImage(evidence);
+  }
+
+  closePreview(): void {
+    this.previewUrl = null;
   }
 
   canAudit(installment: InstallmentResponse): boolean {
-    return installment.status === 'SUBMITTED';
+    return installment.status === 'SUBMITTED' && this.canVerifyInstallments;
   }
 }

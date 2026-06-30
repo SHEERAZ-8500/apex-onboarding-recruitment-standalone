@@ -844,3 +844,175 @@
     max-width: 100%;
   }
 }
+
+/* ============================================================
+   ADDITIONS — append to existing admin-installments.scss
+   ============================================================ */
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--slate-dim);
+
+  i { margin-right: 4px; color: var(--gold); }
+}
+
+.optional {
+  color: var(--slate-dim);
+  font-weight: 400;
+  font-size: 11px;
+}
+
+/* Status tab count badge always renders now (even at 0) — slightly mute
+   the zero-state so it doesn't visually compete with active counts. */
+.status-tab .status-count {
+  opacity: 0.85;
+}
+
+/* ===== "View" proof button (replaces the old direct <a target=_blank> link) ===== */
+.proof-view-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* ===== Evidence list inside the View Proof modal ===== */
+.evidence-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.evidence-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--navy-line);
+  border-radius: 8px;
+  background: var(--navy-deep);
+}
+
+.evidence-thumb-sm {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--navy-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  i {
+    color: var(--gold);
+    font-size: 18px;
+  }
+}
+
+.evidence-row-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    color: var(--ivory);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  small {
+    color: var(--slate-dim);
+    font-size: 11px;
+  }
+}
+
+.evidence-row-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.evidence-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--navy-line);
+  background: var(--navy-card);
+  color: var(--slate);
+  border-radius: 6px;
+  padding: 6px 9px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+}
+
+/* ===== Evidence preview overlay ===== */
+.preview-backdrop {
+  background: rgba(3, 7, 12, 0.85);
+}
+
+.preview-modal {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+
+  img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 10px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.preview-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px;
+  border-radius: 12px;
+  background: var(--navy-card);
+  border: 1px solid var(--navy-line);
+  color: var(--ivory);
+
+  i {
+    font-size: 40px;
+    color: var(--gold);
+  }
+}
